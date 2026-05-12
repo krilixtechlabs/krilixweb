@@ -620,10 +620,315 @@
         padding: 26px;
       }
     }
+
+    .dev-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .35s ease, visibility .35s ease;
+}
+
+.dev-modal.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.dev-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(184,138,53,.22), transparent 360px),
+    rgba(0,0,0,.76);
+  backdrop-filter: blur(14px);
+}
+
+.dev-modal-box {
+  position: relative;
+  width: min(100%, 500px);
+  padding: 46px 44px 38px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(231,200,121,.16), transparent 230px),
+    linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+    #151515;
+  border: 1px solid rgba(231,200,121,.26);
+  box-shadow:
+    0 38px 130px rgba(0,0,0,.64),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  color: var(--text);
+  animation: modalIn .65s cubic-bezier(.16, 1, .3, 1);
+  overflow: hidden;
+}
+
+.dev-modal-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 26%, rgba(231,200,121,.13), transparent 72%);
+  transform: translateX(-120%);
+  animation: modalShine 3.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.dev-modal-box::after {
+  content: "";
+  position: absolute;
+  left: 34px;
+  right: 34px;
+  top: 34px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(231,200,121,.38), transparent);
+  pointer-events: none;
+}
+
+.dev-modal-close {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255,255,255,.17);
+  background: rgba(255,255,255,.045);
+  color: #f7f1e6;
+  font-size: 28px;
+  line-height: 34px;
+  cursor: pointer;
+  transition: .22s ease;
+  z-index: 3;
+}
+
+.dev-modal-close:hover {
+  border-color: var(--gold2);
+  color: var(--gold2);
+  background: rgba(231,200,121,.08);
+}
+
+.dev-orbit {
+  position: relative;
+  width: 118px;
+  height: 118px;
+  margin: 0 auto 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(231,200,121,.22);
+  animation: orbitRotate 9s linear infinite;
+}
+
+.dev-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(231,200,121,.20);
+  background: radial-gradient(circle at 50% 30%, rgba(231,200,121,.10), rgba(255,255,255,.025));
+}
+
+.dev-orbit strong {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  color: var(--gold2);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: .04em;
+  font-weight: 700;
+  transform: rotate(0deg);
+  animation: orbitReverse 9s linear infinite;
+}
+
+.dev-orbit span {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--gold2);
+  box-shadow:
+    0 0 18px rgba(231,200,121,.85),
+    0 0 42px rgba(231,200,121,.26);
+}
+
+.dev-orbit span:nth-child(1) {
+  top: 5px;
+  left: 27px;
+}
+
+.dev-orbit span:nth-child(2) {
+  right: 12px;
+  top: 47px;
+}
+
+.dev-orbit span:nth-child(3) {
+  left: 26px;
+  bottom: 8px;
+}
+
+.dev-label {
+  margin: 0 0 16px;
+  color: var(--gold2);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .44em;
+  text-transform: uppercase;
+}
+
+.dev-modal-box h2 {
+  margin: 0;
+  max-width: none;
+  color: #fffaf0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 50px);
+  line-height: .95;
+  letter-spacing: -.055em;
+  font-weight: 500;
+}
+
+.dev-modal-box p:not(.dev-label) {
+  margin: 22px auto 0;
+  max-width: 390px;
+  color: rgba(247,241,230,.74);
+  line-height: 1.72;
+  font-size: 16px;
+}
+
+.dev-modal-btn {
+  margin-top: 32px;
+  width: auto;
+  min-width: 230px;
+  min-height: 50px;
+  padding: 0 38px;
+  cursor: pointer;
+  background: rgba(255,255,255,.035);
+  color: #fffaf0;
+  border: 1px solid rgba(231,200,121,.46);
+}
+
+.dev-modal-btn::after {
+  content: " →";
+}
+
+.dev-modal-btn:hover {
+  background: var(--gold2);
+  border-color: var(--gold2);
+  color: var(--black);
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalShine {
+  0%, 48% {
+    transform: translateX(-120%);
+  }
+
+  72%, 100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes orbitRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbitReverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@media (max-width: 560px) {
+  .dev-modal-box {
+    padding: 42px 24px 28px;
+  }
+
+  .dev-orbit {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 24px;
+  }
+
+.dev-orbit strong {
+  font-size: 17px;
+}
+
+  .dev-orbit span:nth-child(1) {
+    top: 4px;
+    left: 23px;
+  }
+
+  .dev-orbit span:nth-child(2) {
+    right: 9px;
+    top: 38px;
+  }
+
+  .dev-orbit span:nth-child(3) {
+    left: 22px;
+    bottom: 7px;
+  }
+
+  .dev-label {
+    letter-spacing: .28em;
+  }
+
+  .dev-modal-box h2 {
+    font-size: 34px;
+  }
+
+  .dev-modal-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
   </style>
 </head>
 
 <body>
+<div class="dev-modal" id="devModal">
+  <div class="dev-modal-backdrop"></div>
+
+  <div class="dev-modal-box">
+    <button class="dev-modal-close" id="devModalClose" aria-label="Bezárás">×</button>
+
+    <div class="dev-orbit">
+  <span></span>
+  <span></span>
+  <span></span>
+  <strong>KRILIX</strong>
+</div>
+
+    <p class="dev-label">Fejlesztés alatt</p>
+
+    <h2>Az oldal még készül.</h2>
+
+    <p>
+      A Krilix Tech & Labs weboldala jelenleg finomhangolás alatt áll.
+      Hamarosan teljes formájában elérhető lesz.
+    </p>
+
+    <button class="btn dev-modal-btn" id="devModalOk" type="button">
+      Megértettem
+    </button>
+  </div>
+</div>
+
   <header>
     <nav class="wrap">
       <a class="brand" href="#">
@@ -865,5 +1170,24 @@
       © 2026 Krilix Tech & Labs — Innovation & Quality.
     </div>
   </footer>
+
+  <script>
+  const devModal = document.getElementById("devModal");
+  const devModalClose = document.getElementById("devModalClose");
+  const devModalOk = document.getElementById("devModalOk");
+
+  function closeDevModal() {
+    devModal.classList.add("is-hidden");
+  }
+
+  devModalClose.addEventListener("click", closeDevModal);
+  devModalOk.addEventListener("click", closeDevModal);
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeDevModal();
+    }
+  });
+</script>
 </body>
 </html>
