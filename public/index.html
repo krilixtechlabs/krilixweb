@@ -1166,7 +1166,7 @@
 
           <button class="btn form-btn" type="submit">Üzenet küldése</button>
 
-          <p class="form-note">
+          <p class="form-note" id="formNote">
             Írj pár mondatot, és visszajelzünk a következő lépésekkel.
           </p>
         </form>
@@ -1180,17 +1180,24 @@
     </div>
   </footer>
 
- <script>
+<script>
   const devModal = document.getElementById("devModal");
   const devModalClose = document.getElementById("devModalClose");
   const devModalOk = document.getElementById("devModalOk");
 
   function closeDevModal() {
-    devModal.classList.add("is-hidden");
+    if (devModal) {
+      devModal.classList.add("is-hidden");
+    }
   }
 
-  devModalClose.addEventListener("click", closeDevModal);
-  devModalOk.addEventListener("click", closeDevModal);
+  if (devModalClose) {
+    devModalClose.addEventListener("click", closeDevModal);
+  }
+
+  if (devModalOk) {
+    devModalOk.addEventListener("click", closeDevModal);
+  }
 
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
@@ -1199,61 +1206,69 @@
   });
 
   const contactForm = document.getElementById("contactForm");
-  const formNote = document.getElementById("formNote");
 
-  contactForm.addEventListener("submit", async function (event) {
-    event.preventDefault();
+  if (contactForm) {
+    const formNote = document.getElementById("formNote") || contactForm.querySelector(".form-note");
 
-    const submitButton = contactForm.querySelector("button[type='submit']");
+    contactForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const message = document.getElementById("message").value.trim();
+      const submitButton = contactForm.querySelector("button[type='submit']");
 
-    if (!name || !email || !message) {
-      formNote.textContent = "Tölts ki minden mezőt.";
-      formNote.classList.remove("success");
-      formNote.classList.add("error");
-      return;
-    }
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
 
-    submitButton.disabled = true;
-    submitButton.textContent = "Küldés folyamatban...";
-    formNote.textContent = "Az üzenet küldése folyamatban van.";
-    formNote.classList.remove("error", "success");
+      function setNote(text, type) {
+        if (!formNote) return;
 
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          message
-        })
-      });
+        formNote.textContent = text;
+        formNote.classList.remove("success", "error");
 
-      const result = await response.json();
-
-      if (!response.ok || !result.ok) {
-        throw new Error(result.error || "Sikertelen küldés.");
+        if (type) {
+          formNote.classList.add(type);
+        }
       }
 
-      contactForm.reset();
-      formNote.textContent = "Köszönjük, az üzeneted megérkezett. Hamarosan jelentkezünk.";
-      formNote.classList.remove("error");
-      formNote.classList.add("success");
-    } catch (error) {
-      formNote.textContent = "Nem sikerült elküldeni az üzenetet. Próbáld újra később.";
-      formNote.classList.remove("success");
-      formNote.classList.add("error");
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = "Üzenet küldése";
-    }
-  });
+      if (!name || !email || !message) {
+        setNote("Tölts ki minden mezőt.", "error");
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Küldés folyamatban...";
+      setNote("Az üzenet küldése folyamatban van.");
+
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            message
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || "Sikertelen küldés.");
+        }
+
+        contactForm.reset();
+        setNote("Köszönjük, az üzeneted megérkezett. Hamarosan jelentkezünk.", "success");
+      } catch (error) {
+        console.error("Form küldési hiba:", error);
+        setNote("Nem sikerült elküldeni az üzenetet. Próbáld újra később.", "error");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Üzenet küldése";
+      }
+    });
+  }
 </script>
 </body>
 </html>
