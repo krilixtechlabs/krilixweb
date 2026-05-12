@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Prémium weboldalak, landing oldalak, időpontfoglaló rendszerek és egyedi webes funkciók igényes online jelenléthez.">
+  <meta property="og:title" content="Krilix Tech & Labs">
+  <meta property="og:description" content="Prémium weboldalak és működő webes megoldások ötlettől az élesítésig.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="krilix-logo.png">
+  <link rel="icon" href="krilix-logo.png">
+  <title>Krilix Tech & Labs</title>
+
+  <style>
+    :root {
+      --black: #070707;
+      --black2: #11100d;
+      --cream: #f4efe5;
+      --cream2: #e8dfcf;
+      --gold: #b88a35;
+      --gold2: #e7c879;
+      --text: #f7f1e6;
+      --muted: #a99f90;
+      --dark-muted: #665f54;
+      --line: rgba(184, 138, 53, 0.24);
+      --white-line: rgba(255,255,255,.12);
+      --shadow: 0 30px 100px rgba(0,0,0,.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(184,138,53,.20), transparent 380px),
+        linear-gradient(90deg, transparent 0, transparent calc(25% - 1px), rgba(255,255,255,.035) 25%, transparent calc(25% + 1px)),
+        linear-gradient(90deg, transparent 0, transparent calc(50% - 1px), rgba(255,255,255,.035) 50%, transparent calc(50% + 1px)),
+        linear-gradient(90deg, transparent 0, transparent calc(75% - 1px), rgba(255,255,255,.035) 75%, transparent calc(75% + 1px));
+      z-index: -1;
+    }
+
+    html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold) var(--black);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--gold2), var(--gold));
+  border: 2px solid var(--black);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold2);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--black);
+}
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 42px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,7,7,.78);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--white-line);
+    }
+
+    nav {
+      height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      background: var(--cream);
+      border-radius: 2px;
+      border: 1px solid rgba(231,200,121,.26);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: .36em;
+      line-height: 1;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 7px;
+      color: var(--gold2);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .30em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 34px;
+      align-items: center;
+      color: #ddd5c7;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold2);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 24px;
+      border-radius: 0;
+      background: var(--cream);
+      color: var(--black);
+      border: 1px solid var(--cream);
+      font-size: 14px;
+      font-weight: 950;
+      transition: .22s ease;
+    }
+
+    .btn:hover {
+      background: var(--gold2);
+      border-color: var(--gold2);
+      transform: translateY(-2px);
+    }
+
+    .btn.dark {
+      background: transparent;
+      color: var(--text);
+      border-color: rgba(255,255,255,.22);
+    }
+
+    .btn.dark:hover {
+      background: rgba(255,255,255,.08);
+      border-color: var(--gold2);
+    }
+
+    .hero {
+      padding: 94px 0 74px;
+    }
+
+    .hero-top {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .hero-index {
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      color: var(--gold2);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(58px, 9.4vw, 142px);
+      line-height: .82;
+      letter-spacing: -.075em;
+      font-weight: 500;
+    }
+
+    .gold {
+      color: var(--gold2);
+    }
+
+    .hero-bottom {
+      margin-top: 46px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 48px;
+      align-items: end;
+      border-top: 1px solid var(--white-line);
+      padding-top: 34px;
+    }
+
+    .lead {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.75;
+      margin: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .ticker {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      color: var(--gold2);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .36em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .ticker-track {
+      display: inline-flex;
+      gap: 44px;
+      padding: 18px 0;
+      animation: move 24s linear infinite;
+    }
+
+    @keyframes move {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    section {
+      padding: 96px 0;
+    }
+
+    .cream-section {
+      background: var(--cream);
+      color: var(--black);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 48px;
+      align-items: start;
+      margin-bottom: 46px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      max-width: 900px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 6.4vw, 92px);
+      line-height: .88;
+      letter-spacing: -.065em;
+      font-weight: 500;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid rgba(0,0,0,.14);
+      border-bottom: 1px solid rgba(0,0,0,.14);
+    }
+
+    .service {
+      min-height: 410px;
+      padding: 34px;
+      border-right: 1px solid rgba(0,0,0,.14);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: .22s ease;
+    }
+
+    .service:last-child {
+      border-right: 0;
+    }
+
+    .service:hover {
+      background: #fff9ee;
+    }
+
+    .service small {
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+    }
+
+    .service h3 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 38px;
+      line-height: .96;
+      letter-spacing: -.045em;
+      font-weight: 500;
+      max-width: 300px;
+    }
+
+    .service p {
+      margin: 0;
+      color: var(--dark-muted);
+      line-height: 1.7;
+      max-width: 330px;
+    }
+
+    .black-section {
+      background: var(--black);
+      color: var(--text);
+    }
+
+    .black-section .section-head {
+      margin-bottom: 38px;
+    }
+
+    .black-section h2 {
+      color: var(--text);
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--white-line);
+      border-left: 1px solid var(--white-line);
+    }
+
+    .process-card {
+      min-height: 300px;
+      padding: 28px;
+      border-right: 1px solid var(--white-line);
+      border-bottom: 1px solid var(--white-line);
+      background: rgba(255,255,255,.035);
+    }
+
+    .process-card strong {
+      display: block;
+      color: var(--gold2);
+      font-size: 13px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      margin-bottom: 70px;
+    }
+
+    .process-card h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 23px;
+      letter-spacing: -.035em;
+    }
+
+    .process-card p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .feature {
+      padding: 110px 0;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(184,138,53,.18), transparent 420px),
+        var(--black2);
+      text-align: center;
+    }
+
+    .feature p {
+      margin: 0 auto;
+      max-width: 960px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(40px, 6vw, 88px);
+      line-height: .94;
+      letter-spacing: -.06em;
+      font-weight: 500;
+    }
+
+    .feature span {
+      color: var(--gold2);
+    }
+
+    .contact {
+      background: var(--cream);
+      color: var(--black);
+    }
+
+    .contact-box {
+      display: grid;
+      grid-template-columns: 1fr 460px;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .contact-main {
+      padding: 44px;
+      border: 1px solid rgba(0,0,0,.12);
+      background: #fff9ee;
+    }
+
+    .contact-main p {
+      max-width: 680px;
+      margin: 24px 0 0;
+      color: var(--dark-muted);
+      line-height: 1.75;
+      font-size: 18px;
+    }
+
+    .contact-form {
+      padding: 34px;
+      background: var(--black);
+      color: var(--text);
+      min-height: 360px;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .form-row {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .form-row label {
+      color: var(--gold2);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.055);
+      color: var(--text);
+      padding: 14px 14px;
+      font: inherit;
+      outline: none;
+      border-radius: 0;
+    }
+
+    .form-row input::placeholder,
+    .form-row textarea::placeholder {
+      color: rgba(247,241,230,.45);
+    }
+
+    .form-row select {
+      appearance: none;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .form-row select option {
+      background: var(--black);
+      color: var(--text);
+    }
+
+    .form-row input:focus,
+    .form-row select:focus,
+    .form-row textarea:focus {
+      border-color: var(--gold2);
+      background: rgba(255,255,255,.08);
+    }
+
+    .form-row textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
+
+    .form-btn {
+      width: 100%;
+      margin-top: 8px;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .form-note {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    footer {
+      padding: 38px 0;
+      color: #8f8678;
+      border-top: 1px solid var(--white-line);
+      font-size: 14px;
+    }
+
+    @media (max-width: 960px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-top,
+      .hero-bottom,
+      .section-head,
+      .contact-box {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        justify-content: flex-start;
+      }
+
+      .services,
+      .process-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .service {
+        border-right: 0;
+        border-bottom: 1px solid rgba(0,0,0,.14);
+        min-height: 330px;
+      }
+
+      .service:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .wrap {
+        width: min(100% - 28px, 1180px);
+      }
+
+      nav {
+        height: 76px;
+      }
+
+      .brand img {
+        width: 42px;
+        height: 42px;
+      }
+
+      .brand strong {
+        letter-spacing: .22em;
+      }
+
+      .nav-cta {
+        display: none;
+      }
+
+      .hero {
+        padding: 60px 0 54px;
+      }
+
+      h1 {
+        font-size: clamp(48px, 16vw, 78px);
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      section {
+        padding: 70px 0;
+      }
+
+      .contact-main,
+      .contact-form {
+        padding: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="wrap">
+      <a class="brand" href="#">
+        <img src="krilix-logo.png" alt="Krilix Tech & Labs logó">
+        <div>
+          <strong>KRILIX</strong>
+          <span>Tech & Labs</span>
+        </div>
+      </a>
+
+      <div class="nav-links">
+        <a href="#szolgaltatasok">Szolgáltatások</a>
+        <a href="#folyamat">Folyamat</a>
+        <a href="#kapcsolat">Kapcsolat</a>
+      </div>
+
+      <div class="nav-cta">
+        <a class="btn" href="#kapcsolat">Ajánlatkérés</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-top">
+          <div class="hero-index">Krilix / Tech Lab</div>
+
+          <h1>
+            Prémium weboldalak
+            <span class="gold">hasznos funkciókkal.</span>
+          </h1>
+        </div>
+
+        <div class="hero-bottom">
+          <p class="lead">
+            Prémium weboldalakat és működő webes megoldásokat készítünk: bemutatkozó oldalak, landing oldalak, időpontfoglaló rendszerek és egyedi funkciók igényes online jelenléthez.
+          </p>
+
+          <div class="actions">
+            <a class="btn" href="#kapcsolat">Dolgozzunk együtt</a>
+            <a class="btn dark" href="#szolgaltatasok">Részletek</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker">
+      <div class="ticker-track">
+        <span>Prémium weboldalak</span>
+        <span>Landing oldalak</span>
+        <span>Időpontfoglaló rendszerek</span>
+        <span>Kapcsolati űrlapok</span>
+        <span>Ajánlatkérő felületek</span>
+        <span>Mobilbarát kialakítás</span>
+        <span>Letisztult felület</span>
+        <span>Minőségi kivitelezés</span>
+        <span>Prémium weboldalak</span>
+        <span>Landing oldalak</span>
+        <span>Időpontfoglaló rendszerek</span>
+        <span>Kapcsolati űrlapok</span>
+        <span>Ajánlatkérő felületek</span>
+        <span>Mobilbarát kialakítás</span>
+        <span>Letisztult felület</span>
+        <span>Minőségi kivitelezés</span>
+      </div>
+    </div>
+
+    <section class="cream-section" id="szolgaltatasok">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Szolgáltatások</p>
+
+      <h2>Weboldalak, amelyek nem csak jól néznek ki, hanem működnek is.</h2>
+    </div>
+
+    <div class="services">
+      <article class="service">
+        <small>01 / Weboldal</small>
+        <h3>Prémium weboldalak</h3>
+        <p>Bemutatkozó oldalak, landing oldalak és céges weboldalak letisztult szerkezettel, mobilbarát kialakítással és erős első benyomással.</p>
+      </article>
+
+      <article class="service">
+        <small>02 / Foglalás</small>
+        <h3>Időpontfoglaló rendszerek</h3>
+        <p>Online foglalási felületek szolgáltatóknak, vendégeknek vagy ügyfeleknek: átlátható időpontok, egyszerű jelentkezés és rendezettebb működés.</p>
+      </article>
+
+      <article class="service">
+        <small>03 / Funkció</small>
+        <h3>Egyedi webes funkciók</h3>
+        <p>Kapcsolati űrlapok, ajánlatkérő felületek, admin alapok és olyan megoldások, amelyek túlmutatnak egy egyszerű statikus weboldalon.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="black-section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Kinek ajánljuk?</p>
+      <h2>Ha komolyabb online jelenlétre van szükséged.</h2>
+    </div>
+
+    <div class="process-grid">
+      <article class="process-card">
+        <strong>01</strong>
+        <h3>Vállalkozóknak</h3>
+        <p>Akik szeretnének profibb bemutatkozó oldalt, ajánlatkérő felületet vagy időpontfoglalást.</p>
+      </article>
+
+      <article class="process-card">
+        <strong>02</strong>
+        <h3>Szolgáltatóknak</h3>
+        <p>Edzőknek, szépségipari szakembereknek, tanácsadóknak, oktatóknak vagy helyi szolgáltatóknak.</p>
+      </article>
+
+      <article class="process-card">
+        <strong>03</strong>
+        <h3>Márkáknak</h3>
+        <p>Akiknek fontos, hogy az online megjelenés ne sablonos, hanem igényes és bizalomépítő legyen.</p>
+      </article>
+
+      <article class="process-card">
+        <strong>04</strong>
+        <h3>Induló projekteknek</h3>
+        <p>Ha gyorsan kell egy jól kinéző, működő oldal egy ötlethez, kampányhoz vagy új szolgáltatáshoz.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="cream-section">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Kérdések</p>
+          <h2>Gyakori kérdések indulás előtt.</h2>
+        </div>
+
+        <div class="services">
+          <article class="service">
+            <small>01 / Idő</small>
+            <h3>Mennyi idő egy weboldal?</h3>
+            <p>Egyszerűbb landing oldal néhány nap alatt is elkészülhet, összetettebb weboldal vagy foglalási funkció több egyeztetést igényel.</p>
+          </article>
+
+          <article class="service">
+            <small>02 / Tartalom</small>
+            <h3>Kell kész szöveg?</h3>
+            <p>Nem feltétlenül. Elég, ha megvan az irány, a szolgáltatás és a cél. A szerkezetet és a szövegezést közösen is ki lehet alakítani.</p>
+          </article>
+
+          <article class="service">
+            <small>03 / Funkció</small>
+            <h3>Lehet foglalási rendszer?</h3>
+            <p>Igen. Időpontfoglaló vagy ajánlatkérő működés beépíthető az oldalba, az igényekhez igazítva.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="black-section" id="folyamat">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Folyamat</p>
+
+          <h2>Ötletből terv. Tervből működő megoldás.</h2>
+        </div>
+
+        <div class="process-grid">
+          <article class="process-card">
+            <strong>01</strong>
+            <h3>Ötlet</h3>
+            <p>Megértjük, mit szeretnél elérni és mire kell valóban megoldás.</p>
+          </article>
+
+          <article class="process-card">
+            <strong>02</strong>
+            <h3>Terv</h3>
+            <p>Összerakjuk a funkciókat, a szerkezetet, a vizuális irányt és a működési logikát.</p>
+          </article>
+
+          <article class="process-card">
+            <strong>03</strong>
+            <h3>Kivitelezés</h3>
+            <p>Elkészül az első használható verzió: weboldal, automatizáció, prototípus vagy rendszer.</p>
+          </article>
+
+          <article class="process-card">
+            <strong>04</strong>
+            <h3>Finomítás</h3>
+            <p>Tesztelés, javítás, gyorsítás, átadás és további fejlesztési lehetőségek.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <section class="contact" id="kapcsolat">
+      <div class="wrap contact-box">
+        <div class="contact-main">
+          <p class="eyebrow">Kapcsolat</p>
+          <h2>Indítsuk el a következő verziót.</h2>
+          <p>
+            Írd meg röviden az ötleted vagy problémád: lehet weboldal, automatizáció, AI eszköz, prototípus, belső rendszer vagy teljes digitális megoldás.
+          </p>
+        </div>
+
+        <form class="contact-form" action="mailto:hello@krilix.hu" method="post" enctype="text/plain">
+          <div class="form-row">
+            <label for="name">Név</label>
+            <input id="name" name="Név" type="text" placeholder="Neved" required>
+          </div>
+
+          <div class="form-row">
+            <label for="email">Email</label>
+            <input id="email" name="Email" type="email" placeholder="email@pelda.hu" required>
+          </div>
+
+          <div class="form-row">
+            <label for="message">Üzenet</label>
+            <textarea id="message" name="Üzenet" rows="6" placeholder="Írd le röviden, milyen weboldalt szeretnél, van-e már elképzelésed, kell-e például időpontfoglalás, űrlap vagy más extra funkció." required></textarea>
+          </div>
+
+          <button class="btn form-btn" type="submit">Üzenet küldése</button>
+
+          <p class="form-note">
+            Írj pár mondatot, és visszajelzünk a következő lépésekkel.
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      © 2026 Krilix Tech & Labs — Innovation & Quality.
+    </div>
+  </footer>
+</body>
+</html>
