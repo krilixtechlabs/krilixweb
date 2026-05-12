@@ -880,6 +880,20 @@
         min-width: 0;
       }
     }
+
+    .form-note.success {
+  color: var(--gold2);
+}
+
+.form-note.error {
+  color: #ff9b9b;
+}
+
+.form-btn:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
+}
   </style>
 </head>
 
@@ -1134,7 +1148,7 @@
           </p>
         </div>
 
-        <form class="contact-form" action="mailto:hello@krilix.hu" method="post" enctype="text/plain">
+        <form class="contact-form" id="contactForm">
           <div class="form-row">
             <label for="name">Név</label>
             <input id="name" name="Név" type="text" placeholder="Neved" required>
@@ -1166,23 +1180,80 @@
     </div>
   </footer>
 
-  <script>
-    const devModal = document.getElementById("devModal");
-    const devModalClose = document.getElementById("devModalClose");
-    const devModalOk = document.getElementById("devModalOk");
+ <script>
+  const devModal = document.getElementById("devModal");
+  const devModalClose = document.getElementById("devModalClose");
+  const devModalOk = document.getElementById("devModalOk");
 
-    function closeDevModal() {
-      devModal.classList.add("is-hidden");
+  function closeDevModal() {
+    devModal.classList.add("is-hidden");
+  }
+
+  devModalClose.addEventListener("click", closeDevModal);
+  devModalOk.addEventListener("click", closeDevModal);
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeDevModal();
+    }
+  });
+
+  const contactForm = document.getElementById("contactForm");
+  const formNote = document.getElementById("formNote");
+
+  contactForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const submitButton = contactForm.querySelector("button[type='submit']");
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    if (!name || !email || !message) {
+      formNote.textContent = "Tölts ki minden mezőt.";
+      formNote.classList.remove("success");
+      formNote.classList.add("error");
+      return;
     }
 
-    devModalClose.addEventListener("click", closeDevModal);
-    devModalOk.addEventListener("click", closeDevModal);
+    submitButton.disabled = true;
+    submitButton.textContent = "Küldés folyamatban...";
+    formNote.textContent = "Az üzenet küldése folyamatban van.";
+    formNote.classList.remove("error", "success");
 
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") {
-        closeDevModal();
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "Sikertelen küldés.");
       }
-    });
-  </script>
+
+      contactForm.reset();
+      formNote.textContent = "Köszönjük, az üzeneted megérkezett. Hamarosan jelentkezünk.";
+      formNote.classList.remove("error");
+      formNote.classList.add("success");
+    } catch (error) {
+      formNote.textContent = "Nem sikerült elküldeni az üzenetet. Próbáld újra később.";
+      formNote.classList.remove("success");
+      formNote.classList.add("error");
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "Üzenet küldése";
+    }
+  });
+</script>
 </body>
 </html>
