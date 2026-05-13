@@ -6,342 +6,312 @@
   <title>Krilix Admin</title>
 
   <style>
-    :root {
-      --black: #070707;
-      --black2: #11100d;
-      --cream: #f4efe5;
-      --gold: #b88a35;
-      --gold2: #e7c879;
-      --text: #f7f1e6;
-      --muted: #a99f90;
-      --line: rgba(231, 200, 121, .18);
-      --danger: #ff9b9b;
-    }
+  :root {
+    --black: #070707;
+    --black2: #11100d;
+    --gold: #b88a35;
+    --gold2: #e7c879;
+    --text: #f7f1e6;
+    --muted: #a99f90;
+    --line: rgba(255,255,255,.12);
+    --panel: rgba(255,255,255,.035);
+    --panel-2: rgba(255,255,255,.05);
+    --success: #9ae6b4;
+  }
 
-    * {
-      box-sizing: border-box;
-    }
+  * {
+    box-sizing: border-box;
+  }
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(184,138,53,.20), transparent 420px),
-        var(--black);
-      color: var(--text);
-      min-height: 100vh;
-    }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--black);
+    color: var(--text);
+  }
 
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(184,138,53,.18), transparent 420px),
+      linear-gradient(90deg, transparent 0, transparent calc(25% - 1px), rgba(255,255,255,.03) 25%, transparent calc(25% + 1px)),
+      linear-gradient(90deg, transparent 0, transparent calc(50% - 1px), rgba(255,255,255,.03) 50%, transparent calc(50% + 1px)),
+      linear-gradient(90deg, transparent 0, transparent calc(75% - 1px), rgba(255,255,255,.03) 75%, transparent calc(75% + 1px));
+    z-index: -1;
+  }
 
-    .wrap {
-      width: min(1180px, calc(100% - 40px));
-      margin: 0 auto;
-    }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-    header {
-      border-bottom: 1px solid var(--line);
-      background: rgba(7,7,7,.78);
-      backdrop-filter: blur(18px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+  .wrap {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+  }
 
-    nav {
-      height: 82px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
+  header {
+    border-bottom: 1px solid var(--line);
+    background: rgba(7,7,7,.84);
+    backdrop-filter: blur(16px);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
 
-    .brand strong {
-      display: block;
-      font-size: 14px;
-      letter-spacing: .34em;
-    }
+  nav {
+    min-height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
 
-    .brand span {
-      display: block;
-      margin-top: 7px;
-      color: var(--gold2);
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-    }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 
-    .btn {
-      min-height: 46px;
-      padding: 0 20px;
-      border: 1px solid var(--cream);
-      background: var(--cream);
-      color: var(--black);
-      font-weight: 900;
-      cursor: pointer;
-      transition: .2s ease;
-    }
+  .brand strong {
+    font-size: 14px;
+    letter-spacing: .34em;
+    line-height: 1;
+  }
 
-    .btn:hover {
-      background: var(--gold2);
-      border-color: var(--gold2);
-      transform: translateY(-1px);
-    }
+  .brand span {
+    color: var(--gold2);
+    font-size: 11px;
+    letter-spacing: .26em;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
 
-    .btn.dark {
-      background: transparent;
-      color: var(--text);
-      border-color: rgba(255,255,255,.18);
-    }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 20px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: transparent;
+    color: var(--text);
+    font-weight: 800;
+    cursor: pointer;
+    transition: .2s ease;
+  }
 
-    .btn.dark:hover {
-      border-color: var(--gold2);
-      color: var(--gold2);
-      background: rgba(255,255,255,.05);
-    }
+  .btn:hover {
+    border-color: var(--gold2);
+    color: var(--gold2);
+    transform: translateY(-1px);
+  }
 
-    .login-screen {
-      min-height: calc(100vh - 82px);
-      display: grid;
-      place-items: center;
-      padding: 40px 0;
-    }
+  .btn.gold {
+    background: #f4efe5;
+    color: #111;
+    border-color: #f4efe5;
+  }
 
-    .login-box {
-      width: min(100%, 440px);
-      padding: 38px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(231,200,121,.14), transparent 220px),
-        linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
-        #151515;
-      border: 1px solid rgba(231,200,121,.26);
-      box-shadow: 0 38px 130px rgba(0,0,0,.58);
-    }
+  .btn.gold:hover {
+    background: var(--gold2);
+    border-color: var(--gold2);
+    color: #111;
+  }
 
-    .label {
-      margin: 0 0 14px;
-      color: var(--gold2);
-      font-size: 11px;
-      font-weight: 950;
-      letter-spacing: .32em;
-      text-transform: uppercase;
-    }
+  main {
+    padding: 56px 0 80px;
+  }
 
-    h1 {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(42px, 6vw, 68px);
-      line-height: .9;
-      letter-spacing: -.06em;
-      font-weight: 500;
-    }
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 28px;
+    align-items: end;
+    margin-bottom: 34px;
+  }
 
-    .login-box p,
-    .admin-head p {
-      color: var(--muted);
-      line-height: 1.7;
-    }
+  .eyebrow {
+    margin: 0 0 16px;
+    color: var(--gold2);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+  }
 
-    .field {
-      display: grid;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
+  h1 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(44px, 6vw, 78px);
+    line-height: .92;
+    letter-spacing: -.05em;
+    font-weight: 500;
+  }
 
-    .field label {
-      color: var(--gold2);
-      font-size: 11px;
-      font-weight: 950;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-    }
+  .hero p {
+    margin: 18px 0 0;
+    max-width: 760px;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.7;
+  }
 
-    .field input,
-    .field textarea {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.055);
-      color: var(--text);
-      padding: 14px;
-      outline: none;
-      border-radius: 0;
-    }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
 
-    .field textarea {
-      min-height: 150px;
-      resize: vertical;
-    }
+  .stat-card {
+    padding: 22px 22px 18px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+  }
 
-    .field input:focus,
-    .field textarea:focus {
-      border-color: var(--gold2);
-      background: rgba(255,255,255,.08);
-    }
+  .stat-card small {
+    display: block;
+    color: var(--gold2);
+    font-size: 11px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 900;
+  }
 
-    .note {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
+  .stat-card strong {
+    font-size: 34px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 500;
+  }
 
-    .note.error {
-      color: var(--danger);
-    }
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
 
-    .note.success {
-      color: var(--gold2);
-    }
+  .toolbar h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+  }
 
-    .admin {
-      display: none;
-      padding: 54px 0 80px;
-    }
+  .toolbar-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
 
-    .admin-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      align-items: end;
-      margin-bottom: 34px;
-    }
+  .messages {
+    display: grid;
+    gap: 16px;
+  }
 
-    .admin-head p {
-      margin: 16px 0 0;
-      max-width: 620px;
-    }
+  .message-card {
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+  }
 
-    .admin-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+  .message-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
 
-    .messages {
-      display: grid;
-      gap: 18px;
-    }
+  .message-name {
+    font-size: 34px;
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: .95;
+    letter-spacing: -.04em;
+  }
 
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border: 1px solid rgba(154,230,180,.36);
+    color: var(--success);
+    background: rgba(154,230,180,.08);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .badge.new {
+    color: var(--gold2);
+    border-color: rgba(231,200,121,.36);
+    background: rgba(231,200,121,.08);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+
+  .preview {
+    margin: 0;
+    color: #ddd5c7;
+    line-height: 1.7;
+    max-width: 760px;
+  }
+
+  .message-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    min-width: 220px;
+  }
+
+  .message-actions .btn {
+    width: 100%;
+  }
+
+  .empty {
+    padding: 28px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--muted);
+  }
+
+  @media (max-width: 900px) {
+    .hero,
     .message-card {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.035);
-      padding: 26px;
-      display: grid;
-      grid-template-columns: 1fr 440px;
-      gap: 26px;
+      grid-template-columns: 1fr;
     }
 
-    .message-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: start;
-      margin-bottom: 18px;
+    .stats {
+      grid-template-columns: 1fr;
     }
 
-    .message-card h2 {
-      margin: 0;
-      font-size: 26px;
-      letter-spacing: -.04em;
+    .message-actions {
+      min-width: 0;
     }
 
-    .meta {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-      margin-top: 8px;
+    .message-actions .btn {
+      width: 100%;
     }
-
-    .meta a {
-      color: var(--gold2);
-    }
-
-    .badge {
-      display: inline-flex;
-      padding: 7px 10px;
-      border: 1px solid rgba(231,200,121,.26);
-      color: var(--gold2);
-      font-size: 11px;
-      font-weight: 950;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .badge.replied {
-      color: #b8ffce;
-      border-color: rgba(184,255,206,.28);
-    }
-
-    .chat {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .bubble {
-      padding: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.045);
-      color: #e8dfcf;
-      line-height: 1.65;
-      white-space: pre-wrap;
-    }
-
-    .bubble.admin {
-      display: block;
-      background: rgba(231,200,121,.08);
-      border-color: rgba(231,200,121,.20);
-    }
-
-    .bubble small {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--gold2);
-      font-size: 11px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      font-weight: 900;
-    }
-
-    .reply-box {
-      border-left: 1px solid var(--line);
-      padding-left: 26px;
-    }
-
-    .empty {
-      border: 1px solid var(--line);
-      padding: 34px;
-      color: var(--muted);
-      background: rgba(255,255,255,.035);
-    }
-
-    @media (max-width: 960px) {
-      .admin-head {
-        display: block;
-      }
-
-      .admin-actions {
-        margin-top: 20px;
-      }
-
-      .message-card {
-        grid-template-columns: 1fr;
-      }
-
-      .reply-box {
-        border-left: 0;
-        padding-left: 0;
-        border-top: 1px solid var(--line);
-        padding-top: 24px;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
@@ -352,46 +322,34 @@
         <span>Admin</span>
       </div>
 
-      <button class="btn dark" id="logoutBtn" type="button" style="display:none;">
-        Kilépés
-      </button>
+      <button class="btn" id="logoutBtn">Kilépés</button>
     </nav>
   </header>
 
-  <main>
-    <section class="login-screen wrap" id="loginScreen">
-      <div class="login-box">
-        <p class="label">Admin belépés</p>
-        <h1>Megkeresések kezelése.</h1>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Krilix Admin</p>
+        <h1>Beérkezett megkeresések.</h1>
         <p>
-          Lépj be az admin felületre a weboldalon érkezett megkeresések megtekintéséhez és megválaszolásához.
+          Itt látod az oldalról érkező érdeklődéseket. Az adminban most csak a lényeg
+          jelenik meg: összefoglaló, státusz és gyors belépés a privát beszélgetésbe.
         </p>
+      </div>
 
-        <form id="loginForm">
-          <div class="field">
-            <label for="password">Jelszó</label>
-            <input id="password" type="password" placeholder="Admin jelszó" required>
-          </div>
-
-          <button class="btn" type="submit">Belépés</button>
-
-          <p class="note" id="loginNote"></p>
-        </form>
+      <div>
+        <button class="btn gold" id="refreshBtn">Frissítés</button>
       </div>
     </section>
 
-    <section class="admin wrap" id="adminScreen">
-      <div class="admin-head">
-        <div>
-          <p class="label">Krilix Admin</p>
-          <h1>Beérkezett megkeresések.</h1>
-          <p>
-            Itt látod az oldalról érkező üzeneteket. A válasz emailben is kimegy, és bekerül az ügyfél privát beszélgetési oldalára.
-          </p>
-        </div>
+    <section class="stats" id="stats"></section>
 
-        <div class="admin-actions">
-          <button class="btn" id="refreshBtn" type="button">Frissítés</button>
+    <section>
+      <div class="toolbar">
+        <h2>Megkeresések listája</h2>
+
+        <div class="toolbar-right">
+          <span id="messageCount"></span>
         </div>
       </div>
 
@@ -399,224 +357,167 @@
     </section>
   </main>
 
+
   <script>
-    const loginScreen = document.getElementById("loginScreen");
-    const adminScreen = document.getElementById("adminScreen");
-    const loginForm = document.getElementById("loginForm");
-    const loginNote = document.getElementById("loginNote");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const refreshBtn = document.getElementById("refreshBtn");
-    const messagesEl = document.getElementById("messages");
+  const messagesEl = document.getElementById("messages");
+  const statsEl = document.getElementById("stats");
+  const refreshBtn = document.getElementById("refreshBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const messageCountEl = document.getElementById("messageCount");
 
-    checkAuth();
-
-    loginForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      const password = document.getElementById("password").value;
-
-      loginNote.textContent = "Belépés folyamatban...";
-      loginNote.className = "note";
-
-      try {
-        const response = await fetch("/api/admin/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ password })
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.ok) {
-          throw new Error(result.error || "Sikertelen belépés.");
-        }
-
-        showAdmin();
-        loadMessages();
-      } catch (error) {
-        loginNote.textContent = error.message;
-        loginNote.className = "note error";
-      }
-    });
-
-    logoutBtn.addEventListener("click", async function () {
-      await fetch("/api/admin/logout", {
-        method: "POST"
+  async function loadMessages() {
+    try {
+      const response = await fetch("/api/admin/messages", {
+        credentials: "include"
       });
 
-      showLogin();
-    });
-
-    refreshBtn.addEventListener("click", loadMessages);
-
-    async function checkAuth() {
-      try {
-        const response = await fetch("/api/admin/me");
-
-        if (response.ok) {
-          showAdmin();
-          loadMessages();
-        } else {
-          showLogin();
-        }
-      } catch {
-        showLogin();
-      }
-    }
-
-    function showAdmin() {
-      loginScreen.style.display = "none";
-      adminScreen.style.display = "block";
-      logoutBtn.style.display = "inline-flex";
-    }
-
-    function showLogin() {
-      loginScreen.style.display = "grid";
-      adminScreen.style.display = "none";
-      logoutBtn.style.display = "none";
-    }
-
-    async function loadMessages() {
-      messagesEl.innerHTML = `<div class="empty">Megkeresések betöltése...</div>`;
-
-      try {
-        const response = await fetch("/api/admin/messages");
-        const result = await response.json();
-
-        if (!response.ok || !result.ok) {
-          throw new Error(result.error || "Nem sikerült betölteni.");
-        }
-
-        renderMessages(result.messages);
-      } catch (error) {
-        messagesEl.innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
-      }
-    }
-
-    function renderMessages(messages) {
-      if (!messages.length) {
-        messagesEl.innerHTML = `<div class="empty">Még nincs beérkezett megkeresés.</div>`;
+      if (response.status === 401) {
+        window.location.href = "/admin-login.html";
         return;
       }
 
-      messagesEl.innerHTML = messages.map((message) => {
-        const createdAt = new Date(message.created_at).toLocaleString("hu-HU");
-        const statusLabel = message.status === "replied" ? "Megválaszolva" : "Új";
-        const statusClass = message.status === "replied" ? "badge replied" : "badge";
+      const data = await response.json();
 
-        const conversation = (message.conversation || []).map((item) => {
-          const senderLabel = item.sender === "admin" ? "Krilix válasz" : "Ügyfél";
-          const time = new Date(item.created_at).toLocaleString("hu-HU");
-          const bubbleClass = item.sender === "admin" ? "bubble admin" : "bubble";
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Nem sikerült betölteni az üzeneteket.");
+      }
 
-          return `
-            <div class="${bubbleClass}">
-              <small>${senderLabel} · ${time}</small>
-              ${escapeHtml(item.message)}
-            </div>
-          `;
-        }).join("");
+      renderStats(data.messages || []);
+      renderMessages(data.messages || []);
+    } catch (error) {
+      console.error(error);
+      messagesEl.innerHTML = `<div class="empty">Nem sikerült betölteni a megkereséseket.</div>`;
+      statsEl.innerHTML = "";
+      messageCountEl.textContent = "";
+    }
+  }
 
-        return `
-          <article class="message-card" data-id="${message.id}">
-            <div>
-              <div class="message-top">
-                <div>
-                  <h2>${escapeHtml(message.name)}</h2>
-                  <div class="meta">
-                    <div>#${message.id}</div>
-                    <div>${escapeHtml(message.email)}</div>
-                    <div>${createdAt}</div>
-                    <div><a href="${message.thread_url}" target="_blank" rel="noopener">Privát beszélgetés megnyitása</a></div>
-                  </div>
-                </div>
+  function renderStats(messages) {
+    const total = messages.length;
+    const replied = messages.filter(item => item.status === "replied").length;
+    const fresh = total - replied;
 
-                <span class="${statusClass}">${statusLabel}</span>
+    statsEl.innerHTML = `
+      <article class="stat-card">
+        <small>Összes</small>
+        <strong>${total}</strong>
+      </article>
+
+      <article class="stat-card">
+        <small>Új</small>
+        <strong>${fresh}</strong>
+      </article>
+
+      <article class="stat-card">
+        <small>Megválaszolt</small>
+        <strong>${replied}</strong>
+      </article>
+    `;
+  }
+
+  function formatDate(dateString) {
+    if (!dateString) return "—";
+
+    const date = new Date(dateString);
+
+    return date.toLocaleString("hu-HU", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
+  function escapeHtml(text = "") {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function getPreview(item) {
+    if (item.message && item.message.trim()) {
+      return item.message.trim();
+    }
+
+    if (item.conversation && item.conversation.length) {
+      const last = item.conversation[item.conversation.length - 1];
+      if (last?.message) return last.message.trim();
+    }
+
+    return "Nincs előnézet.";
+  }
+
+  function truncate(text, max = 140) {
+    if (!text) return "";
+    return text.length > max ? text.slice(0, max).trim() + "..." : text;
+  }
+
+  function renderMessages(messages) {
+    messageCountEl.textContent = `${messages.length} db megkeresés`;
+
+    if (!messages.length) {
+      messagesEl.innerHTML = `<div class="empty">Még nincs beérkezett megkeresés.</div>`;
+      return;
+    }
+
+    messagesEl.innerHTML = messages.map(item => {
+      const preview = truncate(getPreview(item), 140);
+      const isReplied = item.status === "replied";
+
+      return `
+        <article class="message-card">
+          <div>
+            <div class="message-top">
+              <div class="message-name">${escapeHtml(item.name || "Névtelen")}</div>
+              <div class="badge ${isReplied ? "" : "new"}">
+                ${isReplied ? "Megválaszolva" : "Új"}
               </div>
-
-              <div class="chat">
-                ${conversation}
-              </div>
             </div>
 
-            <div class="reply-box">
-            <a class="btn" href="${message.thread_url}?admin=1" target="_blank" rel="noopener">
-                Beszélgetés megnyitása
+            <div class="meta">
+              <span>#${item.id}</span>
+              <span>${escapeHtml(item.email || "—")}</span>
+              <span>${formatDate(item.created_at)}</span>
+            </div>
+
+            <p class="preview">${escapeHtml(preview)}</p>
+          </div>
+
+          <div class="message-actions">
+            <a class="btn gold" href="/thread/${item.thread_token}?admin=1" target="_blank" rel="noopener">
+              Beszélgetés megnyitása
             </a>
 
-            <p class="note">
-                Admin módban Krilixként tudsz válaszolni a privát beszélgetésben.
-            </p>
-            </div>
-          </article>
-        `;
-      }).join("");
+            <a class="btn" href="mailto:${escapeHtml(item.email || "")}">
+              Email megnyitása
+            </a>
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
 
-      document.querySelectorAll(".reply-form").forEach((form) => {
-        form.addEventListener("submit", sendReply);
+  async function logout() {
+    try {
+      await fetch("/api/admin/logout", {
+        method: "POST",
+        credentials: "include"
       });
+    } catch (error) {
+      console.error(error);
     }
 
-    async function sendReply(event) {
-      event.preventDefault();
+    window.location.href = "/admin-login.html";
+  }
 
-      const form = event.currentTarget;
-      const card = form.closest(".message-card");
-      const id = card.dataset.id;
-      const reply = form.reply.value.trim();
-      const note = form.querySelector(".note");
-      const button = form.querySelector("button");
+  refreshBtn.addEventListener("click", loadMessages);
+  logoutBtn.addEventListener("click", logout);
 
-      if (!reply) {
-        note.textContent = "Írj választ küldés előtt.";
-        note.className = "note error";
-        return;
-      }
-
-      button.disabled = true;
-      button.textContent = "Küldés...";
-      note.textContent = "Válasz küldése folyamatban...";
-      note.className = "note";
-
-      try {
-        const response = await fetch(`/api/admin/messages/${id}/reply`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ reply })
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.ok) {
-          throw new Error(result.error || "Nem sikerült elküldeni.");
-        }
-
-        note.textContent = "Válasz elküldve.";
-        note.className = "note success";
-        form.reset();
-
-        await loadMessages();
-      } catch (error) {
-        note.textContent = error.message;
-        note.className = "note error";
-      } finally {
-        button.disabled = false;
-        button.textContent = "Válasz küldése";
-      }
-    }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-  </script>
+  loadMessages();
+</script>
 </body>
 </html>
