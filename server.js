@@ -451,6 +451,66 @@ app.post("/api/admin/thread/:token/reply", requireAdmin, async (req, res) => {
   }
 });
 
+app.delete("/api/admin/messages/:id", requireAdmin, async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const { id } = req.params;
+
+    await client.query("BEGIN");
+
+    const existing = await client.query(
+      `
+      SELECT id, name
+      FROM contact_messages
+      WHERE id = $1
+      `,
+      [id]
+    );
+
+    if (existing.rows.length === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({
+        ok: false,
+        error: "A megkeresés nem található."
+      });
+    }
+
+    await client.query(
+      `
+      DELETE FROM conversation_messages
+      WHERE contact_message_id = $1
+      `,
+      [id]
+    );
+
+    await client.query(
+      `
+      DELETE FROM contact_messages
+      WHERE id = $1
+      `,
+      [id]
+    );
+
+    await client.query("COMMIT");
+
+    return res.status(200).json({
+      ok: true,
+      message: "A megkeresés és a teljes beszélgetés törölve lett."
+    });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error("Delete message error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Nem sikerült törölni a megkeresést."
+    });
+  } finally {
+    client.release();
+  }
+});
+
 app.post("/api/thread/:token/reply", async (req, res) => {
   try {
     const { token } = req.params;
