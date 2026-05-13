@@ -141,10 +141,10 @@
       font-weight: 500;
     }
 
-    .login-box p {
+    .login-box p,
+    .admin-head p {
       color: var(--muted);
       line-height: 1.7;
-      margin: 18px 0 24px;
     }
 
     .field {
@@ -213,9 +213,13 @@
 
     .admin-head p {
       margin: 16px 0 0;
-      color: var(--muted);
-      line-height: 1.6;
       max-width: 620px;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .messages {
@@ -228,7 +232,7 @@
       background: rgba(255,255,255,.035);
       padding: 26px;
       display: grid;
-      grid-template-columns: 1fr 420px;
+      grid-template-columns: 1fr 440px;
       gap: 26px;
     }
 
@@ -253,6 +257,10 @@
       margin-top: 8px;
     }
 
+    .meta a {
+      color: var(--gold2);
+    }
+
     .badge {
       display: inline-flex;
       padding: 7px 10px;
@@ -270,26 +278,40 @@
       border-color: rgba(184,255,206,.28);
     }
 
-    .message-text {
+    .chat {
+      display: grid;
+      gap: 12px;
       margin-top: 18px;
+    }
+
+    .bubble {
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.045);
       color: #e8dfcf;
-      line-height: 1.75;
+      line-height: 1.65;
       white-space: pre-wrap;
+    }
+
+    .bubble.admin {
+      display: block;
+      background: rgba(231,200,121,.08);
+      border-color: rgba(231,200,121,.20);
+    }
+
+    .bubble small {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold2);
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 900;
     }
 
     .reply-box {
       border-left: 1px solid var(--line);
       padding-left: 26px;
-    }
-
-    .reply-old {
-      margin-top: 18px;
-      padding: 16px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid rgba(255,255,255,.10);
-      color: var(--muted);
-      line-height: 1.65;
-      white-space: pre-wrap;
     }
 
     .empty {
@@ -302,6 +324,10 @@
     @media (max-width: 960px) {
       .admin-head {
         display: block;
+      }
+
+      .admin-actions {
+        margin-top: 20px;
       }
 
       .message-card {
@@ -360,11 +386,13 @@
           <p class="label">Krilix Admin</p>
           <h1>Beérkezett megkeresések.</h1>
           <p>
-            Itt látod az oldalról érkező üzeneteket. A válasz küldése után a megkeresés megválaszolt státuszt kap.
+            Itt látod az oldalról érkező üzeneteket. A válasz emailben is kimegy, és bekerül az ügyfél privát beszélgetési oldalára.
           </p>
         </div>
 
-        <button class="btn" id="refreshBtn" type="button">Frissítés</button>
+        <div class="admin-actions">
+          <button class="btn" id="refreshBtn" type="button">Frissítés</button>
+        </div>
       </div>
 
       <div class="messages" id="messages"></div>
@@ -478,6 +506,19 @@
         const statusLabel = message.status === "replied" ? "Megválaszolva" : "Új";
         const statusClass = message.status === "replied" ? "badge replied" : "badge";
 
+        const conversation = (message.conversation || []).map((item) => {
+          const senderLabel = item.sender === "admin" ? "Krilix válasz" : "Ügyfél";
+          const time = new Date(item.created_at).toLocaleString("hu-HU");
+          const bubbleClass = item.sender === "admin" ? "bubble admin" : "bubble";
+
+          return `
+            <div class="${bubbleClass}">
+              <small>${senderLabel} · ${time}</small>
+              ${escapeHtml(item.message)}
+            </div>
+          `;
+        }).join("");
+
         return `
           <article class="message-card" data-id="${message.id}">
             <div>
@@ -488,31 +529,28 @@
                     <div>#${message.id}</div>
                     <div>${escapeHtml(message.email)}</div>
                     <div>${createdAt}</div>
+                    <div><a href="${message.thread_url}" target="_blank" rel="noopener">Privát beszélgetés megnyitása</a></div>
                   </div>
                 </div>
 
                 <span class="${statusClass}">${statusLabel}</span>
               </div>
 
-              <div class="message-text">${escapeHtml(message.message)}</div>
+              <div class="chat">
+                ${conversation}
+              </div>
             </div>
 
             <div class="reply-box">
               <form class="reply-form">
                 <div class="field">
                   <label>Válasz</label>
-                  <textarea name="reply" placeholder="Írd meg a választ, amit emailben szeretnél kiküldeni..." required></textarea>
+                  <textarea name="reply" placeholder="Írd meg a választ, amit emailben és a privát beszélgetésben is megkap az ügyfél..." required></textarea>
                 </div>
 
                 <button class="btn" type="submit">Válasz küldése</button>
                 <p class="note"></p>
               </form>
-
-              ${
-                message.reply_message
-                  ? `<div class="reply-old"><strong>Korábbi válasz:</strong><br><br>${escapeHtml(message.reply_message)}</div>`
-                  : ""
-              }
             </div>
           </article>
         `;
