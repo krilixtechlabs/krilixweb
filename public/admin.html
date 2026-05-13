@@ -546,6 +546,32 @@
   logoutBtn.addEventListener("click", logout);
 
   loadMessages();
+
+  window.deleteMessage = async function (id, name) {
+  const confirmed = window.confirm(
+    `Biztosan törölni szeretnéd ezt a megkeresést?\n\nNév: ${name}\n\nA teljes beszélgetés is törlődni fog.`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(`/api/admin/messages/${id}`, {
+      method: "DELETE",
+      credentials: "include"
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || "Nem sikerült törölni.");
+    }
+
+    await loadMessages();
+  } catch (error) {
+    console.error(error);
+    alert("Nem sikerült törölni a megkeresést.");
+  }
+};
 </script>
 </body>
 </html>
