@@ -6,217 +6,354 @@
   <title>Krilix beszélgetés</title>
 
   <style>
-    :root {
-      --black: #070707;
-      --black2: #11100d;
-      --cream: #f4efe5;
-      --gold: #b88a35;
-      --gold2: #e7c879;
-      --text: #f7f1e6;
-      --muted: #a99f90;
-      --line: rgba(231, 200, 121, .18);
-      --danger: #ff9b9b;
+  :root {
+    --black: #070707;
+    --black2: #11100d;
+    --cream: #f4efe5;
+    --gold: #b88a35;
+    --gold2: #e7c879;
+    --text: #f7f1e6;
+    --muted: #a99f90;
+    --line: rgba(231, 200, 121, .18);
+    --danger: #ff9b9b;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--black);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(184,138,53,.20), transparent 420px),
+      linear-gradient(90deg, transparent 0, transparent calc(25% - 1px), rgba(255,255,255,.03) 25%, transparent calc(25% + 1px)),
+      linear-gradient(90deg, transparent 0, transparent calc(50% - 1px), rgba(255,255,255,.03) 50%, transparent calc(50% + 1px)),
+      linear-gradient(90deg, transparent 0, transparent calc(75% - 1px), rgba(255,255,255,.03) 75%, transparent calc(75% + 1px));
+    z-index: -1;
+  }
+
+  button,
+  textarea {
+    font: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  header {
+    border-bottom: 1px solid var(--line);
+    background: rgba(7,7,7,.78);
+    backdrop-filter: blur(18px);
+  }
+
+  nav {
+    width: min(980px, calc(100% - 36px));
+    margin: 0 auto;
+    height: 82px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .brand strong {
+    display: block;
+    font-size: 14px;
+    letter-spacing: .34em;
+  }
+
+  .brand span {
+    display: block;
+    margin-top: 7px;
+    color: var(--gold2);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+  }
+
+  .thread-page {
+    padding: 72px 0 90px;
+  }
+
+  .thread-wrap {
+    width: min(980px, calc(100% - 36px));
+    margin: 0 auto;
+  }
+
+  .thread-top {
+    margin-bottom: 34px;
+  }
+
+  .thread-top .eyebrow {
+    margin: 0 0 18px;
+    color: var(--gold2);
+    font-size: 12px;
+    font-weight: 950;
+    letter-spacing: .30em;
+    text-transform: uppercase;
+  }
+
+  .thread-top h1 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(46px, 7vw, 82px);
+    line-height: .9;
+    letter-spacing: -.06em;
+    font-weight: 500;
+    max-width: 900px;
+  }
+
+  .thread-top p {
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 760px;
+  }
+
+  .thread-shell {
+    border: 1px solid rgba(231,200,121,.18);
+    background:
+      radial-gradient(circle at 50% 0%, rgba(231,200,121,.07), transparent 320px),
+      linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025));
+    box-shadow:
+      0 24px 70px rgba(0,0,0,.26),
+      inset 0 1px 0 rgba(255,255,255,.03);
+    overflow: hidden;
+  }
+
+  .thread-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .thread-header-left strong {
+    display: block;
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+
+  .thread-header-left span {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .thread-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 14px;
+    border: 1px solid rgba(231,200,121,.24);
+    background: rgba(231,200,121,.07);
+    color: var(--gold2);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .chat-list {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 420px;
+  }
+
+  .message-row {
+    display: flex;
+  }
+
+  .message-row.user {
+    justify-content: flex-start;
+  }
+
+  .message-row.admin {
+    justify-content: flex-end;
+  }
+
+  .message-bubble {
+    width: fit-content;
+    max-width: min(76%, 680px);
+    padding: 18px 20px;
+    border: 1px solid rgba(255,255,255,.09);
+    background: rgba(255,255,255,.035);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+  }
+
+  .message-row.user .message-bubble {
+    background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+    border-color: rgba(255,255,255,.11);
+  }
+
+  .message-row.admin .message-bubble {
+    background:
+      linear-gradient(180deg, rgba(231,200,121,.12), rgba(231,200,121,.05)),
+      rgba(255,255,255,.02);
+    border-color: rgba(231,200,121,.24);
+  }
+
+  .message-meta {
+    margin-bottom: 10px;
+    color: var(--gold2);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .message-text {
+    color: #f4eee3;
+    font-size: 17px;
+    line-height: 1.8;
+    word-break: break-word;
+  }
+
+  .chat-empty {
+    padding: 22px;
+    border: 1px dashed rgba(255,255,255,.12);
+    color: var(--muted);
+  }
+
+  .composer {
+    padding: 24px 28px 28px;
+    border-top: 1px solid rgba(255,255,255,.08);
+    background: rgba(0,0,0,.18);
+  }
+
+  .composer-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .composer label {
+    color: var(--gold2);
+    font-size: 11px;
+    font-weight: 950;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .composer textarea {
+    width: 100%;
+    min-height: 150px;
+    resize: vertical;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.045);
+    color: var(--text);
+    padding: 16px;
+    font: inherit;
+    outline: none;
+    line-height: 1.65;
+  }
+
+  .composer textarea:focus {
+    border-color: var(--gold2);
+    background: rgba(255,255,255,.07);
+  }
+
+  .composer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .composer-note {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 560px;
+  }
+
+  .composer-note.success {
+    color: var(--gold2);
+  }
+
+  .composer-note.error {
+    color: var(--danger);
+  }
+
+  .btn {
+    min-height: 50px;
+    padding: 0 24px;
+    border: 1px solid var(--cream);
+    background: var(--cream);
+    color: var(--black);
+    font-weight: 900;
+    cursor: pointer;
+    transition: .2s ease;
+  }
+
+  .btn:hover {
+    background: var(--gold2);
+    border-color: var(--gold2);
+    transform: translateY(-1px);
+  }
+
+  .btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @media (max-width: 700px) {
+    .thread-page {
+      padding: 54px 0 70px;
     }
 
-    * {
-      box-sizing: border-box;
+    .thread-header {
+      align-items: flex-start;
+      flex-direction: column;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(184,138,53,.20), transparent 420px),
-        var(--black);
-      color: var(--text);
-      min-height: 100vh;
+    .thread-header,
+    .chat-list,
+    .composer {
+      padding-left: 18px;
+      padding-right: 18px;
     }
 
-    button,
-    textarea {
-      font: inherit;
+    .thread-top h1 {
+      font-size: 42px;
     }
 
-    .wrap {
-      width: min(920px, calc(100% - 36px));
-      margin: 0 auto;
+    .message-bubble {
+      max-width: 100%;
     }
 
-    header {
-      border-bottom: 1px solid var(--line);
-      background: rgba(7,7,7,.78);
-      backdrop-filter: blur(18px);
-    }
-
-    nav {
-      height: 82px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand strong {
-      display: block;
-      font-size: 14px;
-      letter-spacing: .34em;
-    }
-
-    .brand span {
-      display: block;
-      margin-top: 7px;
-      color: var(--gold2);
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-    }
-
-    .hero {
-      padding: 56px 0 30px;
-    }
-
-    .label {
-      margin: 0 0 16px;
-      color: var(--gold2);
-      font-size: 11px;
-      font-weight: 950;
-      letter-spacing: .32em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(44px, 7vw, 78px);
-      line-height: .9;
-      letter-spacing: -.06em;
-      font-weight: 500;
-    }
-
-    .lead {
-      margin: 22px 0 0;
-      max-width: 620px;
-      color: var(--muted);
-      line-height: 1.75;
-      font-size: 17px;
-    }
-
-    .panel {
-      margin: 26px 0 70px;
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.025)),
-        #111;
-      padding: 26px;
-      box-shadow: 0 38px 130px rgba(0,0,0,.42);
-    }
-
-    .chat {
-      display: grid;
-      gap: 14px;
-    }
-
-    .bubble {
-      max-width: 78%;
-      padding: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.045);
-      color: #e8dfcf;
-      line-height: 1.65;
-      white-space: pre-wrap;
-    }
-
-    .bubble.admin {
-      margin-left: auto;
-      background: rgba(231,200,121,.10);
-      border-color: rgba(231,200,121,.24);
-    }
-
-    .bubble small {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--gold2);
-      font-size: 11px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      font-weight: 900;
-    }
-
-    .reply {
-      margin-top: 26px;
-      border-top: 1px solid var(--line);
-      padding-top: 24px;
-    }
-
-    textarea {
+    .composer-actions .btn {
       width: 100%;
-      min-height: 150px;
-      resize: vertical;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.055);
-      color: var(--text);
-      padding: 14px;
-      outline: none;
-      border-radius: 0;
-      line-height: 1.6;
     }
-
-    textarea:focus {
-      border-color: var(--gold2);
-      background: rgba(255,255,255,.08);
-    }
-
-    .btn {
-      margin-top: 14px;
-      min-height: 50px;
-      padding: 0 24px;
-      border: 1px solid var(--cream);
-      background: var(--cream);
-      color: var(--black);
-      font-weight: 900;
-      cursor: pointer;
-      transition: .2s ease;
-    }
-
-    .btn:hover {
-      background: var(--gold2);
-      border-color: var(--gold2);
-      transform: translateY(-1px);
-    }
-
-    .note {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .note.error {
-      color: var(--danger);
-    }
-
-    .note.success {
-      color: var(--gold2);
-    }
-
-    .empty {
-      border: 1px solid var(--line);
-      padding: 28px;
-      color: var(--muted);
-      background: rgba(255,255,255,.035);
-    }
-
-    @media (max-width: 640px) {
-      .bubble {
-        max-width: 100%;
-      }
-
-      .btn {
-        width: 100%;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
@@ -229,168 +366,238 @@
     </nav>
   </header>
 
-  <main class="wrap">
-    <section class="hero">
-      <p class="label">Privát beszélgetés</p>
+  <main class="thread-page">
+  <div class="thread-wrap">
+    <section class="thread-top">
+      <p class="eyebrow">Privát beszélgetés</p>
       <h1>Egyeztetés a megkeresésedről.</h1>
-      <p class="lead" id="lead">
+      <p id="lead">
         Itt tudod folytatni a beszélgetést a Krilix Tech & Labs csapatával.
       </p>
     </section>
 
-    <section class="panel">
-      <div id="chat" class="chat">
-        <div class="empty">Beszélgetés betöltése...</div>
+    <section class="thread-shell">
+      <div class="thread-header">
+        <div class="thread-header-left">
+          <strong>Privát beszélgetés</strong>
+          <span id="threadSubline">Biztonságos, közvetlen egyeztetés</span>
+        </div>
+
+        <div class="thread-status" id="threadStatus">Aktív</div>
       </div>
 
-      <form class="reply" id="replyForm">
-        <p class="label">Új üzenet</p>
-        <textarea id="message" placeholder="Írd meg a válaszod..." required></textarea>
-        <button class="btn" type="submit">Üzenet küldése</button>
-        <p class="note" id="note"></p>
+      <div class="chat-list" id="chat"></div>
+
+      <form class="composer" id="replyForm">
+        <div class="composer-grid">
+          <label for="message">Új üzenet</label>
+          <textarea id="message" placeholder="Írd meg a válaszod..."></textarea>
+
+          <div class="composer-actions">
+            <p class="composer-note" id="note">
+              Írd meg az üzenetedet, és a rendszer elküldi a másik félnek is.
+            </p>
+
+            <button class="btn" type="submit">Üzenet küldése</button>
+          </div>
+        </div>
       </form>
     </section>
-  </main>
+  </div>
+</main>
 
   <script>
-    const token = window.location.pathname.split("/").filter(Boolean).pop();
-const isAdminMode = new URLSearchParams(window.location.search).get("admin") === "1";
+  const token = window.location.pathname.split("/").filter(Boolean).pop();
+  const isAdminMode = new URLSearchParams(window.location.search).get("admin") === "1";
 
-const chatEl = document.getElementById("chat");
-const leadEl = document.getElementById("lead");
-const replyForm = document.getElementById("replyForm");
-const messageInput = document.getElementById("message");
-const note = document.getElementById("note");
+  const chatEl = document.getElementById("chat");
+  const leadEl = document.getElementById("lead");
+  const replyForm = document.getElementById("replyForm");
+  const messageInput = document.getElementById("message");
+  const note = document.getElementById("note");
+  const threadSubline = document.getElementById("threadSubline");
+  const threadStatus = document.getElementById("threadStatus");
 
-if (isAdminMode) {
-  messageInput.placeholder = "Írd meg a Krilix válaszát...";
-}
+  let adminLoggedIn = false;
 
-    
-
-    loadThread();
-
-    let adminLoggedIn = false;
-
-checkAdminMode();
-loadThread();
-
-async function checkAdminMode() {
-  if (!isAdminMode) return;
-
-  try {
-    const response = await fetch("/api/admin/me");
-    adminLoggedIn = response.ok;
-
-    if (!adminLoggedIn) {
-      setNote("Admin módban csak bejelentkezve lehet válaszolni.", "error");
-    }
-  } catch {
-    adminLoggedIn = false;
+  if (isAdminMode) {
+    messageInput.placeholder = "Írd meg a Krilix válaszát...";
   }
-}
 
-    replyForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
+  init();
 
-      const message = messageInput.value.trim();
-      const button = replyForm.querySelector("button");
+  async function init() {
+    await checkAdminMode();
+    await loadThread();
+  }
 
-      if (!message) {
-        setNote("Írj üzenetet küldés előtt.", "error");
-        return;
+  async function checkAdminMode() {
+    if (!isAdminMode) return;
+
+    try {
+      const response = await fetch("/api/admin/me", {
+        credentials: "include"
+      });
+
+      adminLoggedIn = response.ok;
+
+      if (!adminLoggedIn) {
+        setNote("Admin módban csak bejelentkezve lehet Krilixként válaszolni.", "error");
+      }
+    } catch {
+      adminLoggedIn = false;
+      setNote("Nem sikerült ellenőrizni az admin belépést.", "error");
+    }
+  }
+
+  replyForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const message = messageInput.value.trim();
+    const button = replyForm.querySelector("button");
+
+    if (!message) {
+      setNote("Írj üzenetet küldés előtt.", "error");
+      return;
+    }
+
+    if (isAdminMode && !adminLoggedIn) {
+      setNote("Admin módban előbb be kell jelentkezned az admin felületen.", "error");
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Küldés...";
+    setNote("Üzenet küldése folyamatban...");
+
+    try {
+      const endpoint =
+        isAdminMode && adminLoggedIn
+          ? `/api/admin/thread/${token}/reply`
+          : `/api/thread/${token}/reply`;
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "Nem sikerült elküldeni.");
       }
 
-      button.disabled = true;
-      button.textContent = "Küldés...";
-      setNote("Üzenet küldése folyamatban...");
+      messageInput.value = "";
 
-      try {
-        const endpoint =
-  isAdminMode && adminLoggedIn
-    ? `/api/admin/thread/${token}/reply`
-    : `/api/thread/${token}/reply`;
-
-const response = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ message })
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.ok) {
-          throw new Error(result.error || "Nem sikerült elküldeni.");
-        }
-
-        messageInput.value = "";
+      if (isAdminMode) {
+        setNote("Krilix válasz elküldve.", "success");
+      } else {
         setNote("Üzenet elküldve.", "success");
-        await loadThread();
-      } catch (error) {
-        setNote(error.message, "error");
-      } finally {
-        button.disabled = false;
-        button.textContent = "Üzenet küldése";
       }
-    });
 
-    async function loadThread() {
-      try {
-        const response = await fetch(`/api/thread/${token}`);
-        const result = await response.json();
+      await loadThread();
+    } catch (error) {
+      setNote(error.message, "error");
+    } finally {
+      button.disabled = false;
+      button.textContent = "Üzenet küldése";
+    }
+  });
 
-        if (!response.ok || !result.ok) {
-          throw new Error(result.error || "Nem sikerült betölteni.");
-        }
+  async function loadThread() {
+    try {
+      const response = await fetch(`/api/thread/${token}`);
+      const result = await response.json();
 
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "Nem sikerült betölteni.");
+      }
+
+      if (isAdminMode) {
+        leadEl.textContent = `Admin mód: itt Krilixként tudsz válaszolni ${result.contact.name} megkeresésére.`;
+      } else {
         leadEl.textContent = `${result.contact.name}, itt tudod folytatni a beszélgetést a Krilix Tech & Labs csapatával.`;
-
-        renderMessages(result.messages);
-      } catch (error) {
-        chatEl.innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
-        replyForm.style.display = "none";
       }
+
+      if (threadSubline) {
+        threadSubline.textContent = result.contact.email || "Privát egyeztetés";
+      }
+
+      if (threadStatus) {
+        threadStatus.textContent = isAdminMode ? "Admin mód" : "Aktív";
+      }
+
+      renderMessages(result.messages);
+    } catch (error) {
+      chatEl.innerHTML = `<div class="chat-empty">${escapeHtml(error.message)}</div>`;
+      replyForm.style.display = "none";
+    }
+  }
+
+  function renderMessages(messages) {
+    if (!messages.length) {
+      chatEl.innerHTML = `<div class="chat-empty">Még nincs üzenet ebben a beszélgetésben.</div>`;
+      return;
     }
 
-    function renderMessages(messages) {
-      if (!messages.length) {
-        chatEl.innerHTML = `<div class="empty">Még nincs üzenet ebben a beszélgetésben.</div>`;
-        return;
-      }
+    chatEl.innerHTML = messages.map((item) => {
+      const isAdmin = item.sender === "admin";
+      const senderLabel = isAdmin ? "Krilix" : (isAdminMode ? "Ügyfél" : "Te");
+      const bubbleSide = isAdmin ? "admin" : "user";
 
-      chatEl.innerHTML = messages.map((item) => {
-        const senderLabel = item.sender === "admin" ? "Krilix" : "Te";
-        const time = new Date(item.created_at).toLocaleString("hu-HU");
-        const bubbleClass = item.sender === "admin" ? "bubble admin" : "bubble";
-
-        return `
-          <div class="${bubbleClass}">
-            <small>${senderLabel} · ${time}</small>
-            ${escapeHtml(item.message)}
+      return `
+        <div class="message-row ${bubbleSide}">
+          <div class="message-bubble">
+            <div class="message-meta">${senderLabel} • ${formatDate(item.created_at)}</div>
+            <div class="message-text">${escapeHtml(item.message || "").replace(/\n/g, "<br>")}</div>
           </div>
-        `;
-      }).join("");
-    }
+        </div>
+      `;
+    }).join("");
 
-    function setNote(text, type) {
-      note.textContent = text;
-      note.className = "note";
+    requestAnimationFrame(() => {
+      chatEl.lastElementChild?.scrollIntoView({
+        behavior: "smooth",
+        block: "end"
+      });
+    });
+  }
 
-      if (type) {
-        note.classList.add(type);
-      }
-    }
+  function setNote(text, type) {
+    note.textContent = text;
+    note.className = "composer-note";
 
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    if (type) {
+      note.classList.add(type);
     }
-  </script>
+  }
+
+  function formatDate(dateString) {
+    if (!dateString) return "—";
+
+    const date = new Date(dateString);
+
+    return date.toLocaleString("hu-HU", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+</script>
 </body>
 </html>

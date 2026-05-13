@@ -293,6 +293,30 @@
     color: var(--muted);
   }
 
+  .btn.danger {
+  border-color: rgba(255, 120, 120, 0.28);
+  color: #ffb4b4;
+  background: rgba(255, 90, 90, 0.05);
+}
+
+.btn.danger:hover {
+  border-color: rgba(255, 120, 120, 0.55);
+  color: #fff;
+  background: rgba(255, 90, 90, 0.14);
+}
+
+.message-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  min-width: 220px;
+}
+
+.message-actions .btn {
+  width: 100%;
+}
+
   @media (max-width: 900px) {
     .hero,
     .message-card {
@@ -489,13 +513,17 @@
 
           <div class="message-actions">
             <a class="btn gold" href="/thread/${item.thread_token}?admin=1" target="_blank" rel="noopener">
-              Beszélgetés megnyitása
+                Beszélgetés megnyitása
             </a>
 
             <a class="btn" href="mailto:${escapeHtml(item.email || "")}">
-              Email megnyitása
+                Email megnyitása
             </a>
-          </div>
+
+            <button class="btn danger" onclick='deleteMessage(${item.id}, ${JSON.stringify(item.name || "Névtelen")})'>
+                Megkeresés törlése
+            </button>
+            </div>
         </article>
       `;
     }).join("");
