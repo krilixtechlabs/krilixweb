@@ -6,6 +6,8 @@ const { Resend } = require("resend");
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 const PORT = process.env.PORT || 3000;
 const publicPath = path.join(__dirname, "public");
 
@@ -20,6 +22,8 @@ const SESSION_SECRET =
   process.env.ADMIN_SESSION_SECRET ||
   process.env.RESEND_API_KEY ||
   "change-this-secret";
+
+const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static(publicPath));
@@ -51,16 +55,28 @@ app.post("/api/contact", async (req, res) => {
       });
     }
 
+    const threadToken = crypto.randomBytes(32).toString("hex");
+
     const savedMessage = await pool.query(
       `
-      INSERT INTO contact_messages (name, email, message)
-      VALUES ($1, $2, $3)
-      RETURNING id, created_at
+      INSERT INTO contact_messages (name, email, message, thread_token)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id, created_at, thread_token
       `,
-      [name.trim(), email.trim(), message.trim()]
+      [name.trim(), email.trim(), message.trim(), threadToken]
     );
 
-    const messageId = savedMessage.rows[0].id;
+    const contactId = savedMessage.rows[0].id;
+
+    await pool.query(
+      `
+      INSERT INTO conversation_messages (contact_message_id, sender, message)
+      VALUES ($1, $2, $3)
+      `,
+      [contactId, "customer", message.trim()]
+    );
+
+    const threadUrl = `${BASE_URL}/thread/${threadToken}`;
 
     const safeName = escapeHtml(name);
     const safeEmail = escapeHtml(email);
@@ -74,12 +90,14 @@ app.post("/api/contact", async (req, res) => {
       from: fromEmail,
       to: process.env.CONTACT_TO_EMAIL,
       replyTo: email,
-      subject: `Új megkeresés #${messageId} - ${name}`,
-      html: adminEmailTemplate({
-        id: messageId,
+      subject: `Új megkeresés #${contactId} - ${name}`,
+      html: adminNewMessageEmail({
+        id: contactId,
         name: safeName,
         email: safeEmail,
-        message: safeMessage
+        message: safeMessage,
+        adminUrl: `${BASE_URL}/admin`,
+        threadUrl
       })
     });
 
@@ -87,9 +105,10 @@ app.post("/api/contact", async (req, res) => {
       from: fromEmail,
       to: email,
       subject: "Megkaptuk az üzeneted - Krilix Tech & Labs",
-      html: customerEmailTemplate({
+      html: customerConfirmationEmail({
         name: safeName,
-        message: safeMessage
+        message: safeMessage,
+        threadUrl
       })
     });
 
@@ -111,6 +130,10 @@ app.get("/admin", (req, res) => {
   res.sendFile(path.join(publicPath, "admin.html"));
 });
 
+app.get("/thread/:token", (req, res) => {
+  res.sendFile(path.join(publicPath, "thread.html"));
+});
+
 app.post("/api/admin/login", (req, res) => {
   const { password } = req.body;
 
@@ -129,10 +152,11 @@ app.post("/api/admin/login", (req, res) => {
   }
 
   const token = createSessionToken();
+  const secureCookie = req.headers["x-forwarded-proto"] === "https";
 
   res.setHeader(
     "Set-Cookie",
-    `${COOKIE_NAME}=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=86400; Secure`
+    `${COOKIE_NAME}=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=86400${secureCookie ? "; Secure" : ""}`
   );
 
   return res.status(200).json({
@@ -141,9 +165,11 @@ app.post("/api/admin/login", (req, res) => {
 });
 
 app.post("/api/admin/logout", requireAdmin, (req, res) => {
+  const secureCookie = req.headers["x-forwarded-proto"] === "https";
+
   res.setHeader(
     "Set-Cookie",
-    `${COOKIE_NAME}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0; Secure`
+    `${COOKIE_NAME}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0${secureCookie ? "; Secure" : ""}`
   );
 
   return res.status(200).json({
@@ -159,17 +185,54 @@ app.get("/api/admin/me", requireAdmin, (req, res) => {
 
 app.get("/api/admin/messages", requireAdmin, async (req, res) => {
   try {
-    const result = await pool.query(
+    const contactsResult = await pool.query(
       `
-      SELECT id, name, email, message, status, reply_message, replied_at, created_at
+      SELECT id, name, email, message, status, reply_message, replied_at, created_at, thread_token
       FROM contact_messages
       ORDER BY created_at DESC
       `
     );
 
+    const contacts = contactsResult.rows;
+
+    if (!contacts.length) {
+      return res.status(200).json({
+        ok: true,
+        messages: []
+      });
+    }
+
+    const ids = contacts.map((item) => item.id);
+
+    const conversationResult = await pool.query(
+      `
+      SELECT id, contact_message_id, sender, message, created_at
+      FROM conversation_messages
+      WHERE contact_message_id = ANY($1::int[])
+      ORDER BY created_at ASC
+      `,
+      [ids]
+    );
+
+    const grouped = {};
+
+    for (const row of conversationResult.rows) {
+      if (!grouped[row.contact_message_id]) {
+        grouped[row.contact_message_id] = [];
+      }
+
+      grouped[row.contact_message_id].push(row);
+    }
+
+    const messages = contacts.map((contact) => ({
+      ...contact,
+      thread_url: `${BASE_URL}/thread/${contact.thread_token}`,
+      conversation: grouped[contact.id] || []
+    }));
+
     return res.status(200).json({
       ok: true,
-      messages: result.rows
+      messages
     });
   } catch (error) {
     console.error("Admin messages error:", error);
@@ -195,7 +258,7 @@ app.post("/api/admin/messages/:id/reply", requireAdmin, async (req, res) => {
 
     const messageResult = await pool.query(
       `
-      SELECT id, name, email, message
+      SELECT id, name, email, thread_token
       FROM contact_messages
       WHERE id = $1
       `,
@@ -210,21 +273,19 @@ app.post("/api/admin/messages/:id/reply", requireAdmin, async (req, res) => {
     }
 
     const contact = messageResult.rows[0];
+    const threadUrl = `${BASE_URL}/thread/${contact.thread_token}`;
 
     const fromEmail =
       process.env.CONTACT_FROM_EMAIL ||
       "Krilix Tech & Labs <hello@krilixtechlabs.com>";
 
-    await resend.emails.send({
-      from: fromEmail,
-      to: contact.email,
-      bcc: process.env.CONTACT_TO_EMAIL,
-      subject: "Válasz a megkeresésedre - Krilix Tech & Labs",
-      html: replyEmailTemplate({
-        name: escapeHtml(contact.name),
-        reply: escapeHtml(reply).replace(/\n/g, "<br>")
-      })
-    });
+    await pool.query(
+      `
+      INSERT INTO conversation_messages (contact_message_id, sender, message)
+      VALUES ($1, $2, $3)
+      `,
+      [contact.id, "admin", reply.trim()]
+    );
 
     await pool.query(
       `
@@ -234,8 +295,20 @@ app.post("/api/admin/messages/:id/reply", requireAdmin, async (req, res) => {
           replied_at = NOW()
       WHERE id = $2
       `,
-      [reply.trim(), id]
+      [reply.trim(), contact.id]
     );
+
+    await resend.emails.send({
+      from: fromEmail,
+      to: contact.email,
+      bcc: process.env.CONTACT_TO_EMAIL,
+      subject: "Válasz érkezett - Krilix Tech & Labs",
+      html: replyNotificationEmail({
+        name: escapeHtml(contact.name),
+        reply: escapeHtml(reply).replace(/\n/g, "<br>"),
+        threadUrl
+      })
+    });
 
     return res.status(200).json({
       ok: true,
@@ -247,6 +320,122 @@ app.post("/api/admin/messages/:id/reply", requireAdmin, async (req, res) => {
     return res.status(500).json({
       ok: false,
       error: "Nem sikerült elküldeni a választ."
+    });
+  }
+});
+
+app.get("/api/thread/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const contactResult = await pool.query(
+      `
+      SELECT id, name, email, message, created_at
+      FROM contact_messages
+      WHERE thread_token = $1
+      `,
+      [token]
+    );
+
+    if (contactResult.rows.length === 0) {
+      return res.status(404).json({
+        ok: false,
+        error: "A beszélgetés nem található."
+      });
+    }
+
+    const contact = contactResult.rows[0];
+
+    const messagesResult = await pool.query(
+      `
+      SELECT id, sender, message, created_at
+      FROM conversation_messages
+      WHERE contact_message_id = $1
+      ORDER BY created_at ASC
+      `,
+      [contact.id]
+    );
+
+    return res.status(200).json({
+      ok: true,
+      contact,
+      messages: messagesResult.rows
+    });
+  } catch (error) {
+    console.error("Thread fetch error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Nem sikerült betölteni a beszélgetést."
+    });
+  }
+});
+
+app.post("/api/thread/:token/reply", async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { message } = req.body;
+
+    if (!message || !message.trim()) {
+      return res.status(400).json({
+        ok: false,
+        error: "Az üzenet nem lehet üres."
+      });
+    }
+
+    const contactResult = await pool.query(
+      `
+      SELECT id, name, email
+      FROM contact_messages
+      WHERE thread_token = $1
+      `,
+      [token]
+    );
+
+    if (contactResult.rows.length === 0) {
+      return res.status(404).json({
+        ok: false,
+        error: "A beszélgetés nem található."
+      });
+    }
+
+    const contact = contactResult.rows[0];
+
+    await pool.query(
+      `
+      INSERT INTO conversation_messages (contact_message_id, sender, message)
+      VALUES ($1, $2, $3)
+      `,
+      [contact.id, "customer", message.trim()]
+    );
+
+    const fromEmail =
+      process.env.CONTACT_FROM_EMAIL ||
+      "Krilix Tech & Labs <hello@krilixtechlabs.com>";
+
+    await resend.emails.send({
+      from: fromEmail,
+      to: process.env.CONTACT_TO_EMAIL,
+      replyTo: contact.email,
+      subject: `Új ügyfél válasz #${contact.id} - ${contact.name}`,
+      html: customerThreadReplyEmail({
+        name: escapeHtml(contact.name),
+        email: escapeHtml(contact.email),
+        message: escapeHtml(message).replace(/\n/g, "<br>"),
+        adminUrl: `${BASE_URL}/admin`
+      })
+    });
+
+    return res.status(200).json({
+      ok: true,
+      message: "Üzenet elküldve."
+    });
+  } catch (error) {
+    console.error("Thread reply error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Nem sikerült elküldeni az üzenetet."
     });
   }
 });
@@ -274,6 +463,60 @@ async function initDatabase() {
       );
     `);
 
+    await pool.query(`
+      ALTER TABLE contact_messages
+      ADD COLUMN IF NOT EXISTS thread_token TEXT UNIQUE;
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS conversation_messages (
+        id SERIAL PRIMARY KEY,
+        contact_message_id INTEGER NOT NULL REFERENCES contact_messages(id) ON DELETE CASCADE,
+        sender TEXT NOT NULL,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+    `);
+
+    const missingTokens = await pool.query(`
+      SELECT id
+      FROM contact_messages
+      WHERE thread_token IS NULL
+    `);
+
+    for (const row of missingTokens.rows) {
+      const token = crypto.randomBytes(32).toString("hex");
+
+      await pool.query(
+        `
+        UPDATE contact_messages
+        SET thread_token = $1
+        WHERE id = $2
+        `,
+        [token, row.id]
+      );
+    }
+
+    const existingWithoutConversation = await pool.query(`
+      SELECT cm.id, cm.message
+      FROM contact_messages cm
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM conversation_messages c
+        WHERE c.contact_message_id = cm.id
+      )
+    `);
+
+    for (const row of existingWithoutConversation.rows) {
+      await pool.query(
+        `
+        INSERT INTO conversation_messages (contact_message_id, sender, message)
+        VALUES ($1, $2, $3)
+        `,
+        [row.id, "customer", row.message]
+      );
+    }
+
     console.log("Database ready.");
   } catch (error) {
     console.error("Database init error:", error);
@@ -299,6 +542,7 @@ function createSessionToken() {
   };
 
   const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
+
   const signature = crypto
     .createHmac("sha256", SESSION_SECRET)
     .update(encodedPayload)
@@ -319,7 +563,14 @@ function verifySessionToken(token) {
     .update(encodedPayload)
     .digest("base64url");
 
-  if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+  const signatureBuffer = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expectedSignature);
+
+  if (signatureBuffer.length !== expectedBuffer.length) {
+    return false;
+  }
+
+  if (!crypto.timingSafeEqual(signatureBuffer, expectedBuffer)) {
     return false;
   }
 
@@ -349,180 +600,36 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function adminEmailTemplate({ id, name, email, message }) {
+function emailShell({ title, label, content, dark = true }) {
+  const bg = dark ? "#070707" : "#f4efe5";
+  const card = dark ? "#151515" : "#ffffff";
+  const text = dark ? "#f7f1e6" : "#111111";
+  const muted = dark ? "#b8ad9b" : "#665f54";
+  const border = dark ? "rgba(231,200,121,.35)" : "#ded3bd";
+
   return `
   <!doctype html>
   <html lang="hu">
-  <body style="margin:0; padding:0; background:#f4efe5; font-family:Arial, Helvetica, sans-serif; color:#111;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4efe5; padding:36px 16px;">
+  <body style="margin:0; padding:0; background:${bg}; font-family:Arial, Helvetica, sans-serif; color:${text};">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${bg}; padding:36px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:680px; background:#ffffff; border:1px solid #ded3bd;">
-            <tr>
-              <td style="padding:34px 36px 26px; background:#080808; color:#f7f1e6;">
-                <div style="font-size:11px; letter-spacing:4px; text-transform:uppercase; color:#e7c879; font-weight:700;">
-                  Krilix Tech & Labs
-                </div>
-                <h1 style="margin:18px 0 0; font-family:Georgia, 'Times New Roman', serif; font-size:38px; line-height:1; font-weight:400; letter-spacing:-1.5px;">
-                  Új megkeresés érkezett.
-                </h1>
-                <p style="margin:14px 0 0; color:#a99f90; font-size:14px;">
-                  Azonosító: #${id}
-                </p>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:34px 36px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-                  <tr>
-                    <td style="padding:16px 0; border-top:1px solid #e6ddcd; width:140px; color:#8a6a2c; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">
-                      Név
-                    </td>
-                    <td style="padding:16px 0; border-top:1px solid #e6ddcd; font-size:16px;">
-                      ${name}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td style="padding:16px 0; border-top:1px solid #e6ddcd; width:140px; color:#8a6a2c; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">
-                      Email
-                    </td>
-                    <td style="padding:16px 0; border-top:1px solid #e6ddcd; font-size:16px;">
-                      <a href="mailto:${email}" style="color:#111; text-decoration:underline;">${email}</a>
-                    </td>
-                  </tr>
-                </table>
-
-                <div style="margin-top:28px; padding:24px; background:#f4efe5; border:1px solid #ded3bd;">
-                  <div style="margin-bottom:14px; color:#8a6a2c; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">
-                    Üzenet
-                  </div>
-                  <div style="font-size:16px; line-height:1.75; color:#111;">
-                    ${message}
-                  </div>
-                </div>
-
-                <div style="margin-top:30px;">
-                  <a href="https://krilixtechlabs.com/admin" style="display:inline-block; padding:15px 22px; background:#080808; color:#f7f1e6; text-decoration:none; font-size:14px; font-weight:700;">
-                    Megnyitás adminban
-                  </a>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:22px 36px; background:#f7f1e6; color:#8f8678; font-size:12px; line-height:1.6;">
-                Ez az email automatikusan érkezett a krilixtechlabs.com kapcsolatfelvételi űrlapjáról.
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-  </html>
-  `;
-}
-
-function customerEmailTemplate({ name, message }) {
-  return `
-  <!doctype html>
-  <html lang="hu">
-  <body style="margin:0; padding:0; background:#070707; font-family:Arial, Helvetica, sans-serif; color:#f7f1e6;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#070707; padding:36px 16px;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:680px; background:#151515; border:1px solid rgba(231,200,121,.35);">
-            <tr>
-              <td style="padding:38px 36px 28px; text-align:center;">
-                <div style="margin:0 auto 24px; width:82px; height:82px; border-radius:50%; border:1px solid rgba(231,200,121,.45); display:table;">
-                  <div style="display:table-cell; vertical-align:middle; text-align:center; color:#e7c879; font-family:Georgia, 'Times New Roman', serif; font-size:20px; font-weight:700;">
-                    KRILIX
-                  </div>
-                </div>
-
-                <div style="font-size:11px; letter-spacing:4px; text-transform:uppercase; color:#e7c879; font-weight:700;">
-                  Üzenet megérkezett
-                </div>
-
-                <h1 style="margin:18px 0 0; font-family:Georgia, 'Times New Roman', serif; font-size:42px; line-height:1; font-weight:400; letter-spacing:-1.8px; color:#fffaf0;">
-                  Köszönjük, ${name}.
-                </h1>
-
-                <p style="margin:22px auto 0; max-width:460px; color:#b8ad9b; font-size:16px; line-height:1.75;">
-                  Megkaptuk az üzeneted. Átnézzük, és hamarosan visszajelzünk a következő lépésekkel.
-                </p>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:0 36px 34px;">
-                <div style="padding:24px; background:#0c0c0c; border:1px solid rgba(231,200,121,.22);">
-                  <div style="margin-bottom:14px; color:#e7c879; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">
-                    Az elküldött üzeneted
-                  </div>
-                  <div style="font-size:15px; line-height:1.75; color:#f7f1e6;">
-                    ${message}
-                  </div>
-                </div>
-
-                <p style="margin:24px 0 0; color:#a99f90; font-size:14px; line-height:1.7;">
-                  Ha valamit még hozzátennél, egyszerűen válaszolj erre az emailre.
-                </p>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:22px 36px; border-top:1px solid rgba(231,200,121,.16); color:#8f8678; font-size:12px; line-height:1.6;">
-                Krilix Tech & Labs — prémium weboldalak és működő webes megoldások.
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-  </html>
-  `;
-}
-
-function replyEmailTemplate({ name, reply }) {
-  return `
-  <!doctype html>
-  <html lang="hu">
-  <body style="margin:0; padding:0; background:#070707; font-family:Arial, Helvetica, sans-serif; color:#f7f1e6;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#070707; padding:36px 16px;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:680px; background:#151515; border:1px solid rgba(231,200,121,.35);">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:680px; background:${card}; border:1px solid ${border};">
             <tr>
               <td style="padding:38px 36px 28px;">
                 <div style="font-size:11px; letter-spacing:4px; text-transform:uppercase; color:#e7c879; font-weight:700;">
-                  Krilix Tech & Labs
+                  ${label}
                 </div>
 
-                <h1 style="margin:18px 0 0; font-family:Georgia, 'Times New Roman', serif; font-size:42px; line-height:1; font-weight:400; letter-spacing:-1.8px; color:#fffaf0;">
-                  Válasz a megkeresésedre.
+                <h1 style="margin:18px 0 0; font-family:Georgia, 'Times New Roman', serif; font-size:42px; line-height:1; font-weight:400; letter-spacing:-1.8px; color:${text};">
+                  ${title}
                 </h1>
-
-                <p style="margin:22px 0 0; color:#b8ad9b; font-size:16px; line-height:1.75;">
-                  Szia ${name}, köszönjük a megkeresést. Az alábbi választ küldjük a Krilix Tech & Labs részéről.
-                </p>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:0 36px 34px;">
-                <div style="padding:26px; background:#0c0c0c; border:1px solid rgba(231,200,121,.22);">
-                  <div style="font-size:16px; line-height:1.78; color:#f7f1e6;">
-                    ${reply}
-                  </div>
-                </div>
-
-                <p style="margin:24px 0 0; color:#a99f90; font-size:14px; line-height:1.7;">
-                  Ha kérdésed van, válaszolj erre az emailre.
-                </p>
+              <td style="padding:0 36px 34px; color:${muted}; font-size:16px; line-height:1.75;">
+                ${content}
               </td>
             </tr>
 
@@ -538,4 +645,101 @@ function replyEmailTemplate({ name, reply }) {
   </body>
   </html>
   `;
+}
+
+function buttonHtml({ href, text }) {
+  return `
+    <div style="margin-top:26px;">
+      <a href="${href}" style="display:inline-block; padding:15px 22px; background:#e7c879; color:#070707; text-decoration:none; font-size:14px; font-weight:700;">
+        ${text}
+      </a>
+    </div>
+  `;
+}
+
+function adminNewMessageEmail({ id, name, email, message, adminUrl, threadUrl }) {
+  return emailShell({
+    dark: false,
+    label: "Krilix Tech & Labs",
+    title: "Új megkeresés érkezett.",
+    content: `
+      <p style="margin:0 0 18px;">Azonosító: <strong>#${id}</strong></p>
+      <p style="margin:0 0 8px;"><strong>Név:</strong> ${name}</p>
+      <p style="margin:0 0 22px;"><strong>Email:</strong> <a href="mailto:${email}" style="color:#111;">${email}</a></p>
+
+      <div style="padding:24px; background:#f4efe5; border:1px solid #ded3bd; color:#111;">
+        <div style="margin-bottom:14px; color:#8a6a2c; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">Üzenet</div>
+        ${message}
+      </div>
+
+      ${buttonHtml({ href: adminUrl, text: "Megnyitás adminban" })}
+      <p style="margin-top:20px; font-size:13px;">Ügyfél privát link: <a href="${threadUrl}" style="color:#111;">${threadUrl}</a></p>
+    `
+  });
+}
+
+function customerConfirmationEmail({ name, message, threadUrl }) {
+  return emailShell({
+    dark: true,
+    label: "Üzenet megérkezett",
+    title: `Köszönjük, ${name}.`,
+    content: `
+      <p style="margin:0 0 22px;">
+        Megkaptuk az üzeneted. Átnézzük, és hamarosan visszajelzünk a következő lépésekkel.
+      </p>
+
+      <div style="padding:24px; background:#0c0c0c; border:1px solid rgba(231,200,121,.22); color:#f7f1e6;">
+        <div style="margin-bottom:14px; color:#e7c879; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">Az elküldött üzeneted</div>
+        ${message}
+      </div>
+
+      <p style="margin:24px 0 0;">
+        A beszélgetést később ezen a privát linken tudod folytatni:
+      </p>
+
+      ${buttonHtml({ href: threadUrl, text: "Beszélgetés megnyitása" })}
+    `
+  });
+}
+
+function replyNotificationEmail({ name, reply, threadUrl }) {
+  return emailShell({
+    dark: true,
+    label: "Krilix Tech & Labs",
+    title: "Válasz érkezett.",
+    content: `
+      <p style="margin:0 0 22px;">
+        Szia ${name}, válasz érkezett a megkeresésedre.
+      </p>
+
+      <div style="padding:24px; background:#0c0c0c; border:1px solid rgba(231,200,121,.22); color:#f7f1e6;">
+        ${reply}
+      </div>
+
+      <p style="margin:24px 0 0;">
+        A teljes beszélgetést itt tudod megnyitni és folytatni:
+      </p>
+
+      ${buttonHtml({ href: threadUrl, text: "Beszélgetés megnyitása" })}
+    `
+  });
+}
+
+function customerThreadReplyEmail({ name, email, message, adminUrl }) {
+  return emailShell({
+    dark: false,
+    label: "Ügyfél válaszolt",
+    title: "Új üzenet érkezett.",
+    content: `
+      <p style="margin:0 0 8px;"><strong>Név:</strong> ${name}</p>
+      <p style="margin:0 0 22px;"><strong>Email:</strong> <a href="mailto:${email}" style="color:#111;">${email}</a></p>
+
+      <div style="padding:24px; background:#f4efe5; border:1px solid #ded3bd; color:#111;">
+        <div style="margin-bottom:14px; color:#8a6a2c; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">Üzenet</div>
+        ${message}
+      </div>
+
+      ${buttonHtml({ href: adminUrl, text: "Megnyitás adminban" })}
+    `
+  });
 }
