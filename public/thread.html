@@ -254,13 +254,41 @@
 
   <script>
     const token = window.location.pathname.split("/").filter(Boolean).pop();
-    const chatEl = document.getElementById("chat");
-    const leadEl = document.getElementById("lead");
-    const replyForm = document.getElementById("replyForm");
-    const messageInput = document.getElementById("message");
-    const note = document.getElementById("note");
+const isAdminMode = new URLSearchParams(window.location.search).get("admin") === "1";
+
+const chatEl = document.getElementById("chat");
+const leadEl = document.getElementById("lead");
+const replyForm = document.getElementById("replyForm");
+const messageInput = document.getElementById("message");
+const note = document.getElementById("note");
+
+if (isAdminMode) {
+  messageInput.placeholder = "Írd meg a Krilix válaszát...";
+}
+
+    
 
     loadThread();
+
+    let adminLoggedIn = false;
+
+checkAdminMode();
+loadThread();
+
+async function checkAdminMode() {
+  if (!isAdminMode) return;
+
+  try {
+    const response = await fetch("/api/admin/me");
+    adminLoggedIn = response.ok;
+
+    if (!adminLoggedIn) {
+      setNote("Admin módban csak bejelentkezve lehet válaszolni.", "error");
+    }
+  } catch {
+    adminLoggedIn = false;
+  }
+}
 
     replyForm.addEventListener("submit", async function (event) {
       event.preventDefault();
@@ -278,7 +306,12 @@
       setNote("Üzenet küldése folyamatban...");
 
       try {
-        const response = await fetch(`/api/thread/${token}/reply`, {
+        const endpoint =
+  isAdminMode && adminLoggedIn
+    ? `/api/admin/thread/${token}/reply`
+    : `/api/thread/${token}/reply`;
+
+const response = await fetch(endpoint, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

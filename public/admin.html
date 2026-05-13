@@ -542,15 +542,13 @@
             </div>
 
             <div class="reply-box">
-              <form class="reply-form">
-                <div class="field">
-                  <label>Válasz</label>
-                  <textarea name="reply" placeholder="Írd meg a választ, amit emailben és a privát beszélgetésben is megkap az ügyfél..." required></textarea>
-                </div>
+            <a class="btn" href="${message.thread_url}?admin=1" target="_blank" rel="noopener">
+                Beszélgetés megnyitása
+            </a>
 
-                <button class="btn" type="submit">Válasz küldése</button>
-                <p class="note"></p>
-              </form>
+            <p class="note">
+                Admin módban Krilixként tudsz válaszolni a privát beszélgetésben.
+            </p>
             </div>
           </article>
         `;
