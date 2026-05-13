@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Krilix Admin</title>
+
+  <style>
+    :root {
+      --black: #070707;
+      --black2: #11100d;
+      --cream: #f4efe5;
+      --gold: #b88a35;
+      --gold2: #e7c879;
+      --text: #f7f1e6;
+      --muted: #a99f90;
+      --line: rgba(231, 200, 121, .18);
+      --danger: #ff9b9b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(184,138,53,.20), transparent 420px),
+        var(--black);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(7,7,7,.78);
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav {
+      height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: .34em;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 7px;
+      color: var(--gold2);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      min-height: 46px;
+      padding: 0 20px;
+      border: 1px solid var(--cream);
+      background: var(--cream);
+      color: var(--black);
+      font-weight: 900;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .btn:hover {
+      background: var(--gold2);
+      border-color: var(--gold2);
+      transform: translateY(-1px);
+    }
+
+    .btn.dark {
+      background: transparent;
+      color: var(--text);
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .btn.dark:hover {
+      border-color: var(--gold2);
+      color: var(--gold2);
+      background: rgba(255,255,255,.05);
+    }
+
+    .login-screen {
+      min-height: calc(100vh - 82px);
+      display: grid;
+      place-items: center;
+      padding: 40px 0;
+    }
+
+    .login-box {
+      width: min(100%, 440px);
+      padding: 38px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(231,200,121,.14), transparent 220px),
+        linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
+        #151515;
+      border: 1px solid rgba(231,200,121,.26);
+      box-shadow: 0 38px 130px rgba(0,0,0,.58);
+    }
+
+    .label {
+      margin: 0 0 14px;
+      color: var(--gold2);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 6vw, 68px);
+      line-height: .9;
+      letter-spacing: -.06em;
+      font-weight: 500;
+    }
+
+    .login-box p,
+    .admin-head p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      color: var(--gold2);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.055);
+      color: var(--text);
+      padding: 14px;
+      outline: none;
+      border-radius: 0;
+    }
+
+    .field textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--gold2);
+      background: rgba(255,255,255,.08);
+    }
+
+    .note {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .note.error {
+      color: var(--danger);
+    }
+
+    .note.success {
+      color: var(--gold2);
+    }
+
+    .admin {
+      display: none;
+      padding: 54px 0 80px;
+    }
+
+    .admin-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 34px;
+    }
+
+    .admin-head p {
+      margin: 16px 0 0;
+      max-width: 620px;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .messages {
+      display: grid;
+      gap: 18px;
+    }
+
+    .message-card {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+      padding: 26px;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 26px;
+    }
+
+    .message-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .message-card h2 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: -.04em;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
+    .meta a {
+      color: var(--gold2);
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 7px 10px;
+      border: 1px solid rgba(231,200,121,.26);
+      color: var(--gold2);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .badge.replied {
+      color: #b8ffce;
+      border-color: rgba(184,255,206,.28);
+    }
+
+    .chat {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .bubble {
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.045);
+      color: #e8dfcf;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .bubble.admin {
+      display: block;
+      background: rgba(231,200,121,.08);
+      border-color: rgba(231,200,121,.20);
+    }
+
+    .bubble small {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold2);
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .reply-box {
+      border-left: 1px solid var(--line);
+      padding-left: 26px;
+    }
+
+    .empty {
+      border: 1px solid var(--line);
+      padding: 34px;
+      color: var(--muted);
+      background: rgba(255,255,255,.035);
+    }
+
+    @media (max-width: 960px) {
+      .admin-head {
+        display: block;
+      }
+
+      .admin-actions {
+        margin-top: 20px;
+      }
+
+      .message-card {
+        grid-template-columns: 1fr;
+      }
+
+      .reply-box {
+        border-left: 0;
+        padding-left: 0;
+        border-top: 1px solid var(--line);
+        padding-top: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="wrap">
+      <div class="brand">
+        <strong>KRILIX</strong>
+        <span>Admin</span>
+      </div>
+
+      <button class="btn dark" id="logoutBtn" type="button" style="display:none;">
+        Kilépés
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="login-screen wrap" id="loginScreen">
+      <div class="login-box">
+        <p class="label">Admin belépés</p>
+        <h1>Megkeresések kezelése.</h1>
+        <p>
+          Lépj be az admin felületre a weboldalon érkezett megkeresések megtekintéséhez és megválaszolásához.
+        </p>
+
+        <form id="loginForm">
+          <div class="field">
+            <label for="password">Jelszó</label>
+            <input id="password" type="password" placeholder="Admin jelszó" required>
+          </div>
+
+          <button class="btn" type="submit">Belépés</button>
+
+          <p class="note" id="loginNote"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="admin wrap" id="adminScreen">
+      <div class="admin-head">
+        <div>
+          <p class="label">Krilix Admin</p>
+          <h1>Beérkezett megkeresések.</h1>
+          <p>
+            Itt látod az oldalról érkező üzeneteket. A válasz emailben is kimegy, és bekerül az ügyfél privát beszélgetési oldalára.
+          </p>
+        </div>
+
+        <div class="admin-actions">
+          <button class="btn" id="refreshBtn" type="button">Frissítés</button>
+        </div>
+      </div>
+
+      <div class="messages" id="messages"></div>
+    </section>
+  </main>
+
+  <script>
+    const loginScreen = document.getElementById("loginScreen");
+    const adminScreen = document.getElementById("adminScreen");
+    const loginForm = document.getElementById("loginForm");
+    const loginNote = document.getElementById("loginNote");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const messagesEl = document.getElementById("messages");
+
+    checkAuth();
+
+    loginForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const password = document.getElementById("password").value;
+
+      loginNote.textContent = "Belépés folyamatban...";
+      loginNote.className = "note";
+
+      try {
+        const response = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || "Sikertelen belépés.");
+        }
+
+        showAdmin();
+        loadMessages();
+      } catch (error) {
+        loginNote.textContent = error.message;
+        loginNote.className = "note error";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async function () {
+      await fetch("/api/admin/logout", {
+        method: "POST"
+      });
+
+      showLogin();
+    });
+
+    refreshBtn.addEventListener("click", loadMessages);
+
+    async function checkAuth() {
+      try {
+        const response = await fetch("/api/admin/me");
+
+        if (response.ok) {
+          showAdmin();
+          loadMessages();
+        } else {
+          showLogin();
+        }
+      } catch {
+        showLogin();
+      }
+    }
+
+    function showAdmin() {
+      loginScreen.style.display = "none";
+      adminScreen.style.display = "block";
+      logoutBtn.style.display = "inline-flex";
+    }
+
+    function showLogin() {
+      loginScreen.style.display = "grid";
+      adminScreen.style.display = "none";
+      logoutBtn.style.display = "none";
+    }
+
+    async function loadMessages() {
+      messagesEl.innerHTML = `<div class="empty">Megkeresések betöltése...</div>`;
+
+      try {
+        const response = await fetch("/api/admin/messages");
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || "Nem sikerült betölteni.");
+        }
+
+        renderMessages(result.messages);
+      } catch (error) {
+        messagesEl.innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
+      }
+    }
+
+    function renderMessages(messages) {
+      if (!messages.length) {
+        messagesEl.innerHTML = `<div class="empty">Még nincs beérkezett megkeresés.</div>`;
+        return;
+      }
+
+      messagesEl.innerHTML = messages.map((message) => {
+        const createdAt = new Date(message.created_at).toLocaleString("hu-HU");
+        const statusLabel = message.status === "replied" ? "Megválaszolva" : "Új";
+        const statusClass = message.status === "replied" ? "badge replied" : "badge";
+
+        const conversation = (message.conversation || []).map((item) => {
+          const senderLabel = item.sender === "admin" ? "Krilix válasz" : "Ügyfél";
+          const time = new Date(item.created_at).toLocaleString("hu-HU");
+          const bubbleClass = item.sender === "admin" ? "bubble admin" : "bubble";
+
+          return `
+            <div class="${bubbleClass}">
+              <small>${senderLabel} · ${time}</small>
+              ${escapeHtml(item.message)}
+            </div>
+          `;
+        }).join("");
+
+        return `
+          <article class="message-card" data-id="${message.id}">
+            <div>
+              <div class="message-top">
+                <div>
+                  <h2>${escapeHtml(message.name)}</h2>
+                  <div class="meta">
+                    <div>#${message.id}</div>
+                    <div>${escapeHtml(message.email)}</div>
+                    <div>${createdAt}</div>
+                    <div><a href="${message.thread_url}" target="_blank" rel="noopener">Privát beszélgetés megnyitása</a></div>
+                  </div>
+                </div>
+
+                <span class="${statusClass}">${statusLabel}</span>
+              </div>
+
+              <div class="chat">
+                ${conversation}
+              </div>
+            </div>
+
+            <div class="reply-box">
+            <a class="btn" href="${message.thread_url}?admin=1" target="_blank" rel="noopener">
+                Beszélgetés megnyitása
+            </a>
+
+            <p class="note">
+                Admin módban Krilixként tudsz válaszolni a privát beszélgetésben.
+            </p>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".reply-form").forEach((form) => {
+        form.addEventListener("submit", sendReply);
+      });
+    }
+
+    async function sendReply(event) {
+      event.preventDefault();
+
+      const form = event.currentTarget;
+      const card = form.closest(".message-card");
+      const id = card.dataset.id;
+      const reply = form.reply.value.trim();
+      const note = form.querySelector(".note");
+      const button = form.querySelector("button");
+
+      if (!reply) {
+        note.textContent = "Írj választ küldés előtt.";
+        note.className = "note error";
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Küldés...";
+      note.textContent = "Válasz küldése folyamatban...";
+      note.className = "note";
+
+      try {
+        const response = await fetch(`/api/admin/messages/${id}/reply`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ reply })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || "Nem sikerült elküldeni.");
+        }
+
+        note.textContent = "Válasz elküldve.";
+        note.className = "note success";
+        form.reset();
+
+        await loadMessages();
+      } catch (error) {
+        note.textContent = error.message;
+        note.className = "note error";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Válasz küldése";
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
+</body>
+</html>

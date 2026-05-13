@@ -371,6 +371,86 @@ app.get("/api/thread/:token", async (req, res) => {
   }
 });
 
+app.post("/api/admin/thread/:token/reply", requireAdmin, async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { message } = req.body;
+
+    if (!message || !message.trim()) {
+      return res.status(400).json({
+        ok: false,
+        error: "Az üzenet nem lehet üres."
+      });
+    }
+
+    const contactResult = await pool.query(
+      `
+      SELECT id, name, email, thread_token
+      FROM contact_messages
+      WHERE thread_token = $1
+      `,
+      [token]
+    );
+
+    if (contactResult.rows.length === 0) {
+      return res.status(404).json({
+        ok: false,
+        error: "A beszélgetés nem található."
+      });
+    }
+
+    const contact = contactResult.rows[0];
+    const threadUrl = `${BASE_URL}/thread/${contact.thread_token}`;
+
+    await pool.query(
+      `
+      INSERT INTO conversation_messages (contact_message_id, sender, message)
+      VALUES ($1, $2, $3)
+      `,
+      [contact.id, "admin", message.trim()]
+    );
+
+    await pool.query(
+      `
+      UPDATE contact_messages
+      SET status = 'replied',
+          reply_message = $1,
+          replied_at = NOW()
+      WHERE id = $2
+      `,
+      [message.trim(), contact.id]
+    );
+
+    const fromEmail =
+      process.env.CONTACT_FROM_EMAIL ||
+      "Krilix Tech & Labs <hello@krilixtechlabs.com>";
+
+    await resend.emails.send({
+      from: fromEmail,
+      to: contact.email,
+      bcc: process.env.CONTACT_TO_EMAIL,
+      subject: "Válasz érkezett - Krilix Tech & Labs",
+      html: replyNotificationEmail({
+        name: escapeHtml(contact.name),
+        reply: escapeHtml(message).replace(/\n/g, "<br>"),
+        threadUrl
+      })
+    });
+
+    return res.status(200).json({
+      ok: true,
+      message: "Admin válasz elküldve."
+    });
+  } catch (error) {
+    console.error("Admin thread reply error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Nem sikerült elküldeni az admin választ."
+    });
+  }
+});
+
 app.post("/api/thread/:token/reply", async (req, res) => {
   try {
     const { token } = req.params;
