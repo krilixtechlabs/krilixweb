@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krilix Tech & Labs</title>
+  <meta name="description" content="Prémium weboldalak, landing oldalak, időpontfoglaló rendszerek és egyedi webes funkciók igényes online jelenléthez.">
+  <meta property="og:title" content="Krilix Tech & Labs">
+  <meta property="og:description" content="Prémium weboldalak és működő webes megoldások ötlettől az élesítésig.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/krilix-logo.png">
+  <link rel="icon" href="/krilix-logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Manrope:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --black: #030303;
+      --black-2: #080808;
+      --white: #f4efe5;
+      --soft-white: rgba(244, 239, 229, 0.82);
+      --muted: rgba(244, 239, 229, 0.54);
+      --line: rgba(255, 255, 255, 0.11);
+      --line-gold: rgba(191, 149, 63, 0.33);
+      --gold-1: #bf953f;
+      --gold-2: #fcf6ba;
+      --gold-3: #b38728;
+      --gold-4: #fbf5b7;
+      --gold-gradient: linear-gradient(90deg, var(--gold-1), var(--gold-2), var(--gold-3), var(--gold-4), var(--gold-1));
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold-1) var(--black);
+    }
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--gold-2), var(--gold-1));
+      border: 2px solid var(--black);
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Manrope', Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -3;
+      opacity: 0.62;
+    }
+
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.035;
+      background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+    }
+
+    .ambient-glow {
+      position: fixed;
+      top: -28vh;
+      right: -18vw;
+      width: 70vw;
+      height: 72vh;
+      background: radial-gradient(circle, rgba(191, 149, 63, 0.14), rgba(3, 3, 3, 0) 62%);
+      z-index: -4;
+      filter: blur(42px);
+    }
+
+    .ambient-glow.left {
+      top: 42vh;
+      right: auto;
+      left: -32vw;
+      opacity: 0.72;
+    }
+
+    .container {
+      width: min(1320px, calc(100% - 8vw));
+      margin: 0 auto;
+    }
+
+    h1, h2, h3, .logo-text, .bg-text, .section-kicker, .item-number, .btn, .btn-submit, label, .form-popup-label {
+      font-family: 'Syncopate', sans-serif;
+      text-transform: uppercase;
+    }
+
+    .gold-foil {
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 220% auto;
+      animation: shine 5.5s linear infinite;
+    }
+
+    @keyframes shine { to { background-position: 220% center; } }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.7rem 5vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+      transition: padding 0.4s var(--ease), background-color 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+    }
+
+    .navbar.scrolled {
+      padding: 0.95rem 5vw;
+      background: rgba(3, 3, 3, 0.84);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.9rem;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      background: #f4efe5;
+      border: 1px solid rgba(252, 246, 186, 0.35);
+      box-shadow: 0 0 28px rgba(191, 149, 63, 0.14);
+    }
+
+    .logo-text {
+      display: block;
+      color: var(--white);
+      font-size: 1.02rem;
+      letter-spacing: 0.19rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      display: block;
+      margin-top: 0.38rem;
+      color: var(--gold-1);
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 0.22rem;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.1rem;
+    }
+
+    .nav-links a:not(.nav-cta) {
+      color: var(--soft-white);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.09rem;
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 0.35rem;
+    }
+
+    .nav-links a:not(.nav-cta)::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold-1);
+      transition: width 0.28s ease;
+    }
+
+    .nav-links a:not(.nav-cta):hover { color: var(--gold-2); }
+    .nav-links a:not(.nav-cta):hover::after { width: 100%; }
+
+    .nav-cta, .btn, .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 1.35rem;
+      border: 1px solid rgba(244, 239, 229, 0.72);
+      color: var(--white);
+      background: transparent;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+    }
+
+    .nav-cta:hover, .btn:hover, .btn-submit:hover {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .btn.gold {
+      border-color: transparent;
+      background: var(--gold-gradient);
+      background-size: 220% auto;
+      color: var(--black);
+    }
+
+    .btn.gold:hover {
+      animation: shine 2s linear infinite;
+      color: var(--black);
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.035);
+      color: var(--white);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .menu-toggle span {
+      position: absolute;
+      left: 13px;
+      right: 13px;
+      height: 1px;
+      background: var(--white);
+      transition: transform 0.3s ease, top 0.3s ease, opacity 0.3s ease;
+    }
+
+    .menu-toggle span:nth-child(1) { top: 17px; }
+    .menu-toggle span:nth-child(2) { top: 24px; }
+    .menu-toggle span:nth-child(3) { top: 31px; }
+    .menu-toggle.active span:nth-child(1) { top: 24px; transform: rotate(45deg); }
+    .menu-toggle.active span:nth-child(2) { opacity: 0; }
+    .menu-toggle.active span:nth-child(3) { top: 24px; transform: rotate(-45deg); }
+
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding: 8rem 0 4.2rem;
+      overflow: hidden;
+    }
+
+    .bg-text {
+      position: absolute;
+      top: 49%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(9rem, 25vw, 29rem);
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.035);
+      z-index: -2;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .hero-title {
+      max-width: 1040px;
+      font-size: clamp(3rem, 7.2vw, 7.2rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+      margin-bottom: 2.6rem;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: minmax(0, 640px) auto;
+      gap: 2rem;
+      align-items: end;
+      border-top: 1px solid var(--line);
+      padding-top: 2rem;
+      background: linear-gradient(to top, rgba(3,3,3,0.82), transparent);
+    }
+
+    .hero-meta p {
+      color: var(--muted);
+      line-height: 1.72;
+      font-size: 1.04rem;
+      letter-spacing: 0.02rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .ticker {
+      overflow: hidden;
+      border-top: 1px solid var(--line-gold);
+      border-bottom: 1px solid var(--line-gold);
+      color: var(--gold-2);
+      background: rgba(3,3,3,0.78);
+      font-family: 'Syncopate', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.24rem;
+      white-space: nowrap;
+    }
+
+    .ticker-track {
+      display: inline-flex;
+      gap: 2.8rem;
+      padding: 1.1rem 0;
+      animation: tickerMove 25s linear infinite;
+    }
+
+    @keyframes tickerMove { to { transform: translateX(-50%); } }
+
+    .section-block {
+      padding: 7rem 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .bg-solid { background: rgba(3, 3, 3, 0.94); }
+    .bg-lift { background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005)); }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(120px, 220px) 1fr;
+      gap: 2.4rem;
+      align-items: start;
+      margin-bottom: 4rem;
+    }
+
+    .section-kicker {
+      color: var(--gold-1);
+      border-top: 1px solid var(--line-gold);
+      padding-top: 1.1rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.2rem;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4.6vw, 4.7rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      max-width: 980px;
+      text-wrap: balance;
+    }
+
+    .list-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 2.4rem;
+      border-bottom: 1px solid var(--line);
+      padding: 2.7rem 0;
+      transition: transform 0.4s var(--ease), border-color 0.4s ease;
+    }
+
+    .list-item:hover {
+      transform: translateX(18px);
+      border-color: var(--line-gold);
+    }
+
+    .item-number {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--gold-1);
+      font-size: clamp(1.9rem, 3.4vw, 3.35rem);
+      line-height: 0.9;
+      white-space: nowrap;
+      word-break: normal;
+    }
+
+    .item-label {
+      display: inline-block;
+      margin-bottom: 0.9rem;
+      color: var(--gold-1);
+      font-family: 'Syncopate', sans-serif;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      letter-spacing: 0.18rem;
+    }
+
+    .item-content h3, .grid-card h3 {
+      font-size: clamp(1.35rem, 2.2vw, 2.45rem);
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+      margin-bottom: 0.9rem;
+      text-wrap: balance;
+    }
+
+    .item-content p, .grid-card p, .contact-info p {
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.72;
+      font-size: 1rem;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .grid-card {
+      min-height: 280px;
+      padding: 2rem;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.032), rgba(255,255,255,0.016));
+      transition: transform 0.35s var(--ease), background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .grid-card:hover {
+      transform: translateY(-8px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.024));
+      border-color: var(--line-gold);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.22);
+    }
+
+    .grid-card .item-number {
+      font-size: 1.55rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .feature {
+      padding: 7.5rem 0;
+      text-align: center;
+      background: radial-gradient(circle at 50% 0%, rgba(191,149,63,0.20), transparent 450px), var(--black-2);
+    }
+
+    .feature p {
+      max-width: 1120px;
+      margin: 0 auto;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(2.4rem, 6vw, 6.6rem);
+      line-height: 0.95;
+      letter-spacing: -0.062em;
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(360px, 500px);
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .contact-info h2 {
+      font-size: clamp(2.4rem, 5.1vw, 4.8rem);
+      line-height: 0.96;
+      letter-spacing: -0.065em;
+      margin-bottom: 1.6rem;
+      max-width: 8ch;
+      text-wrap: balance;
+    }
+
+    .contact-info p {
+      margin-bottom: 1.8rem;
+      max-width: 620px;
+    }
+
+    .big-mail {
+      display: inline-block;
+      color: var(--white);
+      border-bottom: 2px solid var(--gold-1);
+      padding-bottom: 0.9rem;
+      font-family: 'Syncopate', sans-serif;
+      font-size: clamp(0.86rem, 1.5vw, 1.55rem);
+      letter-spacing: 0.02rem;
+      transition: color 0.3s ease;
+      word-break: break-word;
+    }
+
+    .big-mail:hover { color: var(--gold-1); }
+
+    .form-container {
+      background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      padding: 2.4rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 28px 90px rgba(0,0,0,0.28);
+      border-radius: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--gold-1);
+      font-size: 0.64rem;
+      letter-spacing: 0.16rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: var(--white);
+      padding: 0.6rem 0;
+      font: inherit;
+      font-size: 1.05rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(244,239,229,0.34); }
+
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--gold-1); }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 126px;
+    }
+
+    .form-group input:-webkit-autofill, .form-group textarea:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 40px #080808 inset !important;
+      -webkit-text-fill-color: var(--white) !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
+    .btn-submit {
+      width: 100%;
+      min-height: 58px;
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+      margin-top: 0.6rem;
+    }
+
+    .btn-submit:hover {
+      background: var(--gold-1);
+      border-color: var(--gold-1);
+      color: var(--white);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.62;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-note {
+      margin-top: 1.4rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.62;
+    }
+
+    .form-note a {
+      color: var(--gold-2);
+      text-decoration: underline;
+    }
+
+    .form-note.success { color: var(--gold-2); }
+    .form-note.error { color: #ff9b9b; }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 7rem;
+      border-top: 1px solid var(--line);
+      padding-top: 2rem;
+      color: rgba(244,239,229,0.38);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.09rem;
+      text-transform: uppercase;
+    }
+
+    .form-popup {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 35%, rgba(191,149,63,.22), transparent 360px), rgba(0,0,0,.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .3s ease, visibility .3s ease;
+    }
+
+    .form-popup.is-visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .form-popup-box {
+      position: relative;
+      width: min(100%, 480px);
+      padding: 42px 38px 34px;
+      text-align: center;
+      background: radial-gradient(circle at 50% 0%, rgba(252,246,186,.16), transparent 230px), linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025)), #111;
+      border: 1px solid rgba(252,246,186,.30);
+      box-shadow: 0 38px 130px rgba(0,0,0,.64), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .form-popup-icon {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(252,246,186,.38);
+      color: var(--gold-2);
+      font-size: 34px;
+    }
+
+    .form-popup-label {
+      margin-bottom: 16px;
+      color: var(--gold-2);
+      font-size: 0.62rem;
+      letter-spacing: 0.25rem;
+    }
+
+    .form-popup-box h2 {
+      font-size: 2.2rem;
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+      margin-bottom: 1rem;
+    }
+
+    .form-popup-box p:not(.form-popup-label) {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .form-popup-btn { width: 100%; margin-top: 1.8rem; }
+
+    .form-popup-close {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(255,255,255,.17);
+      background: rgba(255,255,255,.045);
+      color: var(--white);
+      font-size: 28px;
+      line-height: 34px;
+      cursor: pointer;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(42px);
+      transition: opacity 1s var(--ease), transform 1s var(--ease);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1120px) {
+      .contact-layout { grid-template-columns: 1fr; }
+      .hero-meta { grid-template-columns: 1fr; }
+      .hero-actions { justify-content: flex-start; }
+    }
+
+    @media (max-width: 860px) {
+      .navbar { padding: 1rem 5vw; }
+      .menu-toggle { display: block; }
+      .nav-links {
+        position: fixed;
+        top: 78px;
+        left: 5vw;
+        right: 5vw;
+        display: grid;
+        gap: 0;
+        padding: 0.6rem;
+        background: rgba(3,3,3,0.94);
+        border: 1px solid var(--line);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        transform: translateY(-14px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+      }
+
+      .nav-links.open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .nav-links a:not(.nav-cta), .nav-cta {
+        width: 100%;
+        padding: 1rem;
+        justify-content: flex-start;
+        border: none;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .nav-cta { min-height: auto; }
+      .section-head, .list-item { grid-template-columns: 1fr; gap: 1.2rem; }
+      .item-number { font-size: clamp(2rem, 12vw, 3.6rem); }
+      .section-block { padding: 6rem 0; }
+      .list-item:hover { transform: none; }
+      .grid-layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .container { width: calc(100% - 28px); }
+      .brand img { width: 42px; height: 42px; }
+      .logo-text { font-size: 0.82rem; letter-spacing: 0.12rem; }
+      .brand-sub { font-size: 0.54rem; letter-spacing: 0.15rem; }
+      .hero { padding-top: 6.5rem; min-height: 92svh; }
+      .hero-title { font-size: clamp(2.6rem, 13vw, 4.7rem); }
+      .hero-actions .btn { width: 100%; }
+      .grid-layout { grid-template-columns: 1fr; }
+      .grid-card { min-height: 270px; }
+      .grid-card .item-number { margin-bottom: 3rem; }
+      .form-container { padding: 1.55rem; }
+      .footer-bottom { flex-direction: column; margin-top: 4rem; }
+      .form-popup-box { padding: 38px 24px 28px; }
+      .form-popup-box h2 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+  <canvas id="particle-canvas"></canvas>
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow left"></div>
+
+  <nav class="navbar" id="navbar">
+    <a href="/" class="brand" aria-label="Krilix Tech & Labs főoldal">
+      <img src="/krilix-logo.png" alt="Krilix Tech & Labs logó">
+      <span>
+        <span class="logo-text">KRILIX</span>
+        <span class="brand-sub">Tech & Labs</span>
+      </span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menü megnyitása" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#szolgaltatasok">Szolgáltatások</a>
+      <a href="#ajanljuk">Kinek ajánljuk?</a>
+      <a href="#kerdesek">Kérdések</a>
+      <a href="#folyamat">Folyamat</a>
+      <a href="/brief">Brief</a>
+      <a href="#kapcsolat" class="nav-cta">Ajánlatkérés</a>
+    </div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="bg-text">TECH</div>
+      <div class="container">
+        <h1 class="hero-title reveal">
+          Prémium weboldalak<br>
+          <span class="gold-foil">hasznos funkciókkal.</span>
+        </h1>
+        <div class="hero-meta reveal" style="transition-delay: 0.16s;">
+          <p>Prémium weboldalakat és működő webes megoldásokat készítünk: bemutatkozó oldalak, landing oldalak, időpontfoglaló rendszerek és egyedi funkciók igényes online jelenléthez.</p>
+          <div class="hero-actions">
+            <a class="btn gold" href="#kapcsolat">Ajánlatot kérek</a>
+            <a class="btn" href="#szolgaltatasok">Részletek</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>Prémium weboldalak</span><span>Landing oldalak</span><span>Időpontfoglaló rendszerek</span><span>Kapcsolati űrlapok</span><span>Ajánlatkérő felületek</span><span>Mobilbarát kialakítás</span><span>Letisztult felület</span><span>Minőségi kivitelezés</span>
+        <span>Prémium weboldalak</span><span>Landing oldalak</span><span>Időpontfoglaló rendszerek</span><span>Kapcsolati űrlapok</span><span>Ajánlatkérő felületek</span><span>Mobilbarát kialakítás</span><span>Letisztult felület</span><span>Minőségi kivitelezés</span>
+      </div>
+    </div>
+
+    <section id="szolgaltatasok" class="section-block bg-solid">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-kicker">Szolgáltatások</p>
+          <h2 class="section-title">Weboldalak, amelyek nem csak jól néznek ki, hanem működnek is.</h2>
+        </div>
+
+        <div class="list-layout">
+          <article class="list-item reveal">
+            <div class="item-number">01</div>
+            <div class="item-content">
+              <h3>Prémium weboldalak</h3>
+              <p>Bemutatkozó oldalak, landing oldalak és céges weboldalak letisztult szerkezettel, mobilbarát kialakítással és erős első benyomással.</p>
+            </div>
+          </article>
+
+          <article class="list-item reveal">
+            <div class="item-number">02</div>
+            <div class="item-content">
+              <h3>Időpontfoglaló rendszerek</h3>
+              <p>Online foglalási felületek szolgáltatóknak, vendégeknek vagy ügyfeleknek: átlátható időpontok, egyszerű jelentkezés és rendezettebb működés.</p>
+            </div>
+          </article>
+
+          <article class="list-item reveal">
+            <div class="item-number">03</div>
+            <div class="item-content">
+              <h3>Egyedi webes funkciók</h3>
+              <p>Kapcsolati űrlapok, ajánlatkérő felületek, admin alapok és olyan megoldások, amelyek túlmutatnak egy egyszerű statikus weboldalon.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="ajanljuk" class="section-block bg-lift">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-kicker">Kinek ajánljuk?</p>
+          <h2 class="section-title">Ha komolyabb online jelenlétre van szükséged.</h2>
+        </div>
+
+        <div class="grid-layout">
+          <article class="grid-card reveal">
+            <span class="item-number">01</span>
+            <h3>Vállalkozóknak</h3>
+            <p>Akik szeretnének profibb bemutatkozó oldalt, ajánlatkérő felületet vagy időpontfoglalást.</p>
+          </article>
+
+          <article class="grid-card reveal" style="transition-delay: 0.08s;">
+            <span class="item-number">02</span>
+            <h3>Szolgáltatóknak</h3>
+            <p>Edzőknek, szépségipari szakembereknek, tanácsadóknak, oktatóknak vagy helyi szolgáltatóknak.</p>
+          </article>
+
+          <article class="grid-card reveal" style="transition-delay: 0.16s;">
+            <span class="item-number">03</span>
+            <h3>Márkáknak</h3>
+            <p>Akiknek fontos, hogy az online megjelenés ne sablonos, hanem igényes és bizalomépítő legyen.</p>
+          </article>
+
+          <article class="grid-card reveal" style="transition-delay: 0.24s;">
+            <span class="item-number">04</span>
+            <h3>Induló projekteknek</h3>
+            <p>Ha gyorsan kell egy jól kinéző, működő oldal egy ötlethez, kampányhoz vagy új szolgáltatáshoz.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="kerdesek" class="section-block bg-solid">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-kicker">Kérdések</p>
+          <h2 class="section-title">Gyakori kérdések indulás előtt.</h2>
+        </div>
+
+        <div class="list-layout">
+          <article class="list-item reveal">
+            <div class="item-number">01</div>
+            <div class="item-content">
+              <span class="item-label">Idő</span>
+              <h3>Mennyi idő egy weboldal?</h3>
+              <p>Egyszerűbb landing oldal néhány nap alatt is elkészülhet, összetettebb weboldal vagy foglalási funkció több egyeztetést igényel.</p>
+            </div>
+          </article>
+
+          <article class="list-item reveal">
+            <div class="item-number">02</div>
+            <div class="item-content">
+              <span class="item-label">Szöveg</span>
+              <h3>Kell kész szöveg?</h3>
+              <p>Nem feltétlenül. Elég, ha megvan az irány, a szolgáltatás és a cél. A szerkezetet és a szövegezést közösen is ki lehet alakítani.</p>
+            </div>
+          </article>
+
+          <article class="list-item reveal">
+            <div class="item-number">03</div>
+            <div class="item-content">
+              <span class="item-label">Extra funkció</span>
+              <h3>Lehet foglalási rendszer?</h3>
+              <p>Igen. Időpontfoglaló vagy ajánlatkérő működés beépíthető az oldalba, az igényekhez igazítva.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="folyamat" class="section-block bg-lift">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-kicker">Folyamat</p>
+          <h2 class="section-title">Ötletből terv. Tervből működő weboldal.</h2>
+        </div>
+
+        <div class="grid-layout">
+          <article class="grid-card reveal">
+            <span class="item-number">I.</span>
+            <h3>Irány</h3>
+            <p>Megértjük, milyen weboldalra vagy funkcióra van szükség, kinek szól, és milyen célt kell teljesítenie.</p>
+          </article>
+
+          <article class="grid-card reveal" style="transition-delay: 0.08s;">
+            <span class="item-number">II.</span>
+            <h3>Szerkezet</h3>
+            <p>Összerakjuk az oldal felépítését, a fő szekciókat, a felhasználói útvonalat és a szükséges funkciókat.</p>
+          </article>
+
+          <article class="grid-card reveal" style="transition-delay: 0.16s;">
+            <span class="item-number">III.</span>
+            <h3>Kivitelezés</h3>
+            <p>Elkészül a modern, mobilbarát és működő weboldal első verziója, akár időpontfoglalással vagy űrlapokkal.</p>
+          </article>
+
+          <article class="grid-card reveal" style="transition-delay: 0.24s;">
+            <span class="item-number">IV.</span>
+            <h3>Finomítás</h3>
+            <p>Átnézzük a részleteket, javítjuk az arányokat, teszteljük a működést és előkészítjük az élesítést.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+  </main>
+
+  <footer id="kapcsolat" class="section-block bg-solid">
+    <div class="container">
+      <div class="contact-layout">
+        <div class="contact-info reveal">
+          <h2>Indítsuk el a<br>következő <span class="gold-foil">verziót.</span></h2>
+          <p>Írd meg röviden, milyen weboldalra vagy funkcióra van szükséged: bemutatkozó oldal, landing oldal, időpontfoglaló rendszer, ajánlatkérő felület vagy egyedi webes megoldás.</p>
+          <a href="mailto:hello@krilixtechlabs.com" class="big-mail">hello@krilixtechlabs.com</a>
+        </div>
+
+        <div class="form-container reveal">
+          <form id="contactForm">
+            <div class="form-group">
+              <label for="name">Név</label>
+              <input type="text" id="name" placeholder="Neved" autocomplete="name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="email@pelda.hu" autocomplete="email" required>
+            </div>
+
+            <div class="form-group">
+              <label for="attachmentLink">Link / anyag opcionálisan</label>
+              <input type="url" id="attachmentLink" placeholder="Drive, WeTransfer, referencia vagy brief link">
+            </div>
+
+            <div class="form-group">
+              <label for="message">Üzenet</label>
+              <textarea id="message" placeholder="Írd le röviden, milyen weboldalt szeretnél, van-e már elképzelésed, kell-e például időpontfoglalás, űrlap vagy más extra funkció." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Üzenet küldése</button>
+            <p class="form-note" id="formNote">Írj pár mondatot, és visszajelzünk a következő lépésekkel. Küldéssel elfogadod az <a href="/adatkezeles" target="_blank" rel="noopener">adatkezelési tájékoztatót</a>.</p>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom reveal">
+        <span>© 2026 Krilix Tech & Labs</span>
+        <span>Innovation & Quality</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="form-popup" id="formPopup" aria-hidden="true">
+    <div class="form-popup-box" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+      <button class="form-popup-close" id="formPopupClose" type="button" aria-label="Bezárás">×</button>
+      <div class="form-popup-icon">✓</div>
+      <p class="form-popup-label">Üzenet elküldve</p>
+      <h2 id="popupTitle">Köszönjük a megkeresést.</h2>
+      <p>Az üzeneted megérkezett. Küldtünk egy visszaigazoló emailt is, és hamarosan jelentkezünk a következő lépésekkel.</p>
+      <button class="btn form-popup-btn" id="formPopupOk" type="button">Rendben</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navbar = document.getElementById('navbar');
+      const menuToggle = document.getElementById('menuToggle');
+      const navLinks = document.getElementById('navLinks');
+      const contactForm = document.getElementById('contactForm');
+      const formNote = document.getElementById('formNote');
+      const formPopup = document.getElementById('formPopup');
+      const formPopupClose = document.getElementById('formPopupClose');
+      const formPopupOk = document.getElementById('formPopupOk');
+
+      function handleNavbar() {
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+      }
+
+      handleNavbar();
+      window.addEventListener('scroll', handleNavbar, { passive: true });
+
+      menuToggle.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('open');
+        menuToggle.classList.toggle('active', isOpen);
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('open');
+          menuToggle.classList.remove('active');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      const observer = new IntersectionObserver((entries, observerInstance) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observerInstance.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+      setTimeout(() => {
+        document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('active'));
+      }, 100);
+
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      let particlesArray = [];
+      let animationFrame;
+
+      function setCanvasSize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      class Particle {
+        constructor(x, y, directionX, directionY, size, color) {
+          this.x = x;
+          this.y = y;
+          this.directionX = directionX;
+          this.directionY = directionY;
+          this.size = size;
+          this.color = color;
+        }
+
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        }
+
+        update() {
+          if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+          if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+          this.x += this.directionX;
+          this.y += this.directionY;
+          this.draw();
+        }
+      }
+
+      function initParticles() {
+        particlesArray = [];
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const density = reduceMotion ? 26000 : 13000;
+        const numberOfParticles = Math.min(120, Math.floor((canvas.height * canvas.width) / density));
+
+        for (let i = 0; i < numberOfParticles; i++) {
+          const size = Math.random() * 2 + 0.45;
+          const x = Math.random() * (canvas.width - size * 4) + size * 2;
+          const y = Math.random() * (canvas.height - size * 4) + size * 2;
+          const directionX = Math.random() * 1.1 - 0.55;
+          const directionY = Math.random() * 1.1 - 0.55;
+          particlesArray.push(new Particle(x, y, directionX, directionY, size, 'rgba(191, 149, 63, 0.32)'));
+        }
+      }
+
+      function connectParticles() {
+        for (let a = 0; a < particlesArray.length; a++) {
+          for (let b = a + 1; b < particlesArray.length; b++) {
+            const dx = particlesArray[a].x - particlesArray[b].x;
+            const dy = particlesArray[a].y - particlesArray[b].y;
+            const distance = dx * dx + dy * dy;
+            const maxDistance = (canvas.width / 8) * (canvas.height / 8);
+
+            if (distance < maxDistance) {
+              const opacityValue = 1 - distance / maxDistance;
+              ctx.strokeStyle = 'rgba(191, 149, 63,' + opacityValue * 0.18 + ')';
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+              ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particlesArray.forEach(particle => particle.update());
+        connectParticles();
+        animationFrame = requestAnimationFrame(animateParticles);
+      }
+
+      function restartParticles() {
+        cancelAnimationFrame(animationFrame);
+        setCanvasSize();
+        initParticles();
+        animateParticles();
+      }
+
+      restartParticles();
+      window.addEventListener('resize', restartParticles);
+
+      function openFormPopup() {
+        formPopup.classList.add('is-visible');
+        formPopup.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeFormPopup() {
+        formPopup.classList.remove('is-visible');
+        formPopup.setAttribute('aria-hidden', 'true');
+      }
+
+      function setNote(text, type) {
+        formNote.textContent = text;
+        formNote.className = 'form-note';
+        if (type) formNote.classList.add(type);
+      }
+
+      formPopupClose.addEventListener('click', closeFormPopup);
+      formPopupOk.addEventListener('click', closeFormPopup);
+      formPopup.addEventListener('click', event => {
+        if (event.target === formPopup) closeFormPopup();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeFormPopup();
+      });
+
+      contactForm.addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const button = contactForm.querySelector('button[type="submit"]');
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const attachmentLink = document.getElementById('attachmentLink').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        if (!name || !email || !message) {
+          setNote('Tölts ki minden kötelező mezőt.', 'error');
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = 'Küldés folyamatban...';
+        setNote('Az üzenet küldése folyamatban van.');
+
+        try {
+          const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, message, attachmentLink })
+          });
+
+          let result = {};
+          try {
+            result = await response.json();
+          } catch (_) {
+            result = {};
+          }
+
+          if (!response.ok || result.ok === false) {
+            throw new Error(result.error || 'Sikertelen küldés.');
+          }
+
+          contactForm.reset();
+          setNote('Köszönjük, az üzeneted megérkezett.', 'success');
+          openFormPopup();
+        } catch (error) {
+          setNote('Nem sikerült elküldeni az üzenetet. Ellenőrizd, hogy a /api/contact végpont működik-e, majd próbáld újra.', 'error');
+        } finally {
+          button.disabled = false;
+          button.textContent = 'Üzenet küldése';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

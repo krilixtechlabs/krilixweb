@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Krilix Admin</title>
+  <style>
+    :root{
+      --black:#050505;--black2:#0b0b0b;--panel:rgba(255,255,255,.035);--panel2:rgba(255,255,255,.06);
+      --gold:#b88a35;--gold2:#e7c879;--cream:#f4efe5;--text:#f7f1e6;--muted:#a99f90;
+      --line:rgba(255,255,255,.11);--line2:rgba(231,200,121,.24);--good:#70d68b;--blue:#77aaff;--danger:#ff9b9b;--warn:#f4be62;
+      --shadow:0 28px 110px rgba(0,0,0,.44)
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--black);color:var(--text);overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:
+      radial-gradient(circle at 72% 8%,rgba(184,138,53,.18),transparent 430px),
+      radial-gradient(circle at 0% 70%,rgba(184,138,53,.12),transparent 520px),
+      linear-gradient(90deg,transparent 0,transparent calc(25% - 1px),rgba(255,255,255,.025) 25%,transparent calc(25% + 1px)),
+      linear-gradient(90deg,transparent 0,transparent calc(50% - 1px),rgba(255,255,255,.025) 50%,transparent calc(50% + 1px)),
+      linear-gradient(90deg,transparent 0,transparent calc(75% - 1px),rgba(255,255,255,.025) 75%,transparent calc(75% + 1px))}
+    a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.app{min-height:100vh;display:grid;grid-template-columns:290px 1fr}
+    .sidebar{position:sticky;top:0;height:100vh;padding:28px 22px;border-right:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.016)),rgba(5,5,5,.92);backdrop-filter:blur(18px)}
+    .brand{display:flex;align-items:center;gap:14px;margin-bottom:42px}.brand img{width:48px;height:48px;object-fit:contain;background:var(--cream);border:1px solid rgba(231,200,121,.28)}.brand strong{display:block;letter-spacing:.32em;font-size:14px}.brand span{display:block;margin-top:7px;color:var(--gold2);font-size:10px;font-weight:900;letter-spacing:.24em;text-transform:uppercase}
+    .menu{display:grid;gap:8px}.menu-btn{width:100%;display:flex;align-items:center;gap:12px;min-height:50px;padding:0 16px;border:1px solid transparent;background:transparent;color:var(--muted);text-align:left;cursor:pointer;font-weight:800;transition:.22s}.menu-btn:hover,.menu-btn.active{background:rgba(184,138,53,.13);border-color:rgba(231,200,121,.2);color:var(--gold2);transform:translateX(3px)}.menu-icon{width:24px;text-align:center}.sidebar-card{position:absolute;left:22px;right:22px;bottom:28px;padding:20px;border:1px solid var(--line2);background:linear-gradient(145deg,rgba(231,200,121,.08),rgba(255,255,255,.02));box-shadow:var(--shadow)}.sidebar-card strong{display:block;color:var(--gold2);margin-bottom:8px}.sidebar-card p{margin:0 0 16px;color:var(--muted);font-size:14px;line-height:1.55}
+    .main{padding:26px 32px 70px}.topbar{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:28px}.hello small{display:block;color:var(--gold2);font-size:11px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;margin-bottom:8px}.hello h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:44px;line-height:.95;letter-spacing:-.04em}.top-actions{display:flex;align-items:center;gap:10px}.search{width:min(480px,42vw);min-height:48px;border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--text);padding:0 16px;outline:none}.search:focus{border-color:var(--gold2)}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:0 16px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);font-weight:900;cursor:pointer;transition:.22s}.btn:hover{border-color:var(--gold2);color:var(--gold2);transform:translateY(-1px)}.btn.gold{background:var(--cream);border-color:var(--cream);color:#111}.btn.gold:hover{background:var(--gold2);border-color:var(--gold2);color:#111}.btn.danger{border-color:rgba(255,155,155,.28);color:#ffb4b4}.btn.danger:hover{background:rgba(255,80,80,.12);color:#fff}.btn.small{min-height:36px;padding:0 11px;font-size:13px}
+    .login{min-height:100vh;display:grid;place-items:center;padding:26px}.login-box{width:min(100%,460px);padding:38px;border:1px solid rgba(231,200,121,.28);background:radial-gradient(circle at 50% 0%,rgba(231,200,121,.15),transparent 230px),linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025)),#121212;box-shadow:var(--shadow)}.login-box h1{margin:0 0 18px;font-family:Georgia,"Times New Roman",serif;font-size:46px;line-height:.95;letter-spacing:-.05em;font-weight:500}.note{margin:12px 0 0;color:var(--muted);font-size:14px;line-height:1.55}.note.error{color:var(--danger)}.note.success{color:var(--gold2)}.field{display:grid;gap:8px;margin:16px 0}.field label{color:var(--gold2);font-size:11px;font-weight:950;letter-spacing:.22em;text-transform:uppercase}.field input,.field textarea,.field select{width:100%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.055);color:var(--text);padding:13px;outline:none}.field textarea{min-height:95px;resize:vertical}.field select option{background:#111}
+    .screen{display:none}.screen.active{display:block}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.stat{padding:21px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.052),rgba(255,255,255,.02));box-shadow:0 16px 60px rgba(0,0,0,.24)}.stat small{display:block;color:var(--gold2);font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:900;margin-bottom:10px}.stat strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:38px;font-weight:500}.stat span{display:block;margin-top:8px;color:var(--muted);font-size:13px}
+    .grid-2{display:grid;grid-template-columns:1.45fr .85fr;gap:16px}.panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.018));box-shadow:0 18px 80px rgba(0,0,0,.28)}.panel-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px}.panel-head h2{margin:0;font-size:22px}.panel-head p{margin:5px 0 0;color:var(--muted);font-size:14px}.panel-body{padding:22px}.toolbar{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;margin-bottom:14px}.toolbar input,.toolbar select{min-height:44px;border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--text);padding:0 12px;outline:none}.toolbar select option{background:#111}
+    .table-wrap{overflow:auto;border:1px solid var(--line);background:rgba(0,0,0,.15)}table{width:100%;border-collapse:collapse;min-width:860px}th,td{padding:14px 14px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;font-size:14px;vertical-align:middle}th{color:var(--muted);font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:rgba(255,255,255,.025)}tr:hover td{background:rgba(255,255,255,.025)}.person{display:flex;align-items:center;gap:10px}.avatar{width:34px;height:34px;border-radius:999px;display:grid;place-items:center;background:rgba(231,200,121,.12);border:1px solid rgba(231,200,121,.26);color:var(--gold2);font-size:12px;font-weight:900}.person strong{display:block}.person small{display:block;color:var(--muted);margin-top:3px}.tag{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border:1px solid rgba(231,200,121,.26);background:rgba(231,200,121,.08);color:var(--gold2);font-size:12px;font-weight:900}.tag.green{border-color:rgba(112,214,139,.28);background:rgba(112,214,139,.08);color:var(--good)}.tag.blue{border-color:rgba(119,170,255,.3);background:rgba(119,170,255,.08);color:var(--blue)}.tag.red{border-color:rgba(255,155,155,.28);background:rgba(255,155,155,.08);color:var(--danger)}.tag.gray{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:var(--muted)}
+    .cards-list{display:grid;gap:12px}.brief-card{padding:16px;border:1px solid var(--line);background:rgba(255,255,255,.025);cursor:pointer;transition:.22s}.brief-card:hover{border-color:var(--line2);transform:translateY(-2px)}.brief-card.active{border-color:var(--gold2);background:rgba(231,200,121,.07)}.brief-card-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}.brief-card h3{margin:0;font-size:18px}.brief-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}.detail{display:grid;gap:14px}.detail-title{display:flex;justify-content:space-between;gap:12px;align-items:start}.detail-title h2{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:36px;line-height:.95;letter-spacing:-.04em;font-weight:500}.detail-title p{margin:8px 0 0;color:var(--muted)}.detail-actions{display:flex;gap:8px;flex-wrap:wrap}.detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.info-box{padding:16px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.025)}.info-box.full{grid-column:1/-1}.info-box small{display:block;color:var(--gold2);font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}.info-box div,.info-box p{margin:0;color:#ddd5c7;line-height:1.6;white-space:pre-wrap}.chips{display:flex;flex-wrap:wrap;gap:7px}.chip{display:inline-flex;padding:7px 9px;border:1px solid rgba(231,200,121,.22);color:var(--gold2);background:rgba(231,200,121,.06);font-size:12px}.empty{padding:22px;border:1px solid var(--line);background:var(--panel);color:var(--muted)}
+    .modal{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:.25s}.modal.show{opacity:1;visibility:visible;pointer-events:auto}.modal:before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.74);backdrop-filter:blur(10px)}.modal-box{position:relative;width:min(100%,520px);padding:32px;border:1px solid var(--line2);background:#111;box-shadow:var(--shadow)}.modal-box h2{margin:0 0 12px;font-family:Georgia,"Times New Roman",serif;font-size:38px;line-height:.95;letter-spacing:-.04em;font-weight:500}.modal-actions{display:flex;gap:10px;margin-top:22px}.modal-actions .btn{flex:1}
+    @media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.sidebar-card{position:static;margin-top:20px}.main{padding:22px}.stats,.grid-2{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}.search{width:100%}.topbar{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr}.info-box.full{grid-column:auto}}
+    @media(max-width:620px){.main{padding:16px}.hello h1{font-size:34px}.stats{gap:10px}.stat{padding:16px}.panel-head,.panel-body{padding:16px}.detail-title{display:grid}.modal-actions{display:grid}}
+  </style>
+</head>
+<body>
+  <section class="login" id="loginScreen">
+    <div class="login-box">
+      <div class="brand"><img src="/krilix-logo.png" alt="Krilix logó"><div><strong>KRILIX</strong><span>Admin</span></div></div>
+      <h1>Admin belépés.</h1>
+      <p class="note">Brief-ek, ajánlatkérések és projektindító információk kezelése.</p>
+      <form id="loginForm">
+        <div class="field"><label for="password">Jelszó</label><input id="password" type="password" placeholder="Admin jelszó" required></div>
+        <button class="btn gold" type="submit">Belépés</button>
+        <p class="note" id="loginNote"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="app" id="appScreen" style="display:none">
+    <aside class="sidebar">
+      <div class="brand"><img src="/krilix-logo.png" alt="Krilix logó"><div><strong>KRILIX</strong><span>Tech & Labs</span></div></div>
+      <nav class="menu">
+        <button class="menu-btn active" data-screen="dashboard"><span class="menu-icon">▦</span>Irányítópult</button>
+        <button class="menu-btn" data-screen="briefs"><span class="menu-icon">◉</span>Brief-ek</button>
+        <button class="menu-btn" data-screen="messages"><span class="menu-icon">✉</span>Ajánlatkérések</button>
+        <button class="menu-btn" data-screen="projects"><span class="menu-icon">□</span>Projektek</button>
+        <button class="menu-btn" data-screen="settings"><span class="menu-icon">⚙</span>Beállítások</button>
+      </nav>
+      <div class="sidebar-card">
+        <strong>Krilix workflow</strong>
+        <p>Brief beérkezik → átnézés → státusz → ajánlat → projekt.</p>
+        <button class="btn small" id="logoutBtn">Kilépés</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="hello"><small>Krilix Admin</small><h1 id="pageTitle">Irányítópult.</h1></div>
+        <div class="top-actions">
+          <input class="search" id="globalSearch" type="search" placeholder="Keresés név, cég, email vagy projekt alapján...">
+          <button class="btn gold" id="refreshBtn">Frissítés</button>
+        </div>
+      </div>
+
+      <section class="screen active" id="dashboardScreen">
+        <div class="stats" id="stats"></div>
+        <div class="grid-2">
+          <section class="panel">
+            <div class="panel-head"><div><h2>Legutóbbi brief-ek</h2><p>Frissen beérkezett projektindító anyagok.</p></div><button class="btn small" data-go="briefs">Összes brief</button></div>
+            <div class="panel-body"><div class="cards-list" id="latestBriefs"></div></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><div><h2>Gyors összegzés</h2><p>Állapotok és teendők.</p></div></div>
+            <div class="panel-body" id="quickSummary"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="briefsScreen">
+        <div class="grid-2">
+          <section class="panel">
+            <div class="panel-head"><div><h2>Brief-ek</h2><p>Összes beküldött projekt brief.</p></div><button class="btn gold small" onclick="location.href='/brief'" type="button">Brief oldal</button></div>
+            <div class="panel-body">
+              <div class="toolbar">
+                <input id="briefSearch" type="search" placeholder="Keresés név, cég, email vagy cél alapján...">
+                <select id="briefStatusFilter"><option value="all">Összes státusz</option></select>
+                <select id="briefTypeFilter"><option value="all">Összes típus</option></select>
+                <button class="btn" id="exportBriefsBtn">Export CSV</button>
+              </div>
+              <div class="table-wrap"><table><thead><tr><th>Név / cég</th><th>Projekt</th><th>Érkezés</th><th>Prioritás</th><th>Státusz</th><th>Művelet</th></tr></thead><tbody id="briefRows"></tbody></table></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><div><h2>Brief részletek</h2><p id="detailHint">Válassz ki egy briefet a listából.</p></div></div>
+            <div class="panel-body"><div id="briefDetail" class="empty">Nincs kiválasztott brief.</div></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="messagesScreen">
+        <section class="panel">
+          <div class="panel-head"><div><h2>Ajánlatkérések</h2><p>A főoldali kapcsolat űrlapról érkezett megkeresések.</p></div></div>
+          <div class="panel-body">
+            <div class="toolbar">
+              <input id="messageSearch" type="search" placeholder="Keresés név, email vagy üzenet alapján...">
+              <select id="messageBusinessFilter"><option value="all">Összes üzleti státusz</option></select>
+              <select id="messageFilter"><option value="all">Összes üzenet</option><option value="unread">Új ügyfélüzenet</option><option value="replied">Megválaszolva</option></select>
+              <span></span>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>Név</th><th>Email</th><th>Utolsó aktivitás</th><th>Státusz</th><th>Művelet</th></tr></thead><tbody id="messageRows"></tbody></table></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="screen" id="projectsScreen">
+        <div class="empty">Projekt modul előkészítve. Ide később kerülhetnek az elfogadott briefből létrehozott projektek.</div>
+      </section>
+
+      <section class="screen" id="settingsScreen">
+        <div class="empty">Beállítások modul előkészítve. Itt később email sablonok, státuszok és admin profil kezelhető.</div>
+      </section>
+    </main>
+  </section>
+
+  <div class="modal" id="confirmModal">
+    <div class="modal-box">
+      <h2>Törlés?</h2>
+      <p class="note" id="confirmText">Ez a művelet nem vonható vissza.</p>
+      <div class="modal-actions"><button class="btn" id="cancelDelete">Mégse</button><button class="btn danger" id="approveDelete">Törlés</button></div>
+    </div>
+  </div>
+
+  <script>
+    const state={briefs:[],messages:[],selectedBriefId:null,deleteTarget:null};
+    const briefStatusLabels={new:"Új",contacted:"Kontaktálva",processing:"Feldolgozás alatt",offer_ready:"Ajánlat készül",offer_sent:"Ajánlat elküldve",accepted:"Elfogadva",declined:"Elutasítva",closed:"Lezárva"};
+    const messageStatusLabels={new_lead:"Új érdeklődő",in_discussion:"Egyeztetés alatt",offer_sent:"Ajánlat kiküldve",accepted:"Elfogadva",declined:"Elutasítva",closed:"Lezárva"};
+    const priorityRank={"Nagyon sürgős":1,"Sürgős":2,"Minél hamarabb":2,"1-2 héten belül":3,"Normál":4,"Rugalmas":5};
+
+    const $=id=>document.getElementById(id);
+    const loginScreen=$("loginScreen"), appScreen=$("appScreen"), loginForm=$("loginForm"), loginNote=$("loginNote");
+    const pageTitle=$("pageTitle"), globalSearch=$("globalSearch");
+    const screens={dashboard:$("dashboardScreen"),briefs:$("briefsScreen"),messages:$("messagesScreen"),projects:$("projectsScreen"),settings:$("settingsScreen")};
+
+    init();
+
+    function init(){
+      Object.entries(briefStatusLabels).forEach(([v,l])=>$("briefStatusFilter").insertAdjacentHTML("beforeend",`<option value="${v}">${l}</option>`));
+      Object.entries(messageStatusLabels).forEach(([v,l])=>$("messageBusinessFilter").insertAdjacentHTML("beforeend",`<option value="${v}">${l}</option>`));
+      loginForm.addEventListener("submit",login);
+      $("logoutBtn").addEventListener("click",logout);
+      $("refreshBtn").addEventListener("click",loadAll);
+      document.querySelectorAll(".menu-btn").forEach(btn=>btn.addEventListener("click",()=>switchScreen(btn.dataset.screen)));
+      document.querySelectorAll("[data-go]").forEach(btn=>btn.addEventListener("click",()=>switchScreen(btn.dataset.go)));
+      ["briefSearch","briefStatusFilter","briefTypeFilter","globalSearch"].forEach(id=>$(id).addEventListener("input",renderBriefs));
+      ["messageSearch","messageBusinessFilter","messageFilter","globalSearch"].forEach(id=>$(id).addEventListener("input",renderMessages));
+      $("exportBriefsBtn").addEventListener("click",exportBriefs);
+      $("cancelDelete").addEventListener("click",closeConfirm);
+      $("approveDelete").addEventListener("click",approveDelete);
+      $("confirmModal").addEventListener("click",e=>{if(e.target.id==="confirmModal")closeConfirm()});
+      checkAuth();
+    }
+
+    async function checkAuth(){
+      try{
+        const res=await fetch("/api/admin/me",{credentials:"include"});
+        if(res.ok){showApp();await loadAll()}else showLogin();
+      }catch{showLogin()}
+    }
+
+    async function login(e){
+      e.preventDefault();
+      loginNote.textContent="Belépés folyamatban...";
+      loginNote.className="note";
+      try{
+        const res=await fetch("/api/admin/login",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:$("password").value})});
+        const data=await res.json();
+        if(!res.ok||!data.ok)throw new Error(data.error||"Sikertelen belépés.");
+        showApp(); await loadAll();
+      }catch(err){loginNote.textContent=err.message;loginNote.className="note error"}
+    }
+
+    async function logout(){await fetch("/api/admin/logout",{method:"POST",credentials:"include"});showLogin()}
+    function showApp(){loginScreen.style.display="none";appScreen.style.display="grid"}
+    function showLogin(){loginScreen.style.display="grid";appScreen.style.display="none"}
+
+    async function loadAll(){
+      await Promise.all([loadBriefs(),loadMessages()]);
+      renderStats(); renderBriefs(); renderMessages(); renderDashboard();
+    }
+
+    async function loadBriefs(){
+      try{
+        const res=await fetch("/api/admin/briefs",{credentials:"include"});
+        if(res.status===401){showLogin();return}
+        const data=await res.json();
+        if(!res.ok||!data.ok)throw new Error(data.error);
+        state.briefs=data.briefs||[];
+        fillTypeFilter();
+      }catch(err){state.briefs=[];console.error(err)}
+    }
+
+    async function loadMessages(){
+      try{
+        const res=await fetch("/api/admin/messages",{credentials:"include"});
+        if(res.status===401){showLogin();return}
+        const data=await res.json();
+        if(!res.ok||!data.ok)throw new Error(data.error);
+        state.messages=data.messages||[];
+      }catch(err){state.messages=[];console.error(err)}
+    }
+
+    function switchScreen(name){
+      Object.values(screens).forEach(s=>s.classList.remove("active"));
+      screens[name].classList.add("active");
+      document.querySelectorAll(".menu-btn").forEach(b=>b.classList.toggle("active",b.dataset.screen===name));
+      pageTitle.textContent={dashboard:"Irányítópult.",briefs:"Brief-ek.",messages:"Ajánlatkérések.",projects:"Projektek.",settings:"Beállítások."}[name]||"Admin.";
+    }
+
+    function renderStats(){
+      const newBriefs=state.briefs.filter(b=>b.status==="new").length;
+      const activeBriefs=state.briefs.filter(b=>!["closed","declined","accepted"].includes(b.status)).length;
+      const pendingOffers=state.briefs.filter(b=>["processing","offer_ready"].includes(b.status)).length + state.messages.filter(m=>["in_discussion","new_lead"].includes(m.business_status)).length;
+      const allLeads=state.briefs.length+state.messages.length;
+      $("stats").innerHTML=[
+        stat("Új brief-ek",newBriefs,"azonnali átnézésre"),
+        stat("Aktív projektek",activeBriefs,"brief alapján"),
+        stat("Függő ajánlatok",pendingOffers,"teendő státuszban"),
+        stat("Összes lead",allLeads,"brief + kapcsolat")
+      ].join("");
+    }
+
+    function stat(label,value,sub){return `<article class="stat"><small>${label}</small><strong>${value}</strong><span>${sub}</span></article>`}
+
+    function renderDashboard(){
+      const latest=state.briefs.slice(0,5);
+      $("latestBriefs").innerHTML=latest.length?latest.map(b=>briefMiniCard(b)).join(""):`<div class="empty">Még nincs brief.</div>`;
+      const statusCounts=countBy(state.briefs,b=>b.status||"new");
+      $("quickSummary").innerHTML=`
+        <div class="detail">
+          <div class="info-box"><small>Ma / összes brief</small><div>${state.briefs.length} db összesen</div></div>
+          <div class="info-box"><small>Státusz megoszlás</small><div class="chips">${Object.entries(statusCounts).map(([k,v])=>`<span class="chip">${briefStatusLabels[k]||k}: ${v}</span>`).join("")||"Nincs adat"}</div></div>
+          <div class="info-box"><small>Következő lépés</small><div>Nyisd meg az új briefeket, állíts státuszt, majd készíts ajánlatot vagy vedd fel a kapcsolatot az ügyféllel.</div></div>
+        </div>`;
+    }
+
+    function briefMiniCard(b){
+      return `<article class="brief-card" onclick="selectBrief(${b.id});switchScreen('briefs')"><div class="brief-card-top"><h3>${esc(b.name)}</h3>${statusTag(b.status)}</div><p>${esc(b.company||b.email||"")}</p><p>${esc((b.projectTypes||[]).join(", ")||"Nincs típus")} · ${date(b.createdAt)}</p></article>`;
+    }
+
+    function fillTypeFilter(){
+      const select=$("briefTypeFilter"), current=select.value;
+      const types=[...new Set(state.briefs.flatMap(b=>b.projectTypes||[]).filter(Boolean))].sort();
+      select.innerHTML='<option value="all">Összes típus</option>'+types.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join("");
+      select.value=types.includes(current)?current:"all";
+    }
+
+    function filteredBriefs(){
+      const q=($("briefSearch").value||globalSearch.value||"").trim().toLowerCase();
+      const status=$("briefStatusFilter").value, type=$("briefTypeFilter").value;
+      return state.briefs.filter(b=>{
+        const hay=[b.briefCode,b.name,b.email,b.company,b.mainGoal,b.deadline,b.budget,b.adminNote,(b.projectTypes||[]).join(" ")].join(" ").toLowerCase();
+        if(q&&!hay.includes(q))return false;
+        if(status!=="all"&&b.status!==status)return false;
+        if(type!=="all"&&!(b.projectTypes||[]).includes(type))return false;
+        return true;
+      });
+    }
+
+    function renderBriefs(){
+      const rows=filteredBriefs();
+      $("briefRows").innerHTML=rows.length?rows.map(b=>`
+        <tr class="${state.selectedBriefId===b.id?"selected":""}">
+          <td><div class="person"><div class="avatar">${initials(b.name)}</div><div><strong>${esc(b.name)}</strong><small>${esc(b.company||b.email||"")}</small></div></div></td>
+          <td>${esc((b.projectTypes||[])[0]||"Nincs megadva")}</td>
+          <td>${date(b.createdAt)}</td>
+          <td>${priorityTag(b)}</td>
+          <td>${statusTag(b.status)}</td>
+          <td><button class="btn small gold" onclick="selectBrief(${b.id})">Megnyitás</button></td>
+        </tr>`).join(""):`<tr><td colspan="6">Nincs ilyen brief.</td></tr>`;
+      if(state.selectedBriefId){const b=state.briefs.find(x=>x.id===state.selectedBriefId); if(b) renderBriefDetail(b);}
+    }
+
+    function selectBrief(id){state.selectedBriefId=id;const b=state.briefs.find(x=>x.id===id);renderBriefs();renderBriefDetail(b)}
+
+    function renderBriefDetail(b){
+      if(!b){$("briefDetail").innerHTML=`<div class="empty">Nincs kiválasztott brief.</div>`;return}
+      $("detailHint").textContent=`${b.briefCode||("#"+b.id)} · ${date(b.createdAt)}`;
+      const mailSubject=encodeURIComponent(`Ajánlat / ${b.briefCode||"brief"} - Krilix Tech & Labs`);
+      $("briefDetail").innerHTML=`
+        <div class="detail">
+          <div class="detail-title">
+            <div><h2>${esc(b.name)}</h2><p>${esc(b.company||"")} · ${esc(b.email)}</p></div>
+            <div class="detail-actions">
+              <a class="btn small" href="mailto:${esc(b.email)}?subject=${mailSubject}">Email</a>
+              <button class="btn small danger" onclick="confirmDelete('brief',${b.id},'${jsq(b.name)}')">Törlés</button>
+            </div>
+          </div>
+          <div class="detail-grid">
+            <div class="field"><label>Státusz</label><select onchange="updateBrief(${b.id},{status:this.value})">${Object.entries(briefStatusLabels).map(([v,l])=>`<option value="${v}" ${b.status===v?"selected":""}>${l}</option>`).join("")}</select></div>
+            <div class="field"><label>Belső jegyzet</label><textarea onblur="updateBrief(${b.id},{adminNote:this.value})">${esc(b.adminNote||"")}</textarea></div>
+            ${info("Alap adatok",`Email: ${b.email||"—"}\nTelefon: ${b.phone||"—"}\nCég: ${b.company||"—"}\nWeboldal: ${b.currentWebsite||"—"}\nSocial: ${b.socialLink||"—"}`)}
+            ${info("Projekt típus",chips(b.projectTypes),false)}
+            ${info("Fő cél",b.mainGoal||"—",true)}
+            ${info("Tartalom és anyagok",chips(b.materials),false)}
+            ${info("Anyag linkek",b.materialLinks||"—",true)}
+            ${info("Dizájn",`Stílus: ${b.styleDirection||"—"}\nSzínek: ${b.colors||"—"}\nReferenciák: ${b.references||"—"}\nKerülendő: ${b.avoid||"—"}`,true)}
+            ${info("Funkciók",chips(b.features),false)}
+            ${info("Egyedi funkció",b.customFeatures||"—",true)}
+            ${info("Technikai háttér",`${(b.technical||[]).join(", ")||"—"}\nDomain: ${b.domain||"—"}\nNyelvek: ${b.languages||"—"}`,true)}
+            ${info("Határidő és keret",`Határidő: ${b.deadline||"—"}\nKeret: ${b.budget||"—"}\nSürgősség: ${b.priority||"—"}\nMegjegyzés: ${b.extraMessage||"—"}`,true)}
+          </div>
+        </div>`;
+    }
+
+    function renderMessages(){
+      const q=($("messageSearch").value||globalSearch.value||"").trim().toLowerCase();
+      const bs=$("messageBusinessFilter").value, mf=$("messageFilter").value;
+      const rows=state.messages.filter(m=>{
+        const hay=[m.project_code,m.name,m.email,m.message,m.last_message,m.admin_note].join(" ").toLowerCase();
+        if(q&&!hay.includes(q))return false;
+        if(bs!=="all"&&m.business_status!==bs)return false;
+        if(mf==="unread"&&!m.has_unread_customer_message)return false;
+        if(mf==="replied"&&m.status!=="replied")return false;
+        return true;
+      });
+      $("messageRows").innerHTML=rows.length?rows.map(m=>`
+        <tr>
+          <td><div class="person"><div class="avatar">${initials(m.name)}</div><div><strong>${esc(m.name||"Névtelen")}</strong><small>${esc(m.project_code||("#"+m.id))}</small></div></div></td>
+          <td>${esc(m.email||"—")}</td>
+          <td>${date(m.last_activity_at||m.created_at)}</td>
+          <td>${messageStatusTag(m.business_status)} ${m.has_unread_customer_message?'<span class="tag">Új üzenet</span>':""}</td>
+          <td><a class="btn small gold" href="/thread/${esc(m.thread_token)}?admin=1" target="_blank" onclick="markRead(${m.id})">Beszélgetés</a></td>
+        </tr>`).join(""):`<tr><td colspan="5">Nincs ilyen megkeresés.</td></tr>`;
+    }
+
+    async function updateBrief(id,payload){
+      try{
+        const res=await fetch(`/api/admin/briefs/${id}`,{method:"PATCH",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+        const data=await res.json();
+        if(!res.ok||!data.ok)throw new Error(data.error);
+        const idx=state.briefs.findIndex(b=>b.id===id); if(idx>-1)state.briefs[idx]=data.brief;
+        renderBriefs();renderDashboard();renderStats();
+      }catch(e){alert("Nem sikerült menteni.")}
+    }
+
+    async function markRead(id){try{await fetch(`/api/admin/messages/${id}/read`,{method:"POST",credentials:"include"})}catch{}}
+
+    function confirmDelete(type,id,name){state.deleteTarget={type,id,name};$("confirmText").textContent=`A(z) "${name}" elem törlődni fog.`;$("confirmModal").classList.add("show")}
+    function closeConfirm(){state.deleteTarget=null;$("confirmModal").classList.remove("show")}
+    async function approveDelete(){
+      if(!state.deleteTarget)return;
+      const {type,id}=state.deleteTarget;
+      try{
+        const url=type==="brief"?`/api/admin/briefs/${id}`:`/api/admin/messages/${id}`;
+        const res=await fetch(url,{method:"DELETE",credentials:"include"});
+        const data=await res.json();
+        if(!res.ok||!data.ok)throw new Error(data.error);
+        closeConfirm(); await loadAll();
+      }catch(e){alert("Nem sikerült törölni.")}
+    }
+
+    function exportBriefs(){
+      const rows=filteredBriefs();
+      const header=["Azonosító","Név","Email","Telefon","Cég","Projekt típus","Fő cél","Státusz","Határidő","Keret","Érkezés"];
+      const csv=[header,...rows.map(b=>[b.briefCode,b.name,b.email,b.phone,b.company,(b.projectTypes||[]).join("; "),b.mainGoal,briefStatusLabels[b.status]||b.status,b.deadline,b.budget,date(b.createdAt)])].map(r=>r.map(cell=>`"${String(cell||"").replaceAll('"','""')}"`).join(",")).join("\n");
+      const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
+      const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="krilix-briefek.csv"; a.click(); URL.revokeObjectURL(url);
+    }
+
+    function info(title,value,full=true){return `<div class="info-box ${full?"full":""}"><small>${title}</small><div>${typeof value==="string"?esc(value):value}</div></div>`}
+    function chips(values){return `<div class="chips">${(values&&values.length)?values.map(v=>`<span class="chip">${esc(v)}</span>`).join(""):"—"}</div>`}
+    function statusTag(s){const cls={accepted:"green",offer_sent:"blue",offer_ready:"blue",declined:"red",closed:"gray",processing:""}[s]||"";return `<span class="tag ${cls}">${esc(briefStatusLabels[s]||s||"Új")}</span>`}
+    function messageStatusTag(s){const cls={accepted:"green",offer_sent:"blue",declined:"red",closed:"gray"}[s]||"";return `<span class="tag ${cls}">${esc(messageStatusLabels[s]||s||"Új")}</span>`}
+    function priorityTag(b){const p=b.priority||b.deadline||"Normál";let cls=priorityRank[p]<=2?"red":priorityRank[p]===3?"":"green";return `<span class="tag ${cls}">${esc(p)}</span>`}
+    function date(d){if(!d)return"—";return new Date(d).toLocaleString("hu-HU",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})}
+    function initials(name=""){return String(name).split(" ").filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"?"}
+    function esc(v=""){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+    function jsq(v=""){return String(v??"").replaceAll("\\","\\\\").replaceAll("'","\\'").replaceAll("\n"," ")}
+    function countBy(arr,fn){return arr.reduce((a,x)=>{const k=fn(x);a[k]=(a[k]||0)+1;return a},{})}
+  </script>
+</body>
+</html>
