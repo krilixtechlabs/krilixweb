@@ -1,1 +1,1062 @@
-<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Adatkezelés - Krilix</title><style>body{margin:0;background:#f4efe5;color:#070707;font-family:Arial,Helvetica,sans-serif;line-height:1.7}.wrap{width:min(920px,calc(100% - 40px));margin:0 auto;padding:70px 0}h1,h2{font-family:Georgia,serif;letter-spacing:-.05em}h1{font-size:clamp(48px,7vw,84px);line-height:.9}a{color:#8a6a2c}</style></head><body><main class="wrap"><p><a href="/">← Vissza</a></p><h1>Adatkezelési tájékoztató.</h1><p>Ez egy alap tájékoztató sablon a Krilix Tech & Labs kapcsolatfelvételi űrlapjához. Éles jogi használat előtt érdemes jogi szakemberrel átnézetni.</p><h2>Milyen adatokat kezelünk?</h2><p>Név, email cím, az üzenet tartalma, opcionálisan a beküldött link, valamint a privát beszélgetésben küldött üzenetek.</p><h2>Miért kezeljük?</h2><p>Azért, hogy válaszolni tudjunk a megkeresésre, ajánlatot készítsünk, és a projekt előkészítéséhez szükséges egyeztetést kezeljük.</p><h2>Meddig tároljuk?</h2><p>A megkereséseket addig őrizzük, amíg az egyeztetéshez vagy üzleti adminisztrációhoz szükséges. Kérésre törölhetőek.</p><h2>Kapcsolat</h2><p>Adatkezelési kérés esetén írj a megadott kapcsolatfelvételi email címre.</p></main></body></html>
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Adatkezelési tájékoztató – Krilix Tech & Labs</title>
+    <meta
+      name="description"
+      content="A Krilix Tech & Labs kapcsolatfelvételi űrlapjához és weboldalához kapcsolódó adatkezelési tájékoztató."
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#050607" />
+
+    <link rel="icon" href="/krilix-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&family=Syncopate:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ================================================================
+         ALAPVÁLTOZÓK
+         ================================================================ */
+      :root {
+        --bg: #050607;
+        --bg-soft: #090b0d;
+        --panel: rgba(255, 255, 255, 0.028);
+        --panel-strong: rgba(255, 255, 255, 0.045);
+        --text: #f5f1e9;
+        --muted: rgba(245, 241, 233, 0.68);
+        --muted-soft: rgba(245, 241, 233, 0.44);
+        --line: rgba(255, 255, 255, 0.085);
+        --gold: #c7973c;
+        --gold-light: #f0cd78;
+        --gold-line: rgba(240, 205, 120, 0.24);
+        --success: #76d498;
+        --shadow: 0 28px 90px rgba(0, 0, 0, 0.46);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius: 14px;
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --page-pad: clamp(20px, 5vw, 84px);
+        --content-width: 1320px;
+        --gold-gradient: linear-gradient(
+          135deg,
+          #f4df9c 0%,
+          #c7973c 48%,
+          #f2d47f 100%
+        );
+      }
+
+      /* ================================================================
+         ALAPBEÁLLÍTÁSOK
+         ================================================================ */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+        color: var(--text);
+        font-family: "Manrope", sans-serif;
+        line-height: 1.75;
+        background:
+          radial-gradient(
+            circle at 86% 8%,
+            rgba(199, 151, 60, 0.14),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at 12% 34%,
+            rgba(199, 151, 60, 0.07),
+            transparent 24%
+          ),
+          linear-gradient(180deg, #040506 0%, #090b0d 46%, #050607 100%);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        opacity: 0.035;
+        background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency=".82" numOctaves="3"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E');
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -3;
+        pointer-events: none;
+        opacity: 0.26;
+        background-image:
+          linear-gradient(rgba(240, 205, 120, 0.025) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(240, 205, 120, 0.025) 1px,
+            transparent 1px
+          );
+        background-size: 76px 76px;
+        mask-image: linear-gradient(to bottom, #000, transparent 80%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .container {
+        width: min(
+          var(--content-width),
+          calc(100% - (var(--page-pad) * 2))
+        );
+        margin: 0 auto;
+      }
+
+      .display {
+        font-family: "DM Serif Display", serif;
+        font-weight: 400;
+        letter-spacing: -0.035em;
+      }
+
+      .gold-text {
+        background: var(--gold-gradient);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 11px;
+        color: var(--gold-light);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 38px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--gold-light));
+      }
+
+      /* ================================================================
+         NAVIGÁCIÓ
+         ================================================================ */
+      .nav-wrap {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+        background: rgba(5, 6, 7, 0.78);
+        backdrop-filter: blur(18px);
+      }
+
+      .navbar {
+        min-height: 78px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .brand img {
+        width: 46px;
+        height: 46px;
+        object-fit: contain;
+        border: 1px solid rgba(240, 205, 120, 0.28);
+        border-radius: 10px;
+        background: #ece5d9;
+        box-shadow: 0 0 28px rgba(199, 151, 60, 0.1);
+      }
+
+      .brand strong {
+        display: block;
+        font-family: "Syncopate", sans-serif;
+        font-size: 16px;
+        letter-spacing: 0.18em;
+      }
+
+      .brand span {
+        display: block;
+        margin-top: 5px;
+        color: var(--gold-light);
+        font-size: 8px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+      }
+
+      .back-link {
+        min-height: 44px;
+        padding: 0 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.025);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition:
+          transform 0.22s var(--ease),
+          border-color 0.22s ease,
+          color 0.22s ease;
+      }
+
+      .back-link:hover {
+        color: var(--gold-light);
+        border-color: var(--gold-line);
+        transform: translateY(-2px);
+      }
+
+      /* ================================================================
+         HERO
+         ================================================================ */
+      .hero {
+        padding: clamp(74px, 9vw, 132px) 0 clamp(48px, 6vw, 80px);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: clamp(34px, 6vw, 92px);
+        align-items: end;
+      }
+
+      .hero h1 {
+        max-width: 10ch;
+        margin: 18px 0 22px;
+        font-size: clamp(58px, 8vw, 112px);
+        line-height: 0.9;
+      }
+
+      .hero-lead {
+        max-width: 66ch;
+        color: var(--muted);
+        font-size: clamp(16px, 1.5vw, 19px);
+        line-height: 1.85;
+      }
+
+      .hero-meta {
+        padding: 24px;
+        border: 1px solid var(--gold-line);
+        border-radius: var(--radius-lg);
+        background:
+          radial-gradient(
+            circle at 100% 0%,
+            rgba(199, 151, 60, 0.13),
+            transparent 42%
+          ),
+          rgba(255, 255, 255, 0.025);
+        box-shadow: var(--shadow);
+      }
+
+      .meta-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--gold-light);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .hero-meta strong {
+        display: block;
+        margin-bottom: 16px;
+        font-size: 18px;
+      }
+
+      .hero-meta p {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .meta-separator {
+        height: 1px;
+        margin: 18px 0;
+        background: var(--line);
+      }
+
+      /* ================================================================
+         FŐ TARTALOM
+         ================================================================ */
+      .privacy-layout {
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        gap: 28px;
+        padding-bottom: clamp(72px, 9vw, 130px);
+      }
+
+      .toc {
+        position: sticky;
+        top: 102px;
+        align-self: start;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(10, 12, 14, 0.72);
+        backdrop-filter: blur(14px);
+      }
+
+      .toc strong {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--gold-light);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .toc nav {
+        display: grid;
+        gap: 3px;
+      }
+
+      .toc a {
+        padding: 9px 10px;
+        border-radius: 9px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+        transition:
+          color 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .toc a:hover {
+        color: var(--gold-light);
+        background: rgba(199, 151, 60, 0.07);
+      }
+
+      .privacy-content {
+        display: grid;
+        gap: 16px;
+      }
+
+      .privacy-card {
+        scroll-margin-top: 104px;
+        padding: clamp(24px, 3.5vw, 42px);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.033),
+          rgba(255, 255, 255, 0.014)
+        );
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.2);
+      }
+
+      .section-number {
+        display: inline-grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        margin-bottom: 18px;
+        border: 1px solid var(--gold-line);
+        border-radius: 50%;
+        color: var(--gold-light);
+        background: rgba(199, 151, 60, 0.055);
+        font-family: "Syncopate", sans-serif;
+        font-size: 9px;
+      }
+
+      .privacy-card h2 {
+        margin-bottom: 16px;
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(30px, 3vw, 44px);
+        font-weight: 400;
+        line-height: 1.05;
+        letter-spacing: -0.025em;
+      }
+
+      .privacy-card h3 {
+        margin: 26px 0 10px;
+        color: var(--gold-light);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .privacy-card p {
+        color: var(--muted);
+      }
+
+      .privacy-card p + p {
+        margin-top: 12px;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .info-box {
+        padding: 17px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .info-box small {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--gold-light);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .info-box strong,
+      .info-box a {
+        color: var(--text);
+        font-size: 14px;
+        word-break: break-word;
+      }
+
+      .data-table-wrap {
+        margin-top: 22px;
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+      }
+
+      .data-table {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+        background: rgba(255, 255, 255, 0.015);
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 17px 18px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+        text-align: left;
+      }
+
+      .data-table tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .data-table th {
+        color: var(--gold-light);
+        background: rgba(199, 151, 60, 0.055);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .data-table td {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.65;
+      }
+
+      .data-table td strong {
+        color: var(--text);
+      }
+
+      .clean-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+        list-style: none;
+      }
+
+      .clean-list li {
+        position: relative;
+        padding: 14px 16px 14px 46px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.018);
+      }
+
+      .clean-list li::before {
+        content: "✓";
+        position: absolute;
+        top: 14px;
+        left: 16px;
+        width: 20px;
+        height: 20px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--gold-line);
+        border-radius: 50%;
+        color: var(--gold-light);
+        font-size: 10px;
+      }
+
+      .clean-list strong {
+        color: var(--text);
+      }
+
+      .authority-card {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid var(--gold-line);
+        border-radius: var(--radius-lg);
+        background:
+          linear-gradient(
+            135deg,
+            rgba(199, 151, 60, 0.095),
+            rgba(255, 255, 255, 0.018)
+          );
+      }
+
+      .authority-card strong {
+        display: block;
+        margin-bottom: 9px;
+        color: var(--gold-light);
+      }
+
+      .authority-card p,
+      .authority-card a {
+        font-size: 13px;
+      }
+
+      /* ================================================================
+         LÁBLÉC
+         ================================================================ */
+      footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(4, 5, 6, 0.64);
+      }
+
+      .footer-grid {
+        min-height: 150px;
+        padding: 34px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+      }
+
+      .footer-copy {
+        max-width: 56ch;
+        color: var(--muted-soft);
+        font-size: 12px;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+      }
+
+      .footer-links a {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        transition: color 0.2s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--gold-light);
+      }
+
+      /* ================================================================
+         RESZPONZÍV MEGJELENÉS
+         ================================================================ */
+      @media (max-width: 980px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-meta {
+          max-width: 520px;
+        }
+
+        .privacy-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .toc {
+          position: static;
+        }
+
+        .toc nav {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 680px) {
+        :root {
+          --page-pad: 14px;
+        }
+
+        .navbar {
+          min-height: 70px;
+        }
+
+        .brand img {
+          width: 40px;
+          height: 40px;
+        }
+
+        .brand strong {
+          font-size: 13px;
+        }
+
+        .brand span {
+          font-size: 7px;
+          letter-spacing: 0.18em;
+        }
+
+        .back-link {
+          min-height: 40px;
+          padding: 0 12px;
+          font-size: 9px;
+        }
+
+        .hero {
+          padding-top: 58px;
+        }
+
+        .hero h1 {
+          font-size: clamp(48px, 16vw, 72px);
+        }
+
+        .toc nav,
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .privacy-card {
+          border-radius: 20px;
+        }
+
+        .footer-grid {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ================================================================
+         NAVIGÁCIÓ
+         ================================================================ -->
+    <header class="nav-wrap">
+      <nav class="container navbar" aria-label="Fő navigáció">
+        <a href="/" class="brand" aria-label="Krilix Tech & Labs főoldal">
+          <img src="/krilix-logo.png" alt="Krilix logó" />
+          <div>
+            <strong>KRILIX</strong>
+            <span>Tech &amp; Labs</span>
+          </div>
+        </a>
+
+        <a href="/" class="back-link">← Vissza a főoldalra</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ================================================================
+           BEVEZETŐ
+           ================================================================ -->
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <span class="eyebrow">Adatvédelem és átláthatóság</span>
+            <h1 class="display">
+              Adatkezelési <span class="gold-text">tájékoztató.</span>
+            </h1>
+            <p class="hero-lead">
+              A tájékoztató ismerteti, hogyan kezeljük a weboldal
+              kapcsolatfelvételi űrlapján megadott személyes adatokat, milyen
+              célból használjuk azokat, meddig őrizzük meg, és milyen jogok
+              illetik meg az érintetteket.
+            </p>
+          </div>
+
+          <aside class="hero-meta" aria-label="Tájékoztató adatai">
+            <span class="meta-label">Adatkezelő</span>
+            <strong>Krilix Tech &amp; Labs</strong>
+            <p>
+              Kapcsolat:
+              <a href="mailto:hello@krilixtechlabs.com">
+                hello@krilixtechlabs.com
+              </a>
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           ADATKEZELÉSI TARTALOM
+           ================================================================ -->
+      <section class="container privacy-layout">
+        <aside class="toc" aria-label="Tartalomjegyzék">
+          <strong>Tartalom</strong>
+          <nav>
+            <a href="#adatkezelo">1. Adatkezelő</a>
+            <a href="#adatkezelesek">2. Adatkezelések</a>
+            <a href="#megorzes">3. Megőrzési idő</a>
+            <a href="#adatfeldolgozok">4. Adatfeldolgozók</a>
+            <a href="#biztonsag">5. Adatbiztonság</a>
+            <a href="#sutik">6. Sütik</a>
+            <a href="#jogok">7. Érintetti jogok</a>
+            <a href="#jogorvoslat">8. Jogorvoslat</a>
+            <a href="#modositas">9. Módosítás</a>
+          </nav>
+        </aside>
+
+        <div class="privacy-content">
+          <!-- 1. ADATKEZELŐ -->
+          <article class="privacy-card" id="adatkezelo">
+            <span class="section-number">01</span>
+            <h2>Az adatkezelő adatai</h2>
+            <p>
+              A weboldalon keresztül megadott személyes adatok kezelője a
+              Krilix Tech &amp; Labs.
+            </p>
+
+            <div class="info-grid">
+              <div class="info-box">
+                <small>Adatkezelő neve</small>
+                <strong>Krilix Tech &amp; Labs</strong>
+              </div>
+
+              <div class="info-box">
+                <small>Kapcsolati email</small>
+                <a href="mailto:hello@krilixtechlabs.com">
+                  hello@krilixtechlabs.com
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2. ADATKEZELÉSEK -->
+          <article class="privacy-card" id="adatkezelesek">
+            <span class="section-number">02</span>
+            <h2>Milyen adatokat kezelünk és milyen célból?</h2>
+            <p>
+              Személyes adatot kizárólag meghatározott célból, a szükséges
+              mértékben és a vonatkozó adatvédelmi szabályoknak megfelelően
+              kezelünk.
+            </p>
+
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Adatkezelés</th>
+                    <th>Kezelt adatok</th>
+                    <th>Cél</th>
+                    <th>Jogalap</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Kapcsolatfelvétel és ajánlatkérés</strong></td>
+                    <td>Név, email cím, az üzenet tartalma, beküldés időpontja</td>
+                    <td>
+                      A megkeresés megválaszolása, ajánlat elkészítése,
+                      egyeztetés és a lehetséges együttműködés előkészítése
+                    </td>
+                    <td>
+                      A GDPR 6. cikk (1) bekezdés b) pontja szerinti,
+                      szerződéskötést megelőző lépések megtétele; általános
+                      megkeresés esetén a GDPR 6. cikk (1) bekezdés f) pontja
+                      szerinti jogos érdek
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td><strong>Weboldal biztonságos működése</strong></td>
+                    <td>
+                      IP-cím, böngésző- és eszközadatok, látogatás időpontja,
+                      kért oldal és technikai naplóadatok
+                    </td>
+                    <td>
+                      A weboldal működésének biztosítása, hibák feltárása,
+                      visszaélések és informatikai incidensek megelőzése
+                    </td>
+                    <td>
+                      A GDPR 6. cikk (1) bekezdés f) pontja szerinti jogos érdek
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Az adatszolgáltatás jellege</h3>
+            <p>
+              A kapcsolatfelvételi űrlap kitöltése önkéntes. A név, az email
+              cím és az üzenet megadása nélkül a megkeresést nem tudjuk
+              feldolgozni és megválaszolni.
+            </p>
+
+            <h3>Automatizált döntéshozatal</h3>
+            <p>
+              A megadott személyes adatok alapján nem végzünk automatizált
+              döntéshozatalt vagy profilalkotást.
+            </p>
+          </article>
+
+          <!-- 3. MEGŐRZÉSI IDŐ -->
+          <article class="privacy-card" id="megorzes">
+            <span class="section-number">03</span>
+            <h2>Meddig őrizzük meg az adatokat?</h2>
+
+            <ul class="clean-list">
+              <li>
+                <strong>Kapcsolatfelvételi megkeresés:</strong>
+                a lezárást követő legfeljebb 12 hónapig.
+              </li>
+              <li>
+                <strong>Létrejövő szerződés:</strong>
+                a szerződés teljesítéséhez szükséges ideig, majd a vonatkozó
+                jogszabályi megőrzési kötelezettségek végéig.
+              </li>
+              <li>
+                <strong>Technikai naplóadatok:</strong>
+                legfeljebb 30 napig, kivéve, ha biztonsági esemény
+                kivizsgálásához hosszabb megőrzés szükséges.
+              </li>
+            </ul>
+
+            <p style="margin-top: 18px">
+              A megőrzési idő lejárta után az adatokat töröljük vagy
+              visszaállíthatatlanul anonimizáljuk, amennyiben további
+              adatkezelést jogszabály nem tesz szükségessé.
+            </p>
+          </article>
+
+          <!-- 4. ADATFELDOLGOZÓK -->
+          <article class="privacy-card" id="adatfeldolgozok">
+            <span class="section-number">04</span>
+            <h2>Adatfeldolgozók és adattovábbítás</h2>
+            <p>
+              A weboldal működtetéséhez technikai szolgáltatókat vehetünk
+              igénybe. Ezek a szolgáltatók kizárólag a szolgáltatás
+              teljesítéséhez szükséges mértékben, szerződéses kötelezettségeik
+              és az adatkezelő utasításai alapján kezelhetik az adatokat.
+            </p>
+
+            <ul class="clean-list">
+              <li>
+                <strong>Tárhely- és infrastruktúra-szolgáltató:</strong>
+                a weboldal és a szerver működtetése.
+              </li>
+              <li>
+                <strong>Adatbázis-szolgáltató:</strong>
+                a megkeresések biztonságos tárolása.
+              </li>
+              <li>
+                <strong>Tranzakciós email-szolgáltató:</strong>
+                az üzenetek és visszaigazolások kézbesítése.
+              </li>
+            </ul>
+
+            <p style="margin-top: 18px">
+              Amennyiben valamely szolgáltató az Európai Gazdasági Térségen
+              kívül kezel adatot, az adattovábbítás csak a GDPR szerinti
+              megfelelő garanciák alkalmazásával történhet.
+            </p>
+          </article>
+
+          <!-- 5. ADATBIZTONSÁG -->
+          <article class="privacy-card" id="biztonsag">
+            <span class="section-number">05</span>
+            <h2>Hogyan védjük az adatokat?</h2>
+            <p>
+              Az adatok védelme érdekében az adatkezelés jellegéhez és
+              kockázataihoz igazodó technikai és szervezési intézkedéseket
+              alkalmazunk.
+            </p>
+
+            <ul class="clean-list">
+              <li>Hozzáférés-korlátozás és jogosultságkezelés.</li>
+              <li>Titkosított adatátvitel HTTPS kapcsolaton keresztül.</li>
+              <li>A rendszer és a függőségek rendszeres karbantartása.</li>
+              <li>Biztonsági események és rendellenes működés vizsgálata.</li>
+              <li>Az adatokhoz csak az arra jogosult személyek férhetnek hozzá.</li>
+            </ul>
+          </article>
+
+          <!-- 6. SÜTIK -->
+          <article class="privacy-card" id="sutik">
+            <span class="section-number">06</span>
+            <h2>Sütik és hasonló technológiák</h2>
+            <p>
+              A weboldal jelenlegi működése nem alkalmaz marketing- vagy
+              analitikai célú sütiket. A tárhelyszolgáltató a weboldal
+              biztonságos és stabil működéséhez szükséges technikai adatokat
+              kezelhet.
+            </p>
+          </article>
+
+          <!-- 7. ÉRINTETTI JOGOK -->
+          <article class="privacy-card" id="jogok">
+            <span class="section-number">07</span>
+            <h2>Milyen jogok illetik meg?</h2>
+            <p>
+              Az adatkezeléssel kapcsolatban az alábbi kérelmekkel fordulhat
+              hozzánk a
+              <a href="mailto:hello@krilixtechlabs.com">
+                hello@krilixtechlabs.com
+              </a>
+              email címen.
+            </p>
+
+            <ul class="clean-list">
+              <li>
+                <strong>Hozzáférés:</strong>
+                tájékoztatást kérhet arról, hogy kezeljük-e a személyes adatait,
+                és másolatot kérhet azokról.
+              </li>
+              <li>
+                <strong>Helyesbítés:</strong>
+                kérheti a pontatlan vagy hiányos adatok javítását.
+              </li>
+              <li>
+                <strong>Törlés:</strong>
+                kérheti a személyes adatok törlését, ha annak jogszabályi
+                feltételei fennállnak.
+              </li>
+              <li>
+                <strong>Korlátozás:</strong>
+                kérheti az adatkezelés korlátozását a GDPR-ban meghatározott
+                esetekben.
+              </li>
+              <li>
+                <strong>Tiltakozás:</strong>
+                jogos érdeken alapuló adatkezelés esetén tiltakozhat az
+                adatkezelés ellen.
+              </li>
+              <li>
+                <strong>Adathordozhatóság:</strong>
+                a jogszabályi feltételek fennállása esetén kérheti az adatok
+                géppel olvasható formátumban történő kiadását.
+              </li>
+            </ul>
+
+            <p style="margin-top: 18px">
+              A kérelmeket indokolatlan késedelem nélkül, főszabály szerint a
+              beérkezéstől számított egy hónapon belül teljesítjük vagy
+              megválaszoljuk.
+            </p>
+          </article>
+
+          <!-- 8. JOGORVOSLAT -->
+          <article class="privacy-card" id="jogorvoslat">
+            <span class="section-number">08</span>
+            <h2>Panasz és jogorvoslat</h2>
+            <p>
+              Adatkezelési kérdés vagy panasz esetén elsőként a
+              <a href="mailto:hello@krilixtechlabs.com">
+                hello@krilixtechlabs.com
+              </a>
+              címen kérhető intézkedés.
+            </p>
+
+            <p>
+              Amennyiben az érintett úgy ítéli meg, hogy személyes adatainak
+              kezelése sérti a vonatkozó adatvédelmi szabályokat, panaszt
+              nyújthat be a Nemzeti Adatvédelmi és Információszabadság
+              Hatósághoz, továbbá bírósághoz fordulhat.
+            </p>
+
+            <div class="authority-card">
+              <strong>
+                Nemzeti Adatvédelmi és Információszabadság Hatóság
+              </strong>
+              <p>Székhely: 1055 Budapest, Falk Miksa utca 9–11.</p>
+              <p>Levelezési cím: 1363 Budapest, Pf. 9.</p>
+              <p>
+                Email:
+                <a href="mailto:ugyfelszolgalat@naih.hu">
+                  ugyfelszolgalat@naih.hu
+                </a>
+              </p>
+              <p>Telefon: +36 (1) 391-1400</p>
+            </div>
+          </article>
+
+          <!-- 9. MÓDOSÍTÁS -->
+          <article class="privacy-card" id="modositas">
+            <span class="section-number">09</span>
+            <h2>A tájékoztató módosítása</h2>
+            <p>
+              A tájékoztató a weboldal működésének, az alkalmazott
+              szolgáltatásoknak vagy a jogszabályi környezetnek a változása
+              esetén módosítható. Az aktuális változat ezen az oldalon érhető
+              el, a hatálybalépés dátumának feltüntetésével.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================================================================
+         LÁBLÉC
+         ================================================================ -->
+    <footer>
+      <div class="container footer-grid">
+        <p class="footer-copy">
+          © 2026 Krilix Tech &amp; Labs. A személyes adatokat bizalmasan,
+          kizárólag meghatározott célból kezeljük.
+        </p>
+
+        <div class="footer-links">
+          <a href="/">Főoldal</a>
+          <a href="/#kapcsolat">Kapcsolat</a>
+          <a href="mailto:hello@krilixtechlabs.com">
+            hello@krilixtechlabs.com
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

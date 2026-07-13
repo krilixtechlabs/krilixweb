@@ -1,1 +1,615 @@
-<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Nem található - Krilix</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#070707;color:#f7f1e6;font-family:Arial,Helvetica,sans-serif}div{width:min(680px,calc(100% - 40px));text-align:center}p:first-child{color:#e7c879;letter-spacing:.3em;text-transform:uppercase;font-weight:900}h1{font-family:Georgia,serif;font-size:clamp(46px,8vw,82px);line-height:.9;letter-spacing:-.06em}a{display:inline-flex;margin-top:22px;min-height:50px;padding:0 24px;align-items:center;background:#f4efe5;color:#070707;text-decoration:none;font-weight:900}</style></head><body><div><p>Krilix Tech & Labs</p><h1>Ez az oldal nem található.</h1><p>A keresett link hibás vagy már nem elérhető.</p><a href="/">Vissza a főoldalra</a></div></body></html>
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Az oldal nem található – Krilix Tech & Labs</title>
+    <meta
+      name="description"
+      content="A keresett oldal nem található. Térj vissza a Krilix Tech & Labs főoldalára."
+    />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="theme-color" content="#050607" />
+
+    <link rel="icon" href="/krilix-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&family=Syncopate:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ================================================================
+         ALAPVÁLTOZÓK
+         ================================================================ */
+      :root {
+        --bg: #050607;
+        --bg-soft: #090b0d;
+        --text: #f5f1e9;
+        --muted: rgba(245, 241, 233, 0.68);
+        --muted-soft: rgba(245, 241, 233, 0.42);
+        --line: rgba(255, 255, 255, 0.085);
+        --gold: #c7973c;
+        --gold-light: #f0cd78;
+        --gold-line: rgba(240, 205, 120, 0.24);
+        --shadow: 0 32px 100px rgba(0, 0, 0, 0.5);
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --page-pad: clamp(18px, 5vw, 82px);
+        --gold-gradient: linear-gradient(
+          135deg,
+          #f4df9c 0%,
+          #c7973c 48%,
+          #f2d47f 100%
+        );
+      }
+
+      /* ================================================================
+         ALAPBEÁLLÍTÁSOK
+         ================================================================ */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        color: var(--text);
+        font-family: "Manrope", sans-serif;
+        background:
+          radial-gradient(
+            circle at 82% 14%,
+            rgba(199, 151, 60, 0.15),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 18% 72%,
+            rgba(199, 151, 60, 0.08),
+            transparent 28%
+          ),
+          linear-gradient(180deg, #040506 0%, #090b0d 50%, #050607 100%);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -4;
+        pointer-events: none;
+        opacity: 0.035;
+        background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E');
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -5;
+        pointer-events: none;
+        opacity: 0.25;
+        background-image:
+          linear-gradient(rgba(240, 205, 120, 0.026) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(240, 205, 120, 0.026) 1px,
+            transparent 1px
+          );
+        background-size: 76px 76px;
+        mask-image: radial-gradient(
+          ellipse at 50% 48%,
+          #000 10%,
+          rgba(0, 0, 0, 0.8) 46%,
+          transparent 82%
+        );
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .gold-text {
+        background: var(--gold-gradient);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* ================================================================
+         HÁTTÉRDEKORÁCIÓ
+         ================================================================ */
+      .aurora {
+        position: fixed;
+        z-index: -3;
+        width: min(70vw, 980px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        filter: blur(115px);
+        pointer-events: none;
+        opacity: 0.22;
+      }
+
+      .aurora-one {
+        top: -38%;
+        right: -18%;
+        background: radial-gradient(
+          circle,
+          rgba(240, 205, 120, 0.64),
+          rgba(199, 151, 60, 0.12) 42%,
+          transparent 70%
+        );
+        animation: aurora-one 14s ease-in-out infinite alternate;
+      }
+
+      .aurora-two {
+        left: -28%;
+        bottom: -48%;
+        background: radial-gradient(
+          circle,
+          rgba(141, 95, 28, 0.52),
+          rgba(199, 151, 60, 0.1) 44%,
+          transparent 72%
+        );
+        animation: aurora-two 18s ease-in-out infinite alternate;
+      }
+
+      .orbital {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        z-index: -2;
+        width: min(72vw, 880px);
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        border: 1px solid rgba(240, 205, 120, 0.08);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: rotate 28s linear infinite;
+      }
+
+      .orbital::before,
+      .orbital::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid rgba(240, 205, 120, 0.07);
+      }
+
+      .orbital::before {
+        inset: 14%;
+      }
+
+      .orbital::after {
+        inset: 30%;
+      }
+
+      @keyframes aurora-one {
+        from {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        to {
+          transform: translate3d(-8%, 16%, 0) scale(1.12);
+        }
+      }
+
+      @keyframes aurora-two {
+        from {
+          transform: translate3d(0, 0, 0) scale(0.96);
+        }
+        to {
+          transform: translate3d(18%, -10%, 0) scale(1.1);
+        }
+      }
+
+      @keyframes rotate {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      /* ================================================================
+         FŐ ELRENDEZÉS
+         ================================================================ */
+      .page {
+        min-height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+
+      .topbar {
+        min-height: 82px;
+        padding: 0 var(--page-pad);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+        background: rgba(5, 6, 7, 0.54);
+        backdrop-filter: blur(14px);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .brand img {
+        width: 46px;
+        height: 46px;
+        object-fit: contain;
+        border: 1px solid rgba(240, 205, 120, 0.28);
+        border-radius: 10px;
+        background: #ece5d9;
+        box-shadow: 0 0 28px rgba(199, 151, 60, 0.1);
+      }
+
+      .brand strong {
+        display: block;
+        font-family: "Syncopate", sans-serif;
+        font-size: 16px;
+        letter-spacing: 0.18em;
+      }
+
+      .brand span {
+        display: block;
+        margin-top: 5px;
+        color: var(--gold-light);
+        font-size: 8px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--muted-soft);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .status::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--gold-light);
+        box-shadow: 0 0 14px rgba(240, 205, 120, 0.72);
+      }
+
+      /* ================================================================
+         404 TARTALOM
+         ================================================================ */
+      .main {
+        min-height: 0;
+        padding: clamp(42px, 6vw, 86px) var(--page-pad);
+        display: grid;
+        place-items: center;
+      }
+
+      .content {
+        width: min(100%, 1080px);
+        text-align: center;
+        position: relative;
+      }
+
+      .code-wrap {
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        margin-bottom: 20px;
+      }
+
+      .code {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(160px, 28vw, 360px);
+        line-height: 0.72;
+        letter-spacing: -0.08em;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(240, 205, 120, 0.32);
+        text-shadow:
+          0 0 42px rgba(199, 151, 60, 0.11),
+          0 28px 90px rgba(0, 0, 0, 0.48);
+        user-select: none;
+      }
+
+      .code-glow {
+        position: absolute;
+        inset: 22% 12%;
+        z-index: -1;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(199, 151, 60, 0.2),
+          transparent 68%
+        );
+        filter: blur(28px);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        color: var(--gold-light);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before,
+      .eyebrow::after {
+        content: "";
+        width: 32px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light)
+        );
+      }
+
+      .eyebrow::after {
+        transform: rotate(180deg);
+      }
+
+      h1 {
+        max-width: 11ch;
+        margin: 0 auto;
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(48px, 7vw, 94px);
+        font-weight: 400;
+        line-height: 0.94;
+        letter-spacing: -0.04em;
+      }
+
+      .lead {
+        max-width: 58ch;
+        margin: 22px auto 0;
+        color: var(--muted);
+        font-size: clamp(15px, 1.4vw, 18px);
+        line-height: 1.8;
+      }
+
+      .actions {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .btn {
+        min-height: 54px;
+        padding: 0 23px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.025);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        transition:
+          transform 0.24s var(--ease),
+          border-color 0.24s ease,
+          color 0.24s ease,
+          filter 0.24s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-3px);
+        border-color: var(--gold-line);
+        color: var(--gold-light);
+      }
+
+      .btn.gold {
+        color: #120d07;
+        border-color: transparent;
+        background: var(--gold-gradient);
+        box-shadow: 0 15px 42px rgba(199, 151, 60, 0.22);
+      }
+
+      .btn.gold:hover {
+        color: #120d07;
+        filter: brightness(1.05);
+      }
+
+      /* ================================================================
+         LÁBLÉC
+         ================================================================ */
+      .footer {
+        min-height: 66px;
+        padding: 14px var(--page-pad);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        border-top: 1px solid rgba(255, 255, 255, 0.055);
+        color: var(--muted-soft);
+        font-size: 11px;
+      }
+
+      .footer a {
+        color: var(--muted);
+        transition: color 0.2s ease;
+      }
+
+      .footer a:hover {
+        color: var(--gold-light);
+      }
+
+      /* ================================================================
+         RESZPONZÍV MEGJELENÉS
+         ================================================================ */
+      @media (max-width: 680px) {
+        :root {
+          --page-pad: 14px;
+        }
+
+        body {
+          overflow-y: auto;
+        }
+
+        .topbar {
+          min-height: 72px;
+        }
+
+        .brand img {
+          width: 40px;
+          height: 40px;
+        }
+
+        .brand strong {
+          font-size: 13px;
+        }
+
+        .brand span {
+          font-size: 7px;
+          letter-spacing: 0.18em;
+        }
+
+        .status {
+          display: none;
+        }
+
+        .main {
+          padding-top: 30px;
+          padding-bottom: 44px;
+        }
+
+        .code {
+          font-size: clamp(128px, 43vw, 210px);
+        }
+
+        h1 {
+          font-size: clamp(43px, 14vw, 68px);
+        }
+
+        .lead {
+          font-size: 14px;
+        }
+
+        .actions {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .footer {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 6px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .aurora,
+        .orbital {
+          animation: none !important;
+        }
+
+        * {
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ================================================================
+         HÁTTÉRDEKORÁCIÓ
+         ================================================================ -->
+    <div class="aurora aurora-one" aria-hidden="true"></div>
+    <div class="aurora aurora-two" aria-hidden="true"></div>
+    <div class="orbital" aria-hidden="true"></div>
+
+    <div class="page">
+      <!-- ================================================================
+           FEJLÉC
+           ================================================================ -->
+      <header class="topbar">
+        <a href="/" class="brand" aria-label="Krilix Tech & Labs főoldal">
+          <img src="/krilix-logo.png" alt="Krilix logó" />
+          <div>
+            <strong>KRILIX</strong>
+            <span>Tech &amp; Labs</span>
+          </div>
+        </a>
+
+        <span class="status">404-es hibakód</span>
+      </header>
+
+      <!-- ================================================================
+           404 TARTALOM
+           ================================================================ -->
+      <main class="main">
+        <section class="content" aria-labelledby="page-title">
+          <div class="code-wrap" aria-hidden="true">
+            <div class="code-glow"></div>
+            <div class="code gold-text">404</div>
+          </div>
+
+          <span class="eyebrow">Az oldal nem található</span>
+
+          <h1 id="page-title">
+            Ez az útvonal <span class="gold-text">nem vezet sehova.</span>
+          </h1>
+
+          <p class="lead">
+            A keresett oldal címe megváltozhatott, törölve lett, vagy a link
+            hibás. Térj vissza a főoldalra, vagy írj nekünk, ha segítségre van
+            szükséged.
+          </p>
+
+          <div class="actions">
+            <a href="/" class="btn gold">Vissza a főoldalra →</a>
+            <a href="/#kapcsolat" class="btn">Kapcsolatfelvétel</a>
+          </div>
+        </section>
+      </main>
+
+      <!-- ================================================================
+           LÁBLÉC
+           ================================================================ -->
+      <footer class="footer">
+        <span>© 2026 Krilix Tech &amp; Labs</span>
+        <a href="mailto:hello@krilixtechlabs.com">
+          hello@krilixtechlabs.com
+        </a>
+      </footer>
+    </div>
+  </body>
+</html>

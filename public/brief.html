@@ -1,107 +1,3331 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hu">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projekt brief | Krilix Tech & Labs</title>
-  <meta name="description" content="Projektindító brief űrlap weboldal, landing oldal, foglalási rendszer vagy egyedi webes megoldás elkészítéséhez.">
-  <meta property="og:title" content="Projekt brief | Krilix Tech & Labs">
-  <meta property="og:description" content="Töltsd ki a projektindító briefet, hogy pontosabb ajánlatot és jobb weboldalt tudjunk készíteni.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="/krilix-logo.png">
-  <link rel="icon" href="/krilix-logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Manrope:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{--black:#030303;--white:#f4efe5;--soft:rgba(244,239,229,.82);--muted:rgba(244,239,229,.56);--line:rgba(255,255,255,.11);--gold:#bf953f;--gold2:#fcf6ba;--grad:linear-gradient(90deg,#bf953f,#fcf6ba,#b38728,#fbf5b7,#bf953f);--ease:cubic-bezier(.16,1,.3,1)}
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--gold) var(--black)}
-    ::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--gold2),var(--gold));border:2px solid var(--black)}
-    body{background:radial-gradient(circle at 74% 0%,rgba(191,149,63,.16),transparent 430px),radial-gradient(circle at 0% 48%,rgba(191,149,63,.1),transparent 460px),var(--black);color:var(--white);font-family:Manrope,Arial,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-    a{color:inherit;text-decoration:none}
-    #particle-canvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:-3;opacity:.5}
-    .noise{position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.035;background-image:url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E')}
-    .container{width:min(1260px,calc(100% - 8vw));margin:0 auto}
-    h1,h2,h3,.logo-text,.pill,.btn,.submit-btn,label,.step,.success-label{font-family:Syncopate,sans-serif;text-transform:uppercase}
-    .gold{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:220% auto;animation:shine 5.5s linear infinite}
-    @keyframes shine{to{background-position:220% center}}
-    .navbar{position:fixed;top:0;left:0;width:100%;z-index:100;padding:1.25rem 5vw;display:flex;align-items:center;justify-content:space-between;gap:2rem;background:rgba(3,3,3,.8);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08)}
-    .brand{display:inline-flex;align-items:center;gap:.9rem}.brand img{width:50px;height:50px;object-fit:contain;background:#f4efe5;border:1px solid rgba(252,246,186,.35);box-shadow:0 0 28px rgba(191,149,63,.14)}
-    .logo-text{display:block;font-size:1.02rem;letter-spacing:.19rem;line-height:1}.brand-sub{display:block;margin-top:.38rem;color:var(--gold);font-size:.62rem;font-weight:900;letter-spacing:.22rem;text-transform:uppercase;white-space:nowrap}
-    .nav-links{display:flex;align-items:center;gap:2rem}.nav-links a:not(.nav-cta){color:var(--soft);font-size:.72rem;font-weight:800;letter-spacing:.09rem;text-transform:uppercase;position:relative;padding-bottom:.35rem}.nav-links a:not(.nav-cta):after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:.28s}.nav-links a:not(.nav-cta):hover{color:var(--gold2)}.nav-links a:not(.nav-cta):hover:after{width:100%}
-    .nav-cta,.btn,.submit-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 1.35rem;border:1px solid rgba(244,239,229,.72);background:transparent;color:var(--white);font-size:.72rem;font-weight:800;letter-spacing:.08rem;cursor:pointer;transition:.3s}
-    .nav-cta:hover,.btn:hover{background:var(--white);color:var(--black);transform:translateY(-2px)}
-    .submit-btn,.btn.gold-bg{background:var(--grad);background-size:220% auto;color:var(--black);border-color:transparent}.submit-btn:hover,.btn.gold-bg:hover{animation:shine 2s linear infinite;color:var(--black)}
-    .menu{display:none;width:48px;height:48px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.035);position:relative}.menu span{position:absolute;left:13px;right:13px;height:1px;background:var(--white);transition:.3s}.menu span:nth-child(1){top:17px}.menu span:nth-child(2){top:24px}.menu span:nth-child(3){top:31px}.menu.active span:nth-child(1){top:24px;transform:rotate(45deg)}.menu.active span:nth-child(2){opacity:0}.menu.active span:nth-child(3){top:24px;transform:rotate(-45deg)}
-    .hero{padding:10.5rem 0 5.4rem}.hero-grid{display:grid;grid-template-columns:1fr 420px;gap:4rem;align-items:end}.pill{display:inline-flex;gap:.75rem;align-items:center;color:var(--gold2);font-size:.68rem;letter-spacing:.18rem;margin-bottom:1.5rem}.pill:before{content:"";width:42px;height:1px;background:var(--gold)}
-    h1{max-width:900px;font-size:clamp(3rem,7.4vw,7.4rem);line-height:.92;letter-spacing:-.075em;text-wrap:balance}.lead{border-top:1px solid var(--line);padding-top:1.6rem;color:var(--muted);line-height:1.75;font-size:1.02rem}
-    .brief-shell{padding:0 0 7rem}.brief-layout{display:grid;grid-template-columns:300px 1fr;gap:3rem;align-items:start}.aside{position:sticky;top:112px;padding:1.6rem;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.018));box-shadow:0 30px 100px rgba(0,0,0,.25)}
-    .aside h2{font-size:1rem;letter-spacing:.08rem;line-height:1.25;margin-bottom:1rem}.aside p{color:var(--muted);line-height:1.65;font-size:.92rem;margin-bottom:1.3rem}.aside-list{display:grid;gap:.65rem;color:var(--soft);font-size:.86rem}.aside-list span{border-top:1px solid rgba(255,255,255,.08);padding-top:.7rem}
-    .brief-form{border:1px solid var(--line);background:rgba(3,3,3,.76);box-shadow:0 32px 120px rgba(0,0,0,.36)}.form-section{padding:2.5rem;border-bottom:1px solid var(--line)}.form-section:last-of-type{border-bottom:0}
-    .section-title{display:grid;grid-template-columns:74px 1fr;gap:1.5rem;align-items:start;margin-bottom:2rem}.step{color:transparent;-webkit-text-stroke:1px var(--gold);font-size:2.15rem;line-height:.9;white-space:nowrap}.section-title h2{font-size:clamp(1.35rem,2.5vw,2.4rem);line-height:1.03;letter-spacing:-.05em;text-wrap:balance;margin-bottom:.7rem}.section-title p{color:var(--muted);line-height:1.65;max-width:720px}
-    .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem}.field-grid.one{grid-template-columns:1fr}.field{display:grid;gap:.6rem}label{color:var(--gold);font-size:.62rem;letter-spacing:.15rem;line-height:1.4}
-    input,select,textarea{width:100%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--white);padding:.95rem 1rem;font:inherit;font-size:1rem;outline:none;border-radius:0;transition:.25s}option{background:#111;color:var(--white)}textarea{min-height:132px;resize:vertical;line-height:1.6}input::placeholder,textarea::placeholder{color:rgba(244,239,229,.32)}input:focus,select:focus,textarea:focus{border-color:var(--gold);background:rgba(255,255,255,.065)}
-    .check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.check-card{display:flex;gap:.85rem;align-items:flex-start;min-height:62px;padding:1rem;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.025);cursor:pointer;transition:.25s}.check-card:hover{border-color:rgba(191,149,63,.34);transform:translateY(-2px)}.check-card input{width:18px;height:18px;min-width:18px;margin-top:.1rem;accent-color:var(--gold)}.check-card span{color:var(--soft);font-size:.94rem;line-height:1.35}
-    .range-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.submit-area{padding:2.5rem;background:linear-gradient(180deg,rgba(191,149,63,.08),rgba(255,255,255,.02));border-top:1px solid rgba(191,149,63,.34)}.submit-note{color:var(--muted);line-height:1.6;font-size:.92rem;margin-bottom:1.3rem}.submit-note a{color:var(--gold2);text-decoration:underline}.submit-btn{width:100%;min-height:62px}.submit-btn:disabled{opacity:.62;cursor:not-allowed;transform:none}
-    .form-note{margin-top:1rem;color:var(--muted);line-height:1.6;font-size:.9rem}.form-note.success{color:var(--gold2)}.form-note.error{color:#ff9b9b}
-    .popup{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 35%,rgba(191,149,63,.22),transparent 360px),rgba(0,0,0,.78);backdrop-filter:blur(14px);opacity:0;visibility:hidden;pointer-events:none;transition:.3s}.popup.show{opacity:1;visibility:visible;pointer-events:auto}.popup-box{position:relative;width:min(100%,520px);padding:42px 38px 34px;text-align:center;background:radial-gradient(circle at 50% 0%,rgba(252,246,186,.16),transparent 230px),linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025)),#111;border:1px solid rgba(252,246,186,.3);box-shadow:0 38px 130px rgba(0,0,0,.64)}.success-icon{width:76px;height:76px;margin:0 auto 24px;display:grid;place-items:center;border-radius:999px;border:1px solid rgba(252,246,186,.38);color:var(--gold2);font-size:34px}.success-label{margin-bottom:16px;color:var(--gold2);font-size:.62rem;letter-spacing:.25rem}.popup-box h2{font-size:2.2rem;line-height:.98;letter-spacing:-.055em;margin-bottom:1rem}.popup-box p{color:var(--muted);line-height:1.7}.close{position:absolute;right:16px;top:16px;width:38px;height:38px;border:1px solid rgba(255,255,255,.17);background:rgba(255,255,255,.045);color:var(--white);font-size:28px;line-height:34px;cursor:pointer}
-    footer{padding:2rem 0;border-top:1px solid var(--line);color:rgba(244,239,229,.38);font-size:.72rem;font-weight:800;letter-spacing:.09rem;text-transform:uppercase}.footer-row{display:flex;justify-content:space-between;gap:1rem}.reveal{opacity:0;transform:translateY(36px);transition:opacity 1s var(--ease),transform 1s var(--ease)}.reveal.active{opacity:1;transform:translateY(0)}
-    @media(max-width:1040px){.hero-grid,.brief-layout{grid-template-columns:1fr}.aside{position:static}.range-row{grid-template-columns:1fr}}
-    @media(max-width:860px){.navbar{padding:1rem 5vw}.menu{display:block}.nav-links{position:fixed;top:78px;left:5vw;right:5vw;display:grid;gap:0;padding:.6rem;background:rgba(3,3,3,.94);border:1px solid var(--line);backdrop-filter:blur(16px);transform:translateY(-14px);opacity:0;pointer-events:none;transition:.25s}.nav-links.open{opacity:1;pointer-events:auto;transform:translateY(0)}.nav-links a:not(.nav-cta),.nav-cta{width:100%;padding:1rem;justify-content:flex-start;border:0;border-bottom:1px solid rgba(255,255,255,.08)}.field-grid,.check-grid{grid-template-columns:1fr}.section-title{grid-template-columns:1fr;gap:1rem}}
-    @media(max-width:620px){.container{width:calc(100% - 28px)}.brand img{width:42px;height:42px}.logo-text{font-size:.82rem;letter-spacing:.12rem}.brand-sub{font-size:.54rem;letter-spacing:.15rem}.hero{padding:8.5rem 0 4rem}h1{font-size:clamp(2.55rem,14vw,4.45rem)}.form-section,.submit-area{padding:1.35rem}.popup-box{padding:38px 24px 28px}.popup-box h2{font-size:1.8rem}.footer-row{flex-direction:column}}
-  </style>
-</head>
-<body>
-  <div class="noise"></div><canvas id="particle-canvas"></canvas>
-  <nav class="navbar">
-    <a href="/" class="brand"><img src="/krilix-logo.png" alt="Krilix Tech & Labs logó"><span><span class="logo-text">KRILIX</span><span class="brand-sub">Tech & Labs</span></span></a>
-    <button class="menu" id="menu" type="button" aria-label="Menü"><span></span><span></span><span></span></button>
-    <div class="nav-links" id="navLinks"><a href="/">Főoldal</a><a href="/#szolgaltatasok">Szolgáltatások</a><a href="/#folyamat">Folyamat</a><a href="/brief" class="nav-cta">Brief kitöltése</a></div>
-  </nav>
-  <main>
-    <section class="hero"><div class="container hero-grid"><div class="reveal"><div class="pill">Projektindító brief</div><h1>Mondd el, mit építsünk <span class="gold">neked.</span></h1></div><p class="lead reveal">Ez az űrlap összeszedi azokat az információkat, amelyek alapján pontosabban lehet tervezni, árazni és elindítani a weboldalad vagy egyedi webes rendszered elkészítését.</p></div></section>
-    <section class="brief-shell"><div class="container brief-layout">
-      <aside class="aside reveal"><h2>Miért fontos?</h2><p>Nem kell mindent tökéletesen tudnod. Az a lényeg, hogy lássuk az irányt, a célt, a szükséges funkciókat és az anyagokat.</p><div class="aside-list"><span>01 / pontosabb ajánlat</span><span>02 / gyorsabb kezdés</span><span>03 / kevesebb félreértés</span><span>04 / jobb végeredmény</span></div></aside>
-      <form class="brief-form reveal" id="briefForm">
-        <section class="form-section"><div class="section-title"><div class="step">01</div><div><h2>Alap adatok</h2><p>Elérhetőség és projektazonosítás.</p></div></div><div class="field-grid">
-          <div class="field"><label for="name">Név *</label><input id="name" type="text" placeholder="Neved" required></div>
-          <div class="field"><label for="email">Email *</label><input id="email" type="email" placeholder="email@pelda.hu" required></div>
-          <div class="field"><label for="phone">Telefonszám</label><input id="phone" type="tel" placeholder="+36 ..."></div>
-          <div class="field"><label for="company">Cég / márkanév</label><input id="company" type="text" placeholder="Cég vagy projekt neve"></div>
-          <div class="field"><label for="currentWebsite">Jelenlegi weboldal</label><input id="currentWebsite" type="url" placeholder="https://..."></div>
-          <div class="field"><label for="socialLink">Facebook / Instagram / egyéb</label><input id="socialLink" type="url" placeholder="https://..."></div>
-        </div></section>
-        <section class="form-section"><div class="section-title"><div class="step">02</div><div><h2>Projekt típusa és célja</h2><p>Jelöld be, ami releváns, és írd le röviden, mit szeretnél elérni.</p></div></div><div class="check-grid">
-          <label class="check-card"><input type="checkbox" name="projectTypes" value="Bemutatkozó weboldal"><span>Bemutatkozó weboldal</span></label><label class="check-card"><input type="checkbox" name="projectTypes" value="Landing oldal"><span>Landing oldal</span></label><label class="check-card"><input type="checkbox" name="projectTypes" value="Webshop"><span>Webshop</span></label><label class="check-card"><input type="checkbox" name="projectTypes" value="Időpontfoglaló rendszer"><span>Időpontfoglaló rendszer</span></label><label class="check-card"><input type="checkbox" name="projectTypes" value="Portfólió oldal"><span>Portfólió oldal</span></label><label class="check-card"><input type="checkbox" name="projectTypes" value="Meglévő oldal átalakítása"><span>Meglévő oldal átalakítása</span></label><label class="check-card"><input type="checkbox" name="projectTypes" value="Egyedi webes rendszer"><span>Egyedi webes rendszer</span></label><label class="check-card"><input type="checkbox" name="projectTypes" value="Még nem tudom pontosan"><span>Még nem tudom pontosan</span></label>
-        </div><div class="field-grid one" style="margin-top:1.2rem"><div class="field"><label for="mainGoal">Mi a fő cél? *</label><textarea id="mainGoal" placeholder="Például: több érdeklődő, bizalomépítés, foglalások kezelése, termékek bemutatása..." required></textarea></div></div></section>
-        <section class="form-section"><div class="section-title"><div class="step">03</div><div><h2>Tartalom és anyagok</h2><p>Mi van már meg, és miben kell segíteni?</p></div></div><div class="check-grid">
-          <label class="check-card"><input type="checkbox" name="materials" value="Van logó"><span>Van logó</span></label><label class="check-card"><input type="checkbox" name="materials" value="Van arculat / színek"><span>Van arculat / színek</span></label><label class="check-card"><input type="checkbox" name="materials" value="Vannak képek"><span>Vannak képek</span></label><label class="check-card"><input type="checkbox" name="materials" value="Vannak kész szövegek"><span>Vannak kész szövegek</span></label><label class="check-card"><input type="checkbox" name="materials" value="Kell szövegírás / átdolgozás"><span>Kell szövegírás / átdolgozás</span></label><label class="check-card"><input type="checkbox" name="materials" value="Kell többnyelvű oldal"><span>Kell többnyelvű oldal</span></label>
-        </div><div class="field-grid one" style="margin-top:1.2rem"><div class="field"><label for="materialLinks">Anyagok / Drive / WeTransfer link</label><textarea id="materialLinks" placeholder="Logó, képek, szövegek, brief vagy inspirációs anyagok linkjei."></textarea></div></div></section>
-        <section class="form-section"><div class="section-title"><div class="step">04</div><div><h2>Dizájn irány</h2><p>Hangulat, színek, referencia oldalak.</p></div></div><div class="field-grid">
-          <div class="field"><label for="styleDirection">Milyen stílus legyen?</label><select id="styleDirection"><option value="">Válassz irányt</option><option>Prémium / luxus</option><option>Modern / letisztult</option><option>Fiatalos / dinamikus</option><option>Elegáns / visszafogott</option><option>Ipari / technikai</option><option>Barátságos / közvetlen</option><option>Még nem tudom</option></select></div>
-          <div class="field"><label for="colors">Színek / kerülendő színek</label><input id="colors" type="text" placeholder="Például: fekete-arany, zöld-fehér, ne legyen piros"></div>
-        </div><div class="field-grid one" style="margin-top:1.2rem"><div class="field"><label for="references">Referencia oldalak</label><textarea id="references" placeholder="1-3 link olyan oldalakról, amik tetszenek."></textarea></div><div class="field"><label for="avoid">Mit kerüljünk?</label><textarea id="avoid" placeholder="Például: ne legyen túl színes, ne legyen sablonos, ne legyen zsúfolt."></textarea></div></div></section>
-        <section class="form-section"><div class="section-title"><div class="step">05</div><div><h2>Funkciók</h2><p>Milyen működés kell az oldalba?</p></div></div><div class="check-grid">
-          <label class="check-card"><input type="checkbox" name="features" value="Kapcsolati űrlap"><span>Kapcsolati űrlap</span></label><label class="check-card"><input type="checkbox" name="features" value="Ajánlatkérő űrlap"><span>Ajánlatkérő űrlap</span></label><label class="check-card"><input type="checkbox" name="features" value="Időpontfoglalás"><span>Időpontfoglalás</span></label><label class="check-card"><input type="checkbox" name="features" value="Admin felület"><span>Admin felület</span></label><label class="check-card"><input type="checkbox" name="features" value="Blog / hírek"><span>Blog / hírek</span></label><label class="check-card"><input type="checkbox" name="features" value="Galéria"><span>Galéria</span></label><label class="check-card"><input type="checkbox" name="features" value="Térkép"><span>Térkép</span></label><label class="check-card"><input type="checkbox" name="features" value="Online fizetés"><span>Online fizetés</span></label><label class="check-card"><input type="checkbox" name="features" value="Email automatizmus"><span>Email automatizmus</span></label><label class="check-card"><input type="checkbox" name="features" value="Ügyfélkapu / privát felület"><span>Ügyfélkapu / privát felület</span></label>
-        </div><div class="field-grid one" style="margin-top:1.2rem"><div class="field"><label for="customFeatures">Egyéb funkció</label><textarea id="customFeatures" placeholder="Ide írd, ha valami egyedi működés kellene."></textarea></div></div></section>
-        <section class="form-section"><div class="section-title"><div class="step">06</div><div><h2>Technikai háttér</h2><p>Domain, tárhely, email, mérés, SEO.</p></div></div><div class="check-grid">
-          <label class="check-card"><input type="checkbox" name="technical" value="Van domain"><span>Van domain</span></label><label class="check-card"><input type="checkbox" name="technical" value="Kell domain"><span>Kell domain</span></label><label class="check-card"><input type="checkbox" name="technical" value="Van tárhely / szerver"><span>Van tárhely / szerver</span></label><label class="check-card"><input type="checkbox" name="technical" value="Kell tárhely / szerver"><span>Kell tárhely / szerver</span></label><label class="check-card"><input type="checkbox" name="technical" value="Kell céges email"><span>Kell céges email</span></label><label class="check-card"><input type="checkbox" name="technical" value="Kell Google Analytics"><span>Kell Google Analytics</span></label><label class="check-card"><input type="checkbox" name="technical" value="Kell SEO alap"><span>Kell SEO alap</span></label><label class="check-card"><input type="checkbox" name="technical" value="Kell adatkezelési oldal"><span>Kell adatkezelési oldal</span></label>
-        </div><div class="field-grid" style="margin-top:1.2rem"><div class="field"><label for="domain">Domain név, ha van</label><input id="domain" type="text" placeholder="pelda.hu"></div><div class="field"><label for="languages">Nyelvek</label><input id="languages" type="text" placeholder="Például: magyar, angol, német"></div></div></section>
-        <section class="form-section"><div class="section-title"><div class="step">07</div><div><h2>Határidő és keret</h2><p>Mi fér bele reálisan, mennyire sürgős?</p></div></div><div class="range-row">
-          <div class="field"><label for="deadline">Mikorra kell?</label><select id="deadline"><option value="">Válassz</option><option>Minél hamarabb</option><option>1-2 héten belül</option><option>1 hónapon belül</option><option>2-3 hónapon belül</option><option>Nincs konkrét határidő</option></select></div>
-          <div class="field"><label for="budget">Tervezett keret</label><select id="budget"><option value="">Válassz</option><option>Még nem tudom</option><option>100 000 Ft alatt</option><option>100 000 - 250 000 Ft</option><option>250 000 - 500 000 Ft</option><option>500 000 Ft felett</option></select></div>
-          <div class="field"><label for="priority">Sürgősség</label><select id="priority"><option value="">Válassz</option><option>Normál</option><option>Sürgős</option><option>Nagyon sürgős</option><option>Rugalmas</option></select></div>
-        </div><div class="field-grid one" style="margin-top:1.2rem"><div class="field"><label for="extraMessage">Egyéb megjegyzés</label><textarea id="extraMessage" placeholder="Bármi, amit fontosnak tartasz még elmondani."></textarea></div></div></section>
-        <div class="submit-area"><p class="submit-note">A brief beküldésével az adatok emailben továbbításra kerülnek. Küldéssel elfogadod az <a href="/adatkezeles" target="_blank">adatkezelési tájékoztatót</a>.</p><button class="submit-btn" type="submit">Brief elküldése</button><p class="form-note" id="formNote">A beküldés után kapsz egy visszaigazoló emailt.</p></div>
-      </form>
-    </div></section>
-  </main>
-  <footer><div class="container footer-row"><span>© 2026 Krilix Tech & Labs</span><span>Project Brief</span></div></footer>
-  <div class="popup" id="popup"><div class="popup-box"><button class="close" id="close" type="button">×</button><div class="success-icon">✓</div><p class="success-label">Brief elküldve</p><h2>Köszönjük, megérkezett.</h2><p>Átnézzük a projekt adatait, és ezek alapján tudunk továbbmenni.</p><button class="btn gold-bg" id="ok" type="button" style="width:100%;margin-top:1.8rem">Rendben</button></div></div>
-  <script>
-    document.addEventListener("DOMContentLoaded",()=>{const menu=document.getElementById("menu"),nav=document.getElementById("navLinks"),form=document.getElementById("briefForm"),note=document.getElementById("formNote"),popup=document.getElementById("popup"),close=document.getElementById("close"),ok=document.getElementById("ok");menu.addEventListener("click",()=>{const open=nav.classList.toggle("open");menu.classList.toggle("active",open)});nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{nav.classList.remove("open");menu.classList.remove("active")}));const obs=new IntersectionObserver((entries,o)=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("active");o.unobserve(e.target)}}),{threshold:.1});document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));setTimeout(()=>document.querySelectorAll(".hero .reveal").forEach(el=>el.classList.add("active")),100);
-    const canvas=document.getElementById("particle-canvas"),ctx=canvas.getContext("2d");let pts=[],raf;function size(){canvas.width=innerWidth;canvas.height=innerHeight}class P{constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.s=Math.random()*1.8+.45;this.dx=Math.random()*.9-.45;this.dy=Math.random()*.9-.45}update(){if(this.x>canvas.width||this.x<0)this.dx*=-1;if(this.y>canvas.height||this.y<0)this.dy*=-1;this.x+=this.dx;this.y+=this.dy}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle="rgba(191,149,63,.32)";ctx.fill()}}function init(){pts=[];for(let i=0;i<Math.min(95,Math.floor(innerWidth*innerHeight/15000));i++)pts.push(new P)}function connect(){for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=dx*dx+dy*dy,max=(canvas.width/8.5)*(canvas.height/8.5);if(d<max){ctx.strokeStyle="rgba(191,149,63,"+((1-d/max)*.16)+")";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke()}}}function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);pts.forEach(p=>{p.update();p.draw()});connect();raf=requestAnimationFrame(anim)}function restart(){cancelAnimationFrame(raf);size();init();anim()}restart();addEventListener("resize",restart);
-    function checked(name){return Array.from(document.querySelectorAll('input[name="'+name+'"]:checked')).map(i=>i.value)}function val(id){return(document.getElementById(id)?.value||"").trim()}function setNote(t,type){note.textContent=t;note.className="form-note";if(type)note.classList.add(type)}function openPop(){popup.classList.add("show")}function closePop(){popup.classList.remove("show")}close.addEventListener("click",closePop);ok.addEventListener("click",closePop);popup.addEventListener("click",e=>{if(e.target===popup)closePop()});
-    form.addEventListener("submit",async e=>{e.preventDefault();const btn=form.querySelector('button[type="submit"]');const payload={name:val("name"),email:val("email"),phone:val("phone"),company:val("company"),currentWebsite:val("currentWebsite"),socialLink:val("socialLink"),projectTypes:checked("projectTypes"),mainGoal:val("mainGoal"),materials:checked("materials"),materialLinks:val("materialLinks"),styleDirection:val("styleDirection"),colors:val("colors"),references:val("references"),avoid:val("avoid"),features:checked("features"),customFeatures:val("customFeatures"),technical:checked("technical"),domain:val("domain"),languages:val("languages"),deadline:val("deadline"),budget:val("budget"),priority:val("priority"),extraMessage:val("extraMessage")};if(!payload.name||!payload.email||!payload.mainGoal){setNote("A név, email és fő cél mező kötelező.","error");return}btn.disabled=true;btn.textContent="Küldés folyamatban...";setNote("A brief küldése folyamatban van.");try{const r=await fetch("/api/brief",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});let data={};try{data=await r.json()}catch(_){}if(!r.ok||data.ok===false)throw new Error(data.error||"Sikertelen küldés.");form.reset();setNote("Köszönjük, a brief megérkezett.","success");openPop()}catch(err){setNote("Nem sikerült elküldeni a briefet. Ellenőrizd, hogy az /api/brief végpont működik-e.","error")}finally{btn.disabled=false;btn.textContent="Brief elküldése"}})});
-  </script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Projekt brief – Krilix Tech & Labs</title>
+    <meta
+      name="description"
+      content="Projektindító brief weboldal, webshop, foglalási rendszer, automatizáció vagy egyedi digitális megoldás elkészítéséhez."
+    />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#050607" />
+
+    <meta property="og:title" content="Projekt brief – Krilix Tech & Labs" />
+    <meta
+      property="og:description"
+      content="Mondd el, mit építsünk neked. Egy átlátható projektindító brief a pontos tervezéshez."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/krilix-logo.png" />
+
+    <link rel="icon" href="/krilix-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&family=Syncopate:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ================================================================
+         01. ALAPVÁLTOZÓK
+         ================================================================ */
+      :root {
+        --bg: #050607;
+        --bg-soft: #090b0d;
+        --panel: #0d1012;
+        --panel-soft: rgba(255, 255, 255, 0.026);
+        --panel-strong: rgba(255, 255, 255, 0.046);
+        --text: #f5f1e9;
+        --muted: rgba(245, 241, 233, 0.68);
+        --muted-soft: rgba(245, 241, 233, 0.42);
+        --line: rgba(255, 255, 255, 0.085);
+        --line-strong: rgba(255, 255, 255, 0.13);
+        --gold: #c7973c;
+        --gold-light: #f0cd78;
+        --gold-dark: #825c21;
+        --gold-line: rgba(240, 205, 120, 0.24);
+        --success: #76d498;
+        --error: #ff9690;
+        --warning: #f1b86a;
+        --shadow: 0 32px 110px rgba(0, 0, 0, 0.48);
+        --shadow-soft: 0 18px 58px rgba(0, 0, 0, 0.24);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius: 14px;
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --page-pad: clamp(16px, 4.5vw, 72px);
+        --content-width: 1480px;
+        --gold-gradient: linear-gradient(
+          135deg,
+          #f4df9c 0%,
+          #c7973c 46%,
+          #f2d47f 100%
+        );
+      }
+
+      /* ================================================================
+         02. ALAPBEÁLLÍTÁSOK
+         ================================================================ */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(240, 205, 120, 0.55) var(--bg);
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+        color: var(--text);
+        font-family: "Manrope", sans-serif;
+        background:
+          radial-gradient(
+            circle at 84% 8%,
+            rgba(199, 151, 60, 0.15),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 10% 48%,
+            rgba(199, 151, 60, 0.07),
+            transparent 27%
+          ),
+          linear-gradient(180deg, #040506 0%, #090b0d 48%, #050607 100%);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -4;
+        pointer-events: none;
+        opacity: 0.035;
+        background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency=".82" numOctaves="3"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E');
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -5;
+        pointer-events: none;
+        opacity: 0.28;
+        background-image:
+          linear-gradient(rgba(240, 205, 120, 0.025) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(240, 205, 120, 0.025) 1px,
+            transparent 1px
+          );
+        background-size: 76px 76px;
+        mask-image: radial-gradient(
+          ellipse at 50% 34%,
+          #000 8%,
+          rgba(0, 0, 0, 0.82) 48%,
+          transparent 86%
+        );
+      }
+
+      ::-webkit-scrollbar {
+        width: 9px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border: 2px solid var(--bg);
+        border-radius: 999px;
+        background: rgba(240, 205, 120, 0.48);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        color: inherit;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .container {
+        width: min(
+          var(--content-width),
+          calc(100% - (var(--page-pad) * 2))
+        );
+        margin: 0 auto;
+      }
+
+      .display {
+        font-family: "DM Serif Display", serif;
+        font-weight: 400;
+        letter-spacing: -0.035em;
+      }
+
+      .gold-text {
+        background: var(--gold-gradient);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* ================================================================
+         03. KÖNNYŰ, CSS-ALAPÚ DINAMIKUS HÁTTÉR
+         ================================================================ */
+      .background-aurora {
+        position: fixed;
+        z-index: -3;
+        width: min(70vw, 1050px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        filter: blur(115px);
+        pointer-events: none;
+        opacity: 0.2;
+        will-change: transform;
+      }
+
+      .aurora-one {
+        top: -40%;
+        right: -20%;
+        background: radial-gradient(
+          circle,
+          rgba(240, 205, 120, 0.65),
+          rgba(199, 151, 60, 0.11) 42%,
+          transparent 70%
+        );
+        animation: aurora-one 18s ease-in-out infinite alternate;
+      }
+
+      .aurora-two {
+        left: -28%;
+        top: 42%;
+        background: radial-gradient(
+          circle,
+          rgba(135, 91, 29, 0.5),
+          rgba(199, 151, 60, 0.08) 46%,
+          transparent 72%
+        );
+        animation: aurora-two 23s ease-in-out infinite alternate;
+      }
+
+      .light-line {
+        position: fixed;
+        z-index: -2;
+        width: 64vw;
+        height: 1px;
+        pointer-events: none;
+        opacity: 0.18;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(240, 205, 120, 0.65),
+          transparent
+        );
+        box-shadow: 0 0 18px rgba(240, 205, 120, 0.22);
+      }
+
+      .light-line-one {
+        top: 28%;
+        left: -34%;
+        transform: rotate(-13deg);
+        animation: line-sweep 18s ease-in-out infinite;
+      }
+
+      @keyframes aurora-one {
+        from {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        to {
+          transform: translate3d(-10%, 18%, 0) scale(1.12);
+        }
+      }
+
+      @keyframes aurora-two {
+        from {
+          transform: translate3d(0, 0, 0) scale(0.94);
+        }
+        to {
+          transform: translate3d(18%, -12%, 0) scale(1.1);
+        }
+      }
+
+      @keyframes line-sweep {
+        0%,
+        100% {
+          transform: translate3d(-8%, 0, 0) rotate(-13deg);
+          opacity: 0.05;
+        }
+        50% {
+          transform: translate3d(125vw, 16vh, 0) rotate(-13deg);
+          opacity: 0.24;
+        }
+      }
+
+      /* ================================================================
+         04. FEJLÉC
+         ================================================================ */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+        background: rgba(5, 6, 7, 0.78);
+        backdrop-filter: blur(18px);
+      }
+
+      .navbar {
+        min-height: 78px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .brand img {
+        width: 46px;
+        height: 46px;
+        object-fit: contain;
+        border: 1px solid rgba(240, 205, 120, 0.28);
+        border-radius: 10px;
+        background: #ece5d9;
+        box-shadow: 0 0 28px rgba(199, 151, 60, 0.1);
+      }
+
+      .brand strong {
+        display: block;
+        font-family: "Syncopate", sans-serif;
+        font-size: 16px;
+        letter-spacing: 0.18em;
+      }
+
+      .brand span {
+        display: block;
+        margin-top: 5px;
+        color: var(--gold-light);
+        font-size: 8px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      .header-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .private-badge,
+      .save-status {
+        min-height: 36px;
+        padding: 0 13px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.025);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .private-badge::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--gold-light);
+        box-shadow: 0 0 12px rgba(240, 205, 120, 0.55);
+      }
+
+      .save-status {
+        color: var(--muted-soft);
+      }
+
+      .save-status.saved {
+        color: var(--success);
+        border-color: rgba(118, 212, 152, 0.22);
+      }
+
+      .save-status.saving {
+        color: var(--warning);
+      }
+
+      /* ================================================================
+         05. HERO
+         ================================================================ */
+      .hero {
+        padding: clamp(72px, 8vw, 122px) 0 clamp(46px, 5vw, 72px);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 380px;
+        gap: clamp(34px, 6vw, 96px);
+        align-items: end;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 17px;
+        color: var(--gold-light);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--gold-light));
+      }
+
+      .hero h1 {
+        max-width: 10.5ch;
+        font-size: clamp(58px, 8vw, 112px);
+        line-height: 0.9;
+      }
+
+      .hero-lead {
+        max-width: 65ch;
+        margin-top: 22px;
+        color: var(--muted);
+        font-size: clamp(16px, 1.45vw, 19px);
+        line-height: 1.82;
+      }
+
+      .hero-card {
+        padding: 24px;
+        border: 1px solid var(--gold-line);
+        border-radius: var(--radius-lg);
+        background:
+          radial-gradient(
+            circle at 100% 0%,
+            rgba(199, 151, 60, 0.13),
+            transparent 44%
+          ),
+          rgba(255, 255, 255, 0.025);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-card-label {
+        display: block;
+        margin-bottom: 15px;
+        color: var(--gold-light);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .hero-facts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .hero-fact {
+        min-height: 86px;
+        padding: 13px 10px;
+        display: grid;
+        align-content: center;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        text-align: center;
+      }
+
+      .hero-fact strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--gold-light);
+        font-size: 19px;
+      }
+
+      .hero-fact span {
+        color: var(--muted-soft);
+        font-size: 9px;
+        line-height: 1.35;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+
+      .hero-card p {
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.7;
+      }
+
+      /* ================================================================
+         06. BRIEF ALAPELRENDEZÉS
+         ================================================================ */
+      .brief-section {
+        padding-bottom: clamp(72px, 8vw, 122px);
+      }
+
+      .brief-layout {
+        display: grid;
+        grid-template-columns: 310px minmax(0, 1fr);
+        gap: 20px;
+        align-items: start;
+      }
+
+      /* ================================================================
+         07. BAL OLDALI HALADÁSI PANEL
+         ================================================================ */
+      .brief-sidebar {
+        position: sticky;
+        top: 98px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(9, 11, 13, 0.78);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(16px);
+      }
+
+      .sidebar-progress {
+        padding: 22px;
+        border-bottom: 1px solid var(--line);
+        background:
+          radial-gradient(
+            circle at 100% 0%,
+            rgba(199, 151, 60, 0.11),
+            transparent 45%
+          ),
+          rgba(255, 255, 255, 0.016);
+      }
+
+      .progress-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 15px;
+      }
+
+      .progress-heading small {
+        display: block;
+        color: var(--gold-light);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .progress-heading strong {
+        color: var(--text);
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      .progress-track {
+        height: 7px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.065);
+      }
+
+      .progress-bar {
+        width: 14.285%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--gold-gradient);
+        transition: width 0.45s var(--ease);
+      }
+
+      .progress-copy {
+        margin-top: 11px;
+        color: var(--muted-soft);
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      .step-navigation {
+        display: grid;
+        padding: 10px;
+      }
+
+      .step-nav-button {
+        width: 100%;
+        min-height: 58px;
+        padding: 8px 10px;
+        display: grid;
+        grid-template-columns: 36px minmax(0, 1fr) 18px;
+        gap: 10px;
+        align-items: center;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        color: var(--muted);
+        background: transparent;
+        text-align: left;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .step-nav-button:hover {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .step-nav-button.active {
+        color: var(--gold-light);
+        border-color: var(--gold-line);
+        background: rgba(199, 151, 60, 0.07);
+      }
+
+      .step-nav-button.completed {
+        color: var(--text);
+      }
+
+      .step-nav-index {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: var(--muted-soft);
+        font-family: "Syncopate", sans-serif;
+        font-size: 8px;
+      }
+
+      .step-nav-button.active .step-nav-index {
+        color: var(--gold-light);
+        border-color: var(--gold-line);
+      }
+
+      .step-nav-button.completed .step-nav-index {
+        color: #0a130d;
+        border-color: transparent;
+        background: var(--success);
+      }
+
+      .step-nav-text strong {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 12px;
+      }
+
+      .step-nav-text span {
+        display: block;
+        overflow: hidden;
+        color: var(--muted-soft);
+        font-size: 9px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .step-nav-check {
+        color: var(--success);
+        opacity: 0;
+        font-size: 13px;
+      }
+
+      .step-nav-button.completed .step-nav-check {
+        opacity: 1;
+      }
+
+      .sidebar-help {
+        margin: 0 10px 10px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: rgba(255, 255, 255, 0.018);
+      }
+
+      .sidebar-help strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--gold-light);
+        font-size: 11px;
+      }
+
+      .sidebar-help p {
+        color: var(--muted-soft);
+        font-size: 10px;
+        line-height: 1.6;
+      }
+
+      .draft-actions {
+        padding: 0 10px 10px;
+      }
+
+      .text-button {
+        width: 100%;
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        color: var(--muted-soft);
+        background: rgba(255, 255, 255, 0.018);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .text-button:hover {
+        color: var(--error);
+        border-color: rgba(255, 150, 144, 0.28);
+      }
+
+      /* ================================================================
+         08. ŰRLAPKÁRTYA
+         ================================================================ */
+      .brief-form-shell {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.033),
+          rgba(255, 255, 255, 0.014)
+        );
+        box-shadow: var(--shadow);
+      }
+
+      .form-topbar {
+        min-height: 72px;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        border-bottom: 1px solid var(--line);
+        background:
+          linear-gradient(
+            90deg,
+            rgba(199, 151, 60, 0.07),
+            transparent 38%
+          ),
+          rgba(255, 255, 255, 0.014);
+      }
+
+      .form-topbar-copy small {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--gold-light);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .form-topbar-copy strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .mobile-progress {
+        display: none;
+        min-width: 70px;
+        text-align: right;
+      }
+
+      .mobile-progress strong {
+        display: block;
+        color: var(--gold-light);
+        font-size: 20px;
+      }
+
+      .mobile-progress span {
+        color: var(--muted-soft);
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .brief-form {
+        min-height: 720px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-step {
+        display: none;
+        flex: 1;
+        padding: clamp(26px, 4vw, 52px);
+        animation: step-in 0.45s var(--ease);
+      }
+
+      .form-step.active {
+        display: block;
+      }
+
+      @keyframes step-in {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .step-heading {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 20px;
+        align-items: start;
+        margin-bottom: 34px;
+      }
+
+      .step-number {
+        color: transparent;
+        -webkit-text-stroke: 1px var(--gold-light);
+        font-family: "Syncopate", sans-serif;
+        font-size: 32px;
+        line-height: 0.95;
+      }
+
+      .step-heading h2 {
+        margin-bottom: 10px;
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(34px, 4vw, 55px);
+        font-weight: 400;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+      }
+
+      .step-heading p {
+        max-width: 66ch;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.75;
+      }
+
+      /* ================================================================
+         09. MEZŐK ÉS VÁLASZTHATÓ KÁRTYÁK
+         ================================================================ */
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .field-grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      .field label,
+      .fieldset-label {
+        color: var(--gold-light);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        line-height: 1.45;
+        text-transform: uppercase;
+      }
+
+      .field-help {
+        margin-top: -3px;
+        color: var(--muted-soft);
+        font-size: 10px;
+        line-height: 1.55;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        min-height: 56px;
+        padding: 0 15px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        outline: none;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.025);
+        transition:
+          border-color 0.2s ease,
+          background 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      select {
+        appearance: none;
+        cursor: pointer;
+        background-image:
+          linear-gradient(45deg, transparent 50%, var(--gold-light) 50%),
+          linear-gradient(135deg, var(--gold-light) 50%, transparent 50%);
+        background-position:
+          calc(100% - 19px) 24px,
+          calc(100% - 14px) 24px;
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+      }
+
+      option {
+        color: var(--text);
+        background: #111519;
+      }
+
+      textarea {
+        min-height: 145px;
+        padding: 15px;
+        resize: vertical;
+        line-height: 1.7;
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: rgba(245, 241, 233, 0.27);
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: rgba(240, 205, 120, 0.46);
+        background-color: rgba(255, 255, 255, 0.04);
+        box-shadow: 0 0 0 3px rgba(199, 151, 60, 0.075);
+      }
+
+      input.invalid,
+      select.invalid,
+      textarea.invalid {
+        border-color: rgba(255, 150, 144, 0.6);
+        box-shadow: 0 0 0 3px rgba(255, 150, 144, 0.07);
+      }
+
+      .choice-group {
+        margin-top: 6px;
+      }
+
+      .choice-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 11px;
+      }
+
+      .choice-grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .choice-card {
+        position: relative;
+        min-height: 66px;
+        padding: 13px 14px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.018);
+        cursor: pointer;
+        transition:
+          transform 0.2s var(--ease),
+          border-color 0.2s ease,
+          color 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .choice-card:hover {
+        color: var(--text);
+        border-color: rgba(240, 205, 120, 0.22);
+        transform: translateY(-2px);
+      }
+
+      .choice-card.selected {
+        color: var(--text);
+        border-color: var(--gold-line);
+        background: rgba(199, 151, 60, 0.075);
+        box-shadow: inset 0 0 24px rgba(199, 151, 60, 0.025);
+      }
+
+      .choice-card input {
+        width: 18px;
+        height: 18px;
+        min-height: 0;
+        flex: 0 0 18px;
+        padding: 0;
+        border-radius: 5px;
+        accent-color: var(--gold);
+        box-shadow: none;
+      }
+
+      .choice-card span {
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .field-block {
+        margin-top: 20px;
+      }
+
+      .required-mark {
+        color: var(--error);
+      }
+
+      /* ================================================================
+         10. UTOLSÓ LÉPÉS ÉS ADATKEZELÉS
+         ================================================================ */
+      .final-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 310px;
+        gap: 22px;
+        align-items: start;
+      }
+
+      .summary-card {
+        padding: 20px;
+        border: 1px solid var(--gold-line);
+        border-radius: var(--radius-lg);
+        background:
+          radial-gradient(
+            circle at 100% 0%,
+            rgba(199, 151, 60, 0.12),
+            transparent 46%
+          ),
+          rgba(255, 255, 255, 0.02);
+      }
+
+      .summary-card small {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--gold-light);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .summary-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .summary-item {
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .summary-item:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+      }
+
+      .summary-item span {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--muted-soft);
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .summary-item strong {
+        display: block;
+        overflow: hidden;
+        color: var(--text);
+        font-size: 12px;
+        line-height: 1.5;
+        text-overflow: ellipsis;
+      }
+
+      .consent-card {
+        margin-top: 20px;
+        padding: 17px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.018);
+        cursor: pointer;
+      }
+
+      .consent-card input {
+        width: 18px;
+        height: 18px;
+        min-height: 0;
+        flex: 0 0 18px;
+        margin-top: 2px;
+        padding: 0;
+        accent-color: var(--gold);
+      }
+
+      .consent-card span {
+        font-size: 11px;
+        line-height: 1.65;
+      }
+
+      .consent-card a {
+        color: var(--gold-light);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* ================================================================
+         11. ALSÓ NAVIGÁCIÓ
+         ================================================================ */
+      .form-navigation {
+        min-height: 84px;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        border-top: 1px solid var(--line);
+        background: rgba(0, 0, 0, 0.18);
+      }
+
+      .navigation-note {
+        min-width: 0;
+        color: var(--muted-soft);
+        font-size: 10px;
+        line-height: 1.55;
+      }
+
+      .navigation-note.success {
+        color: var(--success);
+      }
+
+      .navigation-note.error {
+        color: var(--error);
+      }
+
+      .navigation-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn {
+        min-height: 50px;
+        padding: 0 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.022);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          transform 0.22s var(--ease),
+          color 0.22s ease,
+          border-color 0.22s ease,
+          filter 0.22s ease,
+          opacity 0.22s ease;
+      }
+
+      .btn:hover {
+        color: var(--gold-light);
+        border-color: var(--gold-line);
+        transform: translateY(-2px);
+      }
+
+      .btn.gold {
+        color: #120d07;
+        border-color: transparent;
+        background: var(--gold-gradient);
+        box-shadow: 0 14px 38px rgba(199, 151, 60, 0.2);
+      }
+
+      .btn.gold:hover {
+        color: #120d07;
+        filter: brightness(1.05);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .submit-button {
+        display: none;
+      }
+
+      .submit-button.visible {
+        display: inline-flex;
+      }
+
+      /* ================================================================
+         12. TOAST ÉS SIKERES KÜLDÉS POPUP
+         ================================================================ */
+      .toast {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 600;
+        max-width: min(380px, calc(100% - 28px));
+        padding: 14px 16px;
+        border: 1px solid var(--gold-line);
+        border-radius: 13px;
+        color: var(--text);
+        background: rgba(10, 13, 15, 0.94);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(16px);
+        font-size: 11px;
+        line-height: 1.55;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(12px);
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease,
+          transform 0.25s ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .success-popup {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        padding: 24px;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(
+            circle at 50% 34%,
+            rgba(199, 151, 60, 0.21),
+            transparent 360px
+          ),
+          rgba(0, 0, 0, 0.78);
+        backdrop-filter: blur(14px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: 0.28s ease;
+      }
+
+      .success-popup.show {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .popup-card {
+        position: relative;
+        width: min(100%, 560px);
+        padding: 38px;
+        overflow: hidden;
+        border: 1px solid var(--gold-line);
+        border-radius: 24px;
+        background:
+          radial-gradient(
+            circle at 50% 0%,
+            rgba(240, 205, 120, 0.14),
+            transparent 220px
+          ),
+          linear-gradient(180deg, #0d1012, #090b0d);
+        box-shadow: var(--shadow);
+        text-align: center;
+      }
+
+      .popup-icon {
+        width: 78px;
+        height: 78px;
+        margin: 0 auto 20px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--gold-line);
+        border-radius: 50%;
+        color: var(--gold-light);
+        background: rgba(199, 151, 60, 0.07);
+        font-size: 30px;
+        box-shadow: inset 0 0 30px rgba(199, 151, 60, 0.055);
+      }
+
+      .popup-card small {
+        display: block;
+        margin-bottom: 13px;
+        color: var(--gold-light);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .popup-card h2 {
+        margin-bottom: 12px;
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(38px, 5vw, 52px);
+        font-weight: 400;
+        line-height: 0.98;
+      }
+
+      .popup-card p {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.75;
+      }
+
+      .popup-card .btn {
+        width: 100%;
+        margin-top: 22px;
+      }
+
+      .popup-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.025);
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      /* ================================================================
+         13. LÁBLÉC
+         ================================================================ */
+      .footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.055);
+        background: rgba(4, 5, 6, 0.56);
+      }
+
+      .footer-inner {
+        min-height: 82px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        color: var(--muted-soft);
+        font-size: 10px;
+      }
+
+      .footer a {
+        color: var(--muted);
+        transition: color 0.2s ease;
+      }
+
+      .footer a:hover {
+        color: var(--gold-light);
+      }
+
+      /* ================================================================
+         14. RESZPONZÍV MEGJELENÉS
+         ================================================================ */
+      @media (max-width: 1120px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-card {
+          max-width: 620px;
+        }
+
+        .brief-layout {
+          grid-template-columns: 250px minmax(0, 1fr);
+        }
+
+        .final-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .summary-card {
+          order: -1;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .brief-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .brief-sidebar {
+          display: none;
+        }
+
+        .mobile-progress {
+          display: block;
+        }
+
+        .brief-form {
+          min-height: 0;
+        }
+
+        .field-grid.three {
+          grid-template-columns: 1fr;
+        }
+
+        .choice-grid.three {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 680px) {
+        :root {
+          --page-pad: 14px;
+        }
+
+        .navbar {
+          min-height: 70px;
+        }
+
+        .brand img {
+          width: 40px;
+          height: 40px;
+        }
+
+        .brand strong {
+          font-size: 13px;
+        }
+
+        .brand span {
+          font-size: 7px;
+          letter-spacing: 0.18em;
+        }
+
+        .save-status {
+          display: none;
+        }
+
+        .private-badge {
+          min-height: 34px;
+          padding: 0 11px;
+          font-size: 8px;
+        }
+
+        .hero {
+          padding-top: 52px;
+        }
+
+        .hero h1 {
+          font-size: clamp(48px, 15vw, 72px);
+        }
+
+        .hero-lead {
+          font-size: 14px;
+        }
+
+        .hero-facts {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-fact {
+          min-height: 70px;
+        }
+
+        .brief-form-shell {
+          border-radius: 20px;
+        }
+
+        .form-topbar {
+          padding: 14px 16px;
+        }
+
+        .form-step {
+          padding: 24px 18px 30px;
+        }
+
+        .step-heading {
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-bottom: 26px;
+        }
+
+        .step-number {
+          font-size: 26px;
+        }
+
+        .step-heading h2 {
+          font-size: clamp(34px, 11vw, 48px);
+        }
+
+        .field-grid,
+        .choice-grid,
+        .choice-grid.three {
+          grid-template-columns: 1fr;
+        }
+
+        .form-navigation {
+          position: sticky;
+          bottom: 0;
+          z-index: 50;
+          padding: 12px;
+          background: rgba(7, 8, 10, 0.96);
+          backdrop-filter: blur(16px);
+        }
+
+        .navigation-note {
+          display: none;
+        }
+
+        .navigation-buttons {
+          width: 100%;
+        }
+
+        .navigation-buttons .btn {
+          flex: 1;
+          padding: 0 13px;
+        }
+
+        .footer-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          justify-content: center;
+          gap: 5px;
+        }
+
+        .toast {
+          right: 14px;
+          bottom: 14px;
+        }
+
+        .popup-card {
+          padding: 34px 22px 26px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .background-aurora,
+        .light-line {
+          animation: none !important;
+        }
+
+        .form-step {
+          animation: none;
+        }
+
+        * {
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ================================================================
+         CSS-ALAPÚ DINAMIKUS HÁTTÉR
+         ================================================================ -->
+    <div class="background-aurora aurora-one" aria-hidden="true"></div>
+    <div class="background-aurora aurora-two" aria-hidden="true"></div>
+    <div class="light-line light-line-one" aria-hidden="true"></div>
+
+    <!-- ================================================================
+         FEJLÉC
+         ================================================================ -->
+    <header class="topbar">
+      <nav class="container navbar" aria-label="Brief fejléc">
+        <a href="/" class="brand" aria-label="Krilix Tech & Labs főoldal">
+          <img src="/krilix-logo.png" alt="Krilix logó" />
+          <div>
+            <strong>KRILIX</strong>
+            <span>Tech &amp; Labs</span>
+          </div>
+        </a>
+
+        <div class="header-status">
+          <span class="save-status" id="saveStatus">Vázlat mentése</span>
+          <span class="private-badge">Privát projekt brief</span>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ================================================================
+           HERO
+           ================================================================ -->
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <span class="eyebrow">Projektindító brief</span>
+
+            <h1 class="display">
+              Mondd el, mit építsünk <span class="gold-text">fel neked.</span>
+            </h1>
+
+            <p class="hero-lead">
+              Ebből a briefből indulunk ki. Minél pontosabban válaszolsz, annál
+              jobb ajánlatot és ütemtervet tudunk készíteni az egyedi projektedhez.
+            </p>
+          </div>
+
+          <aside class="hero-card">
+            <span class="hero-card-label">A kitöltésről</span>
+
+            <div class="hero-facts">
+              <div class="hero-fact">
+                <strong>7</strong>
+                <span>átlátható lépés</span>
+              </div>
+
+              <div class="hero-fact">
+                <strong>8–12</strong>
+                <span>perc kitöltési idő</span>
+              </div>
+
+              <div class="hero-fact">
+                <strong>Auto</strong>
+                <span>helyi vázlatmentés</span>
+              </div>
+            </div>
+
+            <p>
+              Nem kell minden kérdésre azonnal tökéletes választ adnod. Az alapirány,
+              a főbb célok és az elvárások már elegendők a közös munkánk elindításához.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ================================================================
+           TÖBBLÉPÉSES BRIEF
+           ================================================================ -->
+      <section class="brief-section">
+        <div class="container brief-layout">
+          <!-- ============================================================
+               BAL OLDALI HALADÁSI PANEL
+               ============================================================ -->
+          <aside class="brief-sidebar">
+            <div class="sidebar-progress">
+              <div class="progress-heading">
+                <div>
+                  <small>Kitöltöttség</small>
+                  <strong id="progressPercent">14%</strong>
+                </div>
+
+                <small id="stepCounter">1 / 7</small>
+              </div>
+
+              <div class="progress-track">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+
+              <p class="progress-copy" id="progressCopy">
+                Kezdjük az alapadatokkal.
+              </p>
+            </div>
+
+            <nav class="step-navigation" aria-label="Brief lépések">
+              <button class="step-nav-button active" type="button" data-step="0">
+                <span class="step-nav-index">01</span>
+                <span class="step-nav-text">
+                  <strong>Alapadatok</strong>
+                  <span>Kapcsolat és projekt</span>
+                </span>
+                <span class="step-nav-check">✓</span>
+              </button>
+
+              <button class="step-nav-button" type="button" data-step="1">
+                <span class="step-nav-index">02</span>
+                <span class="step-nav-text">
+                  <strong>Projekt</strong>
+                  <span>Típus és célok</span>
+                </span>
+                <span class="step-nav-check">✓</span>
+              </button>
+
+              <button class="step-nav-button" type="button" data-step="2">
+                <span class="step-nav-index">03</span>
+                <span class="step-nav-text">
+                  <strong>Anyagok</strong>
+                  <span>Szöveg, kép, arculat</span>
+                </span>
+                <span class="step-nav-check">✓</span>
+              </button>
+
+              <button class="step-nav-button" type="button" data-step="3">
+                <span class="step-nav-index">04</span>
+                <span class="step-nav-text">
+                  <strong>Dizájn</strong>
+                  <span>Stílus és inspiráció</span>
+                </span>
+                <span class="step-nav-check">✓</span>
+              </button>
+
+              <button class="step-nav-button" type="button" data-step="4">
+                <span class="step-nav-index">05</span>
+                <span class="step-nav-text">
+                  <strong>Funkciók</strong>
+                  <span>Mit tudjon a rendszer?</span>
+                </span>
+                <span class="step-nav-check">✓</span>
+              </button>
+
+              <button class="step-nav-button" type="button" data-step="5">
+                <span class="step-nav-index">06</span>
+                <span class="step-nav-text">
+                  <strong>Technika</strong>
+                  <span>Domain, tárhely, SEO</span>
+                </span>
+                <span class="step-nav-check">✓</span>
+              </button>
+
+              <button class="step-nav-button" type="button" data-step="6">
+                <span class="step-nav-index">07</span>
+                <span class="step-nav-text">
+                  <strong>Indítás</strong>
+                  <span>Határidő és keret</span>
+                </span>
+                <span class="step-nav-check">✓</span>
+              </button>
+            </nav>
+
+            <div class="sidebar-help">
+              <strong>Elakadtál?</strong>
+              <p>
+                Írd le saját szavaiddal, amit tudsz. A hiányzó részleteket a
+                közös egyeztetésen úgyis pontosítjuk.
+              </p>
+            </div>
+
+            <div class="draft-actions">
+              <button class="text-button" id="clearDraftButton" type="button">
+                Mentett vázlat törlése
+              </button>
+            </div>
+          </aside>
+
+          <!-- ============================================================
+               ŰRLAP
+               ============================================================ -->
+          <div class="brief-form-shell">
+            <div class="form-topbar">
+              <div class="form-topbar-copy">
+                <small id="currentStepLabel">01 / Alapadatok</small>
+                <strong id="currentStepTitle">
+                  Kapcsolat és projektazonosítás
+                </strong>
+              </div>
+
+              <div class="mobile-progress">
+                <strong id="mobileStepCounter">1/7</strong>
+                <span>Lépés</span>
+              </div>
+            </div>
+
+            <form class="brief-form" id="briefForm" novalidate>
+              <!-- ========================================================
+                   1. LÉPÉS – ALAPADATOK
+                   ======================================================== -->
+              <section class="form-step active" data-step-panel="0">
+                <div class="step-heading">
+                  <div class="step-number">01</div>
+
+                  <div>
+                    <h2>Alapadatok</h2>
+                    <p>
+                      Kezdjük az alapokkal! Kérlek, add meg az elérhetőségeidet, hogy
+                      tudjuk, kivel és miről fogunk beszélni. A csillaggal jelölt mezők kötelezők.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="field-grid">
+                  <div class="field">
+                    <label for="name">
+                      Név <span class="required-mark">*</span>
+                    </label>
+                    <input
+                      id="name"
+                      type="text"
+                      autocomplete="name"
+                      placeholder="Teljes neved"
+                      required
+                    />
+                  </div>
+
+                  <div class="field">
+                    <label for="email">
+                      Email cím <span class="required-mark">*</span>
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      autocomplete="email"
+                      placeholder="email@pelda.hu"
+                      required
+                    />
+                  </div>
+
+                  <div class="field">
+                    <label for="phone">Telefonszám <span class="required-mark">*</span>
+                    </label>
+                    <input
+                      id="phone"
+                      type="tel"
+                      autocomplete="tel"
+                      placeholder="+36 ..."
+                      required
+                    />
+                  </div>
+
+                  <div class="field">
+                    <label for="company">Cég vagy márkanév <span class="required-mark">*</span>
+                    </label>
+                    <input
+                      id="company"
+                      type="text"
+                      autocomplete="organization"
+                      placeholder="Cég vagy projekt neve"
+                      required
+                    />
+                  </div>
+
+                  <div class="field">
+                    <label for="currentWebsite">Jelenlegi weboldal (ha van)</label>
+                    <input
+                      id="currentWebsite"
+                      type="url"
+                      placeholder="https://..."
+                    />
+                  </div>
+
+                  <div class="field">
+                    <label for="socialLink">
+                      Facebook, Instagram vagy más felület
+                    </label>
+                    <input
+                      id="socialLink"
+                      type="url"
+                      placeholder="https://..."
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <!-- ========================================================
+                   2. LÉPÉS – PROJEKT
+                   ======================================================== -->
+              <section class="form-step" data-step-panel="1">
+                <div class="step-heading">
+                  <div class="step-number">02</div>
+
+                  <div>
+                    <h2>A projekt iránya</h2>
+                    <p>
+                      Foglaljuk össze, miről is szól a projekt, mit szeretnél elérni, és
+                      kiknek fog készülni ez a megoldás.
+                    </p>
+                  </div>
+                </div>
+
+                <fieldset class="choice-group">
+                  <legend class="fieldset-label">Milyen projektről van szó?</legend>
+
+                  <div class="choice-grid">
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="projectTypes"
+                        value="Bemutatkozó weboldal"
+                      />
+                      <span>Bemutatkozó weboldal</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="projectTypes"
+                        value="Landing oldal"
+                      />
+                      <span>Landing oldal</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="projectTypes"
+                        value="Webshop"
+                      />
+                      <span>Webshop</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="projectTypes"
+                        value="Időpontfoglaló rendszer"
+                      />
+                      <span>Időpontfoglaló rendszer</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="projectTypes"
+                        value="Portfólió oldal"
+                      />
+                      <span>Portfólió oldal</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="projectTypes"
+                        value="Meglévő oldal átalakítása"
+                      />
+                      <span>Meglévő oldal átalakítása</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="projectTypes"
+                        value="Egyedi webes rendszer"
+                      />
+                      <span>Egyedi webes rendszer</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="projectTypes"
+                        value="Még nem tudom pontosan"
+                      />
+                      <span>Még nem tudom pontosan</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="field field-block">
+                  <label for="mainGoal">
+                    Mi a projekt fő célja?
+                    <span class="required-mark">*</span>
+                  </label>
+                  <p class="field-help">
+                    Például: több érdeklődő, online foglalás elindítása, bizalomépítés, automatizált eladás.
+                  </p>
+                  <textarea
+                    id="mainGoal"
+                    placeholder="Írd le röviden, miért vágunk bele ebbe a projektbe."
+                    required
+                  ></textarea>
+                </div>
+
+                <div class="field-grid field-block">
+                  <div class="field full">
+                    <label for="targetAudience">Kiknek szól az oldal? (Célcsoport)</label>
+                    <p class="field-help">
+                      Kik a vásárlóid vagy az ügyfeleid? Ki fogja használni az oldalt?
+                    </p>
+                    <textarea
+                      id="targetAudience"
+                      placeholder="Írd le, kinek kommunikálunk (kor, érdeklődés, B2B vagy B2C)."
+                    ></textarea>
+                  </div>
+
+                  <div class="field full">
+                    <label for="competitors">Kik a főbb versenytársak?</label>
+                    <p class="field-help">
+                      Segít nekünk látni a piacot, ha megadsz 1-2 példát, aki hasonlóval foglalkozik.
+                    </p>
+                    <textarea
+                      id="competitors"
+                      placeholder="Másolj ide pár linket vagy nevet."
+                    ></textarea>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ========================================================
+                   3. LÉPÉS – TARTALOM ÉS ANYAGOK
+                   ======================================================== -->
+              <section class="form-step" data-step-panel="2">
+                <div class="step-heading">
+                  <div class="step-number">03</div>
+
+                  <div>
+                    <h2>Tartalom és anyagok</h2>
+                    <p>
+                      Milyen tartalmaid vannak már meg? Jelöld be, miből tudunk dolgozni, 
+                      és mi az, amiben még ránk lesz szükséged.
+                    </p>
+                  </div>
+                </div>
+
+                <fieldset class="choice-group">
+                  <legend class="fieldset-label">Mi áll már rendelkezésre?</legend>
+
+                  <div class="choice-grid">
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="materials"
+                        value="Van logó"
+                      />
+                      <span>Van logó</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="materials"
+                        value="Van arculat / színek"
+                      />
+                      <span>Van arculat vagy meghatározott színvilág</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="materials"
+                        value="Vannak képek"
+                      />
+                      <span>Vannak használható képek</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="materials"
+                        value="Vannak kész szövegek"
+                      />
+                      <span>Vannak kész szövegek az oldalra</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="materials"
+                        value="Kell szövegírás / átdolgozás"
+                      />
+                      <span>Szövegírásban / szerkesztésben segítség kell</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="materials"
+                        value="Kell többnyelvű oldal"
+                      />
+                      <span>Többnyelvű oldalra lesz szükség</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="field field-block">
+                  <label for="materialLinks">
+                    Anyagok, Drive vagy WeTransfer link
+                  </label>
+                  <p class="field-help">
+                    Ide jöhet a logó, fotók, szövegek vagy bármilyen arculati dokumentum linkje.
+                  </p>
+                  <textarea
+                    id="materialLinks"
+                    placeholder="Másold ide a linkeket, ha vannak már feltöltött anyagaid."
+                  ></textarea>
+                </div>
+              </section>
+
+              <!-- ========================================================
+                   4. LÉPÉS – DIZÁJN
+                   ======================================================== -->
+              <section class="form-step" data-step-panel="3">
+                <div class="step-heading">
+                  <div class="step-number">04</div>
+
+                  <div>
+                    <h2>Dizájn és hangulat</h2>
+                    <p>
+                      Határozzuk meg az irányt. Milyen vizuális világ áll a legközelebb az
+                      elképzeléseidhez, és mi az, amit semmiképp sem szeretnél látni?
+                    </p>
+                  </div>
+                </div>
+
+                <div class="field-grid">
+                  <div class="field">
+                    <label for="styleDirection">Milyen stílus illik hozzátok?</label>
+
+                    <select id="styleDirection">
+                      <option value="">Válassz vizuális irányt</option>
+                      <option>Prémium / luxus</option>
+                      <option>Modern / letisztult</option>
+                      <option>Fiatalos / dinamikus</option>
+                      <option>Elegáns / visszafogott</option>
+                      <option>Ipari / technikai</option>
+                      <option>Barátságos / közvetlen</option>
+                      <option>Még nem tudom</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="colors">Színek és kerülendő színek</label>
+
+                    <input
+                      id="colors"
+                      type="text"
+                      placeholder="Pl.: fekete–arany jó, de ne legyen piros"
+                    />
+                  </div>
+
+                  <div class="field full">
+                    <label for="references">Referenciaoldalak (Mik tetszenek?)</label>
+                    <p class="field-help">
+                      Másolj ide 1–3 linket olyan weboldalakról, amelyeknek a megjelenése vagy a működése bejön.
+                    </p>
+                    <textarea
+                      id="references"
+                      placeholder="https://..."
+                    ></textarea>
+                  </div>
+
+                  <div class="field full">
+                    <label for="avoid">Mit kerüljünk el?</label>
+                    <p class="field-help">
+                      Van olyan trend, dizájnelem vagy elrendezés, amitől a falra mászol?
+                    </p>
+                    <textarea
+                      id="avoid"
+                      placeholder="Például: ne legyen sablonos, túl színes, zsúfolt, vagy ne ugorjon fel 5 pop-up."
+                    ></textarea>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ========================================================
+                   5. LÉPÉS – FUNKCIÓK
+                   ======================================================== -->
+              <section class="form-step" data-step-panel="4">
+                <div class="step-heading">
+                  <div class="step-number">05</div>
+
+                  <div>
+                    <h2>Funkciók és működés</h2>
+                    <p>
+                      Mik azok a funkciók, amik nélkülözhetetlenek az oldalhoz? 
+                      Mivel mi mindent egyedileg (HTML, CSS, JS, stb.) kódolunk, szinte bármilyen egyedi igény megvalósítható.
+                    </p>
+                  </div>
+                </div>
+
+                <fieldset class="choice-group">
+                  <legend class="fieldset-label">Tervezett funkciók</legend>
+
+                  <div class="choice-grid">
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Kapcsolati űrlap"
+                      />
+                      <span>Kapcsolati űrlap</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Ajánlatkérő űrlap"
+                      />
+                      <span>Ajánlatkérő űrlap</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Időpontfoglalás"
+                      />
+                      <span>Időpontfoglalás</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Admin felület"
+                      />
+                      <span>Egyedi admin felület (CMS)</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Blog / hírek"
+                      />
+                      <span>Blog vagy hírek szekció</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Galéria"
+                      />
+                      <span>Képgaléria / portfólió</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Térkép"
+                      />
+                      <span>Interaktív térkép</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Online fizetés"
+                      />
+                      <span>Online bankkártyás fizetés</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Email automatizmus"
+                      />
+                      <span>Email automatizmus (pl. visszaigazolás)</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="features"
+                        value="Ügyfélkapu / privát felület"
+                      />
+                      <span>Bejelentkezéses privát felület</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="field field-block">
+                  <label for="integrations">Külső rendszerek bekötése (Integrációk)</label>
+                  <p class="field-help">
+                    Milyen szoftvereket használtok, amit össze kellene kötni az oldallal? 
+                    (pl. Számlázz.hu, Billingo, Stripe, MailerLite, CRM rendszerek)
+                  </p>
+                  <input
+                    id="integrations"
+                    type="text"
+                    placeholder="Írd be a szoftverek neveit..."
+                  />
+                </div>
+
+                <div class="field field-block">
+                  <label for="customFeatures">Egyedi folyamatok, egyéb funkciók</label>
+                  <p class="field-help">
+                    Lépésről lépésre vezesd le, hogyan működjön egy adott rész, ha az eltér az átlagostól.
+                  </p>
+                  <textarea
+                    id="customFeatures"
+                    placeholder="Írd le, milyen speciális elvárásaid vannak a működéssel kapcsolatban."
+                  ></textarea>
+                </div>
+              </section>
+
+              <!-- ========================================================
+                   6. LÉPÉS – TECHNIKAI HÁTTÉR
+                   ======================================================== -->
+              <section class="form-step" data-step-panel="5">
+                <div class="step-heading">
+                  <div class="step-number">06</div>
+
+                  <div>
+                    <h2>Technikai háttér</h2>
+                    <p>
+                      Hol fog futni az oldal? Nézzük át a domain, a tárhely (szerver), a céges email és a 
+                      mérések jelenlegi állapotát.
+                    </p>
+                  </div>
+                </div>
+
+                <fieldset class="choice-group">
+                  <legend class="fieldset-label">
+                    Mi van már meg, és mire lesz szükség?
+                  </legend>
+
+                  <div class="choice-grid">
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="technical"
+                        value="Van domain"
+                      />
+                      <span>Már van saját domainem</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="technical"
+                        value="Kell domain"
+                      />
+                      <span>Domain vásárlásában is segítsetek</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="technical"
+                        value="Van tárhely / szerver"
+                      />
+                      <span>Már van tárhelyem / szerverem</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="technical"
+                        value="Kell tárhely / szerver"
+                      />
+                      <span>Tárhely vagy felhős szerver is szükséges</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="technical"
+                        value="Kell céges email"
+                      />
+                      <span>Céges email címet is be kell állítani</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="technical"
+                        value="Kell Google Analytics"
+                      />
+                      <span>Google Analytics mérés beállítása kell</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="technical"
+                        value="Kell SEO alap"
+                      />
+                      <span>Technikai SEO alapbeállítások</span>
+                    </label>
+
+                    <label class="choice-card">
+                      <input
+                        type="checkbox"
+                        name="technical"
+                        value="Folyamatos karbantartás"
+                      />
+                      <span>Szeretném, ha az oldal későbbi karbantartását is ti végeznétek</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="field-grid field-block">
+                  <div class="field">
+                    <label for="domain">Domain név, ha már megvan</label>
+                    <input
+                      id="domain"
+                      type="text"
+                      placeholder="pelda.hu"
+                    />
+                  </div>
+
+                  <div class="field">
+                    <label for="languages">Az oldal tervezett nyelvei</label>
+                    <input
+                      id="languages"
+                      type="text"
+                      placeholder="Például: magyar, angol"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <!-- ========================================================
+                   7. LÉPÉS – HATÁRIDŐ, KERET ÉS KÜLDÉS
+                   ======================================================== -->
+              <section class="form-step" data-step-panel="6">
+                <div class="step-heading">
+                  <div class="step-number">07</div>
+
+                  <div>
+                    <h2>Indulás és keretek</h2>
+                    <p>
+                      Már csak a matek és az időzítés van hátra. Mikorra szeretnéd 
+                      élesben látni a projektet, és milyen keretekkel számolhatunk a tervezésnél?
+                    </p>
+                  </div>
+                </div>
+
+                <div class="final-grid">
+                  <div>
+                    <div class="field-grid three">
+                      <div class="field">
+                        <label for="deadline">Mikorra legyen kész?</label>
+
+                        <select id="deadline">
+                          <option value="">Válassz időzítést</option>
+                          <option>1 hónapon belül</option>
+                          <option>2–3 hónapon belül</option>
+                          <option>Még csak tervezgetem, nincs fix dátum</option>
+                        </select>
+                      </div>
+
+                      <div class="field">
+                        <label for="budget">Tervezett költségkeret</label>
+                        <p class="field-help" style="margin-top:2px;">Segít a reális technológia kiválasztásában.</p>
+                        <select id="budget">
+                          <option value="">Válassz keretet</option>
+                          <option>100 000 Ft alatt</option>
+                          <option>100 000 – 250 000 Ft</option>
+                          <option>250 000 – 500 000 Ft</option>
+                          <option>500 000 – 1 000 000 Ft</option>
+                          <option>1 000 000 Ft felett</option>
+                        </select>
+                      </div>
+
+                      <div class="field full">
+                        <label for="extraMessage">Bármi egyéb megjegyzés?</label>
+                        <p class="field-help">Írj ide mindent, ami az előző pontokból kimaradt, de fontos lehet.</p>
+                        <textarea
+                          id="extraMessage"
+                          placeholder="Ide jöhetnek az extra gondolatok..."
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    <label class="consent-card">
+                      <input id="consent" type="checkbox" required />
+
+                      <span>
+                        Elolvastam és elfogadom az
+                        <a href="/adatkezeles" target="_blank" rel="noopener">
+                          adatkezelési tájékoztatót
+                        </a>.
+                        Tudomásul veszem, hogy a megadott adatok a projekt
+                        előkészítése és a kapcsolatfelvétel céljából kerülnek
+                        kezelésre.
+                      </span>
+                    </label>
+                  </div>
+
+                  <aside class="summary-card">
+                    <small>Beküldés előtti összefoglaló</small>
+
+                    <div class="summary-list">
+                      <div class="summary-item">
+                        <span>Kapcsolattartó</span>
+                        <strong id="summaryName">Még nincs megadva</strong>
+                      </div>
+
+                      <div class="summary-item">
+                        <span>Cég vagy projekt</span>
+                        <strong id="summaryCompany">Még nincs megadva</strong>
+                      </div>
+
+                      <div class="summary-item">
+                        <span>Projekt típusa</span>
+                        <strong id="summaryProjectType">Még nincs kiválasztva</strong>
+                      </div>
+
+                      <div class="summary-item">
+                        <span>Időzítés</span>
+                        <strong id="summaryDeadline">Még nincs kiválasztva</strong>
+                      </div>
+
+                      <div class="summary-item">
+                        <span>Tervezett keret</span>
+                        <strong id="summaryBudget">Még nincs kiválasztva</strong>
+                      </div>
+                    </div>
+                  </aside>
+                </div>
+              </section>
+
+              <!-- ========================================================
+                   ALSÓ NAVIGÁCIÓ
+                   ======================================================== -->
+              <div class="form-navigation">
+                <p class="navigation-note" id="formNote">
+                  A válaszaid automatikusan mentésre kerülnek ezen az eszközön.
+                </p>
+
+                <div class="navigation-buttons">
+                  <button class="btn" id="previousButton" type="button" disabled>
+                    ← Vissza
+                  </button>
+
+                  <button class="btn gold" id="nextButton" type="button">
+                    Tovább →
+                  </button>
+
+                  <button
+                    class="btn gold submit-button"
+                    id="submitButton"
+                    type="submit"
+                  >
+                    Brief elküldése →
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================================================================
+         LÁBLÉC
+         ================================================================ -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <span>© 2026 Krilix Tech &amp; Labs</span>
+
+        <a href="mailto:hello@krilixtechlabs.com">
+          hello@krilixtechlabs.com
+        </a>
+      </div>
+    </footer>
+
+    <!-- ================================================================
+         VÁZLAT VISSZAJELZÉS
+         ================================================================ -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <!-- ================================================================
+         SIKERES BEKÜLDÉS
+         ================================================================ -->
+    <div class="success-popup" id="successPopup" aria-hidden="true">
+      <div class="popup-card">
+        <button
+          class="popup-close"
+          id="popupClose"
+          type="button"
+          aria-label="Bezárás"
+        >
+          ×
+        </button>
+
+        <div class="popup-icon">✓</div>
+        <small>Brief sikeresen elküldve</small>
+
+        <h2>Király, megkaptuk!</h2>
+
+        <p>
+          Átnézzük a projekt részleteit, és a megadott elérhetőségeiden hamarosan
+          jelentkezünk a következő lépésekkel és a javaslatainkkal.
+        </p>
+
+        <button class="btn gold" id="popupOk" type="button">
+          Rendben
+        </button>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         JAVASCRIPT
+         - lépések kezelése
+         - ellenőrzés
+         - helyi vázlatmentés
+         - /api/brief bekötés
+         ================================================================ -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        /* ==============================================================
+           01. ELEMEK ÉS ÁLLAPOT
+           ============================================================== */
+        const form = document.getElementById("briefForm");
+        const stepPanels = Array.from(
+          document.querySelectorAll("[data-step-panel]"),
+        );
+        const stepButtons = Array.from(
+          document.querySelectorAll(".step-nav-button"),
+        );
+
+        const previousButton = document.getElementById("previousButton");
+        const nextButton = document.getElementById("nextButton");
+        const submitButton = document.getElementById("submitButton");
+
+        const progressBar = document.getElementById("progressBar");
+        const progressPercent = document.getElementById("progressPercent");
+        const stepCounter = document.getElementById("stepCounter");
+        const mobileStepCounter =
+          document.getElementById("mobileStepCounter");
+        const progressCopy = document.getElementById("progressCopy");
+
+        const currentStepLabel =
+          document.getElementById("currentStepLabel");
+        const currentStepTitle =
+          document.getElementById("currentStepTitle");
+
+        const formNote = document.getElementById("formNote");
+        const saveStatus = document.getElementById("saveStatus");
+        const clearDraftButton =
+          document.getElementById("clearDraftButton");
+
+        const successPopup =
+          document.getElementById("successPopup");
+        const popupClose = document.getElementById("popupClose");
+        const popupOk = document.getElementById("popupOk");
+        const toast = document.getElementById("toast");
+
+        const summaryName = document.getElementById("summaryName");
+        const summaryCompany =
+          document.getElementById("summaryCompany");
+        const summaryProjectType =
+          document.getElementById("summaryProjectType");
+        const summaryDeadline =
+          document.getElementById("summaryDeadline");
+        const summaryBudget =
+          document.getElementById("summaryBudget");
+
+        const draftStorageKey = "krilixProjectBriefDraftV2";
+
+        const stepMeta = [
+          {
+            label: "01 / Alapadatok",
+            title: "Kapcsolat és projektazonosítás",
+            progress: "Kezdjük az alapadatokkal.",
+          },
+          {
+            label: "02 / Projekt",
+            title: "Típus, cél és célcsoport",
+            progress: "Határozzuk meg a projekt irányát.",
+          },
+          {
+            label: "03 / Anyagok",
+            title: "Tartalom és rendelkezésre álló anyagok",
+            progress: "Nézzük meg, miből tudunk dolgozni.",
+          },
+          {
+            label: "04 / Dizájn",
+            title: "Vizuális irány és inspiráció",
+            progress: "Most kialakítjuk a kívánt hangulatot.",
+          },
+          {
+            label: "05 / Funkciók",
+            title: "A rendszer működése",
+            progress: "Összegyűjtjük a szükséges funkciókat.",
+          },
+          {
+            label: "06 / Technika",
+            title: "Domain, tárhely és mérés",
+            progress: "Átnézzük a technikai hátteret.",
+          },
+          {
+            label: "07 / Indítás",
+            title: "Határidő, keret és beküldés",
+            progress: "Már csak az indulás részletei vannak hátra.",
+          },
+        ];
+
+        let currentStep = 0;
+        let saveTimer = null;
+        let toastTimer = null;
+
+        /* ==============================================================
+           02. SEGÉDFÜGGVÉNYEK
+           ============================================================== */
+        function valueOf(id) {
+          return (
+            document.getElementById(id)?.value || ""
+          ).trim();
+        }
+
+        function checkedValues(name) {
+          return Array.from(
+            document.querySelectorAll(
+              `input[name="${name}"]:checked`,
+            ),
+          ).map((input) => input.value);
+        }
+
+        function setFormNote(message, type = "") {
+          formNote.textContent = message;
+          formNote.className = "navigation-note";
+
+          if (type) {
+            formNote.classList.add(type);
+          }
+        }
+
+        function showToast(message) {
+          toast.textContent = message;
+          toast.classList.add("show");
+
+          window.clearTimeout(toastTimer);
+
+          toastTimer = window.setTimeout(() => {
+            toast.classList.remove("show");
+          }, 3200);
+        }
+
+        function setSaveStatus(message, state = "") {
+          saveStatus.textContent = message;
+          saveStatus.className = "save-status";
+
+          if (state) {
+            saveStatus.classList.add(state);
+          }
+        }
+
+        function scrollFormIntoView() {
+          const top =
+            document.querySelector(".brief-form-shell")
+              .getBoundingClientRect().top +
+            window.scrollY -
+            92;
+
+          window.scrollTo({
+            top,
+            behavior: "smooth",
+          });
+        }
+
+        /* ==============================================================
+           03. VÁLASZTHATÓ KÁRTYÁK
+           ============================================================== */
+        function updateChoiceCards() {
+          document
+            .querySelectorAll(".choice-card")
+            .forEach((card) => {
+              const input = card.querySelector("input");
+              card.classList.toggle(
+                "selected",
+                Boolean(input?.checked),
+              );
+            });
+        }
+
+        document
+          .querySelectorAll(".choice-card input")
+          .forEach((input) => {
+            input.addEventListener("change", updateChoiceCards);
+          });
+
+        /* ==============================================================
+           04. LÉPÉSEK MEGJELENÍTÉSE
+           ============================================================== */
+        function showStep(stepIndex, shouldScroll = true) {
+          currentStep = Math.max(
+            0,
+            Math.min(stepPanels.length - 1, stepIndex),
+          );
+
+          stepPanels.forEach((panel, index) => {
+            panel.classList.toggle(
+              "active",
+              index === currentStep,
+            );
+          });
+
+          stepButtons.forEach((button, index) => {
+            button.classList.toggle(
+              "active",
+              index === currentStep,
+            );
+          });
+
+          previousButton.disabled = currentStep === 0;
+
+          const isFinalStep =
+            currentStep === stepPanels.length - 1;
+
+          nextButton.style.display = isFinalStep
+            ? "none"
+            : "inline-flex";
+
+          submitButton.classList.toggle(
+            "visible",
+            isFinalStep,
+          );
+
+          const completedPercentage = Math.round(
+            ((currentStep + 1) / stepPanels.length) * 100,
+          );
+
+          progressBar.style.width = `${completedPercentage}%`;
+          progressPercent.textContent = `${completedPercentage}%`;
+          stepCounter.textContent = `${currentStep + 1} / ${stepPanels.length}`;
+          mobileStepCounter.textContent = `${currentStep + 1}/${stepPanels.length}`;
+
+          currentStepLabel.textContent =
+            stepMeta[currentStep].label;
+          currentStepTitle.textContent =
+            stepMeta[currentStep].title;
+          progressCopy.textContent =
+            stepMeta[currentStep].progress;
+
+          updateSummary();
+
+          if (shouldScroll) {
+            scrollFormIntoView();
+          }
+        }
+
+        stepButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const targetStep = Number(button.dataset.step);
+
+            if (targetStep <= currentStep) {
+              showStep(targetStep);
+              return;
+            }
+
+            if (validateStep(currentStep)) {
+              markStepCompleted(currentStep);
+              showStep(targetStep);
+            }
+          });
+        });
+
+        /* ==============================================================
+           05. LÉPÉSEK ELLENŐRZÉSE
+           ============================================================== */
+        function clearInvalidStates(panel) {
+          panel
+            .querySelectorAll(".invalid")
+            .forEach((element) => {
+              element.classList.remove("invalid");
+            });
+        }
+
+        function validateStep(stepIndex) {
+          const panel = stepPanels[stepIndex];
+          clearInvalidStates(panel);
+
+          let firstInvalidField = null;
+
+          const requiredFields = Array.from(
+            panel.querySelectorAll(
+              "input[required], select[required], textarea[required]",
+            ),
+          );
+
+          requiredFields.forEach((field) => {
+            const isCheckbox = field.type === "checkbox";
+            const isValid = isCheckbox
+              ? field.checked
+              : field.checkValidity() &&
+                field.value.trim().length > 0;
+
+            if (!isValid) {
+              field.classList.add("invalid");
+
+              if (!firstInvalidField) {
+                firstInvalidField = field;
+              }
+            }
+          });
+
+          if (firstInvalidField) {
+            setFormNote(
+              stepIndex === 6
+                ? "A beküldéshez kérlek, fogadd el az adatkezelési tájékoztatót."
+                : "Légy oly kedves, töltsd ki a csillaggal jelölt kötelező mezőket.",
+              "error",
+            );
+
+            firstInvalidField.focus({
+              preventScroll: true,
+            });
+
+            firstInvalidField.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+
+            return false;
+          }
+
+          setFormNote(
+            "A válaszaid automatikusan mentésre kerülnek ezen az eszközön.",
+          );
+
+          return true;
+        }
+
+        function markStepCompleted(stepIndex) {
+          const button = stepButtons[stepIndex];
+
+          if (button) {
+            button.classList.add("completed");
+          }
+        }
+
+        function refreshCompletedSteps() {
+          const hasBasicData =
+            valueOf("name") &&
+            valueOf("email");
+
+          const hasProjectData =
+            valueOf("mainGoal");
+
+          const stepCompletion = [
+            Boolean(hasBasicData),
+            Boolean(hasProjectData),
+            checkedValues("materials").length > 0 ||
+              valueOf("materialLinks"),
+            valueOf("styleDirection") ||
+              valueOf("colors") ||
+              valueOf("references") ||
+              valueOf("avoid"),
+            checkedValues("features").length > 0 ||
+              valueOf("customFeatures") || valueOf("integrations"),
+            checkedValues("technical").length > 0 ||
+              valueOf("domain") ||
+              valueOf("languages"),
+            Boolean(
+              valueOf("deadline") ||
+                valueOf("budget") ||
+                valueOf("priority"),
+            ),
+          ];
+
+          stepCompletion.forEach((completed, index) => {
+            stepButtons[index].classList.toggle(
+              "completed",
+              Boolean(completed),
+            );
+          });
+        }
+
+        nextButton.addEventListener("click", () => {
+          if (!validateStep(currentStep)) return;
+
+          markStepCompleted(currentStep);
+          showStep(currentStep + 1);
+        });
+
+        previousButton.addEventListener("click", () => {
+          showStep(currentStep - 1);
+        });
+
+        /* ==============================================================
+           06. ÖSSZEFOGLALÓ
+           ============================================================== */
+        function updateSummary() {
+          summaryName.textContent =
+            valueOf("name") || "Még nincs megadva";
+
+          summaryCompany.textContent =
+            valueOf("company") || "Még nincs megadva";
+
+          const projectTypes =
+            checkedValues("projectTypes");
+
+          summaryProjectType.textContent =
+            projectTypes.length > 0
+              ? projectTypes.join(", ")
+              : "Még nincs kiválasztva";
+
+          summaryDeadline.textContent =
+            valueOf("deadline") ||
+            "Még nincs kiválasztva";
+
+          summaryBudget.textContent =
+            valueOf("budget") ||
+            "Még nincs kiválasztva";
+        }
+
+        /* ==============================================================
+           07. VÁZLATMENTÉS
+           ============================================================== */
+        function collectDraftData() {
+          const data = {};
+
+          form
+            .querySelectorAll(
+              "input, select, textarea",
+            )
+            .forEach((field) => {
+              if (!field.id && !field.name) return;
+
+              const key = field.id || field.name;
+
+              if (field.type === "checkbox") {
+                if (!data[key]) data[key] = [];
+
+                if (field.checked) {
+                  data[key].push(field.value || true);
+                }
+              } else {
+                data[key] = field.value;
+              }
+            });
+
+          return {
+            currentStep,
+            fields: data,
+            savedAt: new Date().toISOString(),
+          };
+        }
+
+        function saveDraft() {
+          try {
+            setSaveStatus("Mentés...", "saving");
+
+            window.localStorage.setItem(
+              draftStorageKey,
+              JSON.stringify(collectDraftData()),
+            );
+
+            window.setTimeout(() => {
+              setSaveStatus("Vázlat mentve", "saved");
+            }, 180);
+          } catch {
+            setSaveStatus("Mentés sikertelen");
+          }
+        }
+
+        function queueDraftSave() {
+          setSaveStatus("Változások mentése", "saving");
+          window.clearTimeout(saveTimer);
+          saveTimer = window.setTimeout(saveDraft, 450);
+        }
+
+        function restoreDraft() {
+          let savedDraft = null;
+
+          try {
+            savedDraft = JSON.parse(
+              window.localStorage.getItem(
+                draftStorageKey,
+              ),
+            );
+          } catch {
+            savedDraft = null;
+          }
+
+          if (!savedDraft?.fields) return;
+
+          Object.entries(savedDraft.fields).forEach(
+            ([key, savedValue]) => {
+              const elements = Array.from(
+                form.querySelectorAll(
+                  `#${CSS.escape(key)}, [name="${CSS.escape(key)}"]`,
+                ),
+              );
+
+              elements.forEach((field) => {
+                if (field.type === "checkbox") {
+                  field.checked = Array.isArray(savedValue)
+                    ? savedValue.includes(
+                        field.value || true,
+                      )
+                    : Boolean(savedValue);
+                } else if (
+                  typeof savedValue === "string"
+                ) {
+                  field.value = savedValue;
+                }
+              });
+            },
+          );
+
+          currentStep = Number.isFinite(
+            Number(savedDraft.currentStep),
+          )
+            ? Math.min(
+                Number(savedDraft.currentStep),
+                stepPanels.length - 1,
+              )
+            : 0;
+
+          updateChoiceCards();
+          refreshCompletedSteps();
+          updateSummary();
+          showStep(currentStep, false);
+          setSaveStatus("Vázlat mentve", "saved");
+          showToast(
+            "A korábban mentett brief-vázlatot visszaállítottuk.",
+          );
+        }
+
+        form.addEventListener("input", () => {
+          queueDraftSave();
+          refreshCompletedSteps();
+          updateSummary();
+        });
+
+        form.addEventListener("change", () => {
+          queueDraftSave();
+          updateChoiceCards();
+          refreshCompletedSteps();
+          updateSummary();
+        });
+
+        clearDraftButton.addEventListener("click", () => {
+          const confirmed = window.confirm(
+            "Biztosan törlöd a mentett brief-vázlatot és az összes eddigi választ?",
+          );
+
+          if (!confirmed) return;
+
+          window.localStorage.removeItem(
+            draftStorageKey,
+          );
+
+          form.reset();
+          updateChoiceCards();
+
+          stepButtons.forEach((button) => {
+            button.classList.remove("completed");
+          });
+
+          showStep(0);
+          setSaveStatus("Nincs mentett vázlat");
+          showToast("A mentett vázlat törölve lett.");
+        });
+
+        /* ==============================================================
+           08. ADATOK ÖSSZEÁLLÍTÁSA
+           ============================================================== */
+        function buildPayload() {
+          return {
+            name: valueOf("name"),
+            email: valueOf("email"),
+            phone: valueOf("phone"),
+            company: valueOf("company"),
+            currentWebsite: valueOf("currentWebsite"),
+            socialLink: valueOf("socialLink"),
+            projectTypes: checkedValues("projectTypes"),
+            mainGoal: valueOf("mainGoal"),
+            targetAudience: valueOf("targetAudience"),
+            competitors: valueOf("competitors"),
+            materials: checkedValues("materials"),
+            materialLinks: valueOf("materialLinks"),
+            styleDirection: valueOf("styleDirection"),
+            colors: valueOf("colors"),
+            references: valueOf("references"),
+            avoid: valueOf("avoid"),
+            features: checkedValues("features"),
+            integrations: valueOf("integrations"),
+            customFeatures: valueOf("customFeatures"),
+            technical: checkedValues("technical"),
+            domain: valueOf("domain"),
+            languages: valueOf("languages"),
+            deadline: valueOf("deadline"),
+            budget: valueOf("budget"),
+            extraMessage: valueOf("extraMessage"),
+          };
+        }
+
+        /* ==============================================================
+           09. BRIEF BEKÜLDÉSE
+           ============================================================== */
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          if (!validateStep(6)) return;
+
+          const payload = buildPayload();
+
+          if (
+            !payload.name ||
+            !payload.email ||
+            !payload.mainGoal
+          ) {
+            setFormNote(
+              "A név, az email cím és a projekt fő célja kötelező.",
+              "error",
+            );
+
+            showStep(
+              !payload.name || !payload.email ? 0 : 1,
+            );
+
+            return;
+          }
+
+          submitButton.disabled = true;
+          submitButton.textContent =
+            "Küldés folyamatban...";
+
+          setFormNote(
+            "A brief biztonságos elküldése folyamatban van.",
+          );
+
+          try {
+            const response = await fetch("/api/brief", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            });
+
+            let result = {};
+
+            try {
+              result = await response.json();
+            } catch {
+              result = {};
+            }
+
+            if (
+              !response.ok ||
+              result.ok === false
+            ) {
+              throw new Error(
+                result.error ||
+                  "Sajnos nem sikerült elküldeni a briefet. Próbáld újra később.",
+              );
+            }
+
+            window.localStorage.removeItem(
+              draftStorageKey,
+            );
+
+            form.reset();
+            updateChoiceCards();
+
+            stepButtons.forEach((button) => {
+              button.classList.remove("completed");
+            });
+
+            setFormNote(
+              "Köszönjük, a brief sikeresen megérkezett.",
+              "success",
+            );
+
+            setSaveStatus("Brief elküldve", "saved");
+            openSuccessPopup();
+          } catch (error) {
+            setFormNote(
+              error.message ||
+                "Nem sikerült elküldeni a briefet. Próbáld újra.",
+              "error",
+            );
+          } finally {
+            submitButton.disabled = false;
+            submitButton.textContent =
+              "Brief elküldése →";
+          }
+        });
+
+        /* ==============================================================
+           10. SIKERES KÜLDÉS POPUP
+           ============================================================== */
+        function openSuccessPopup() {
+          successPopup.classList.add("show");
+          successPopup.setAttribute(
+            "aria-hidden",
+            "false",
+          );
+        }
+
+        function closeSuccessPopup() {
+          successPopup.classList.remove("show");
+          successPopup.setAttribute(
+            "aria-hidden",
+            "true",
+          );
+
+          showStep(0);
+        }
+
+        popupClose.addEventListener(
+          "click",
+          closeSuccessPopup,
+        );
+
+        popupOk.addEventListener(
+          "click",
+          closeSuccessPopup,
+        );
+
+        successPopup.addEventListener(
+          "click",
+          (event) => {
+            if (event.target === successPopup) {
+              closeSuccessPopup();
+            }
+          },
+        );
+
+        document.addEventListener(
+          "keydown",
+          (event) => {
+            if (
+              event.key === "Escape" &&
+              successPopup.classList.contains("show")
+            ) {
+              closeSuccessPopup();
+            }
+          },
+        );
+
+        /* ==============================================================
+           11. INDÍTÁS
+           ============================================================== */
+        restoreDraft();
+        updateChoiceCards();
+        refreshCompletedSteps();
+        updateSummary();
+        showStep(currentStep, false);
+      });
+    </script>
+  </body>
 </html>
