@@ -574,7 +574,7 @@
       }
 
       .progress-bar {
-        width: 14.285%;
+        width: 12.5%;
         height: 100%;
         border-radius: inherit;
         background: var(--gold-gradient);
@@ -1015,8 +1015,86 @@
       }
 
       .choice-card span {
-        font-size: 13px;
+        font-size: 14px;
         line-height: 1.45;
+      }
+
+      .choice-copy {
+        display: grid;
+        gap: 3px;
+      }
+
+      .choice-copy strong {
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.35;
+      }
+
+      .choice-copy small {
+        color: var(--muted-soft);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .choice-card.selected .choice-copy small {
+        color: var(--muted);
+      }
+
+      .radio-card input {
+        border-radius: 50%;
+      }
+
+      .priority-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .priority-card {
+        min-height: 74px;
+      }
+
+      .priority-card .priority-number {
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--gold-line);
+        border-radius: 50%;
+        color: var(--gold-light);
+        font-family: "Syncopate", sans-serif;
+        font-size: 8px;
+      }
+
+      .field label,
+      .fieldset-label {
+        font-size: 12px;
+      }
+
+      .field-help {
+        font-size: 12px;
+      }
+
+      input,
+      select,
+      textarea {
+        font-size: 16px;
+      }
+
+      .step-nav-text strong {
+        font-size: 13px;
+      }
+
+      .step-nav-text span {
+        font-size: 11px;
+      }
+
+      .sidebar-help p,
+      .progress-copy,
+      .navigation-note {
+        font-size: 12px;
       }
 
       .field-block {
@@ -1085,12 +1163,14 @@
       }
 
       .summary-item strong {
-        display: block;
+        display: -webkit-box;
         overflow: hidden;
         color: var(--text);
         font-size: 12px;
         line-height: 1.5;
-        text-overflow: ellipsis;
+        overflow-wrap: anywhere;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
       }
 
       .consent-card {
@@ -1512,7 +1592,8 @@
 
         .field-grid,
         .choice-grid,
-        .choice-grid.three {
+        .choice-grid.three,
+        .priority-grid {
           grid-template-columns: 1fr;
         }
 
@@ -1624,7 +1705,7 @@
 
             <div class="hero-facts">
               <div class="hero-fact">
-                <strong>7</strong>
+                <strong>8</strong>
                 <span>átlátható lépés</span>
               </div>
 
@@ -1660,10 +1741,10 @@
               <div class="progress-heading">
                 <div>
                   <small>Kitöltöttség</small>
-                  <strong id="progressPercent">14%</strong>
+                  <strong id="progressPercent">13%</strong>
                 </div>
 
-                <small id="stepCounter">1 / 7</small>
+                <small id="stepCounter">1 / 8</small>
               </div>
 
               <div class="progress-track">
@@ -1697,8 +1778,8 @@
               <button class="step-nav-button" type="button" data-step="2">
                 <span class="step-nav-index">03</span>
                 <span class="step-nav-text">
-                  <strong>Anyagok</strong>
-                  <span>Szöveg, kép, arculat</span>
+                  <strong>Tartalmak</strong>
+                  <span>Képek, szövegek, arculat</span>
                 </span>
                 <span class="step-nav-check">✓</span>
               </button>
@@ -1738,6 +1819,15 @@
                 </span>
                 <span class="step-nav-check">✓</span>
               </button>
+
+              <button class="step-nav-button" type="button" data-step="7">
+                <span class="step-nav-index">08</span>
+                <span class="step-nav-text">
+                  <strong>Prioritások</strong>
+                  <span>Mi a legfontosabb?</span>
+                </span>
+                <span class="step-nav-check">✓</span>
+              </button>
             </nav>
 
             <div class="sidebar-help">
@@ -1768,7 +1858,7 @@
               </div>
 
               <div class="mobile-progress">
-                <strong id="mobileStepCounter">1/7</strong>
+                <strong id="mobileStepCounter">1/8</strong>
                 <span>Lépés</span>
               </div>
             </div>
@@ -1818,27 +1908,34 @@
                   </div>
 
                   <div class="field">
-                    <label for="phone">Telefonszám <span class="required-mark">*</span>
+                    <label for="phone">
+                      Telefonszám <span class="required-mark">*</span>
                     </label>
                     <input
                       id="phone"
                       type="tel"
                       autocomplete="tel"
-                      placeholder="+36 ..."
+                      inputmode="tel"
+                      placeholder="+36 30 123 4567"
                       required
                     />
+                    <p class="field-help">
+                      Bármilyen formátumban megadhatod, például +36 30 123 4567,
+                      06 30 123 4567 vagy 06301234567.
+                    </p>
                   </div>
 
                   <div class="field">
-                    <label for="company">Cég vagy márkanév <span class="required-mark">*</span>
-                    </label>
+                    <label for="company">Cégnév</label>
                     <input
                       id="company"
                       type="text"
                       autocomplete="organization"
-                      placeholder="Cég vagy projekt neve"
-                      required
+                      placeholder="Vállalkozásod neve"
                     />
+                    <p class="field-help">
+                      Ha még nincs céged, írd be a projekt vagy a márka nevét.
+                    </p>
                   </div>
 
                   <div class="field">
@@ -1880,79 +1977,106 @@
                 </div>
 
                 <fieldset class="choice-group">
-                  <legend class="fieldset-label">Milyen projektről van szó?</legend>
+                  <legend class="fieldset-label">
+                    Milyen elsődleges projektről van szó?
+                  </legend>
+
+                  <p class="field-help">
+                    Válaszd ki azt az egy típust, amelyik a legjobban leírja az
+                    elképzelésedet. A további funkciókat később külön is megadhatod.
+                  </p>
 
                   <div class="choice-grid">
-                    <label class="choice-card">
+                    <label class="choice-card radio-card">
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="projectTypes"
-                        value="Bemutatkozó weboldal"
+                        value="Céges bemutatkozó weboldal"
                       />
-                      <span>Bemutatkozó weboldal</span>
+                      <span class="choice-copy">
+                        <strong>Céges bemutatkozó weboldal</strong>
+                        <small>Több aloldalas weboldal vállalkozásoknak.</small>
+                      </span>
                     </label>
 
-                    <label class="choice-card">
+                    <label class="choice-card radio-card">
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="projectTypes"
-                        value="Landing oldal"
+                        value="Landing oldal (kampányoldal)"
                       />
-                      <span>Landing oldal</span>
+                      <span class="choice-copy">
+                        <strong>Landing oldal</strong>
+                        <small>Egy szolgáltatás, kampány vagy ajánlat bemutatására.</small>
+                      </span>
                     </label>
 
-                    <label class="choice-card">
-                      <input
-                        type="checkbox"
-                        name="projectTypes"
-                        value="Webshop"
-                      />
-                      <span>Webshop</span>
+                    <label class="choice-card radio-card">
+                      <input type="radio" name="projectTypes" value="Webshop" />
+                      <span class="choice-copy">
+                        <strong>Webshop</strong>
+                        <small>Termékek online értékesítéséhez.</small>
+                      </span>
                     </label>
 
-                    <label class="choice-card">
+                    <label class="choice-card radio-card">
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="projectTypes"
-                        value="Időpontfoglaló rendszer"
+                        value="Foglalási rendszer"
                       />
-                      <span>Időpontfoglaló rendszer</span>
+                      <span class="choice-copy">
+                        <strong>Foglalási rendszer</strong>
+                        <small>Időpontok, szállások vagy szolgáltatások foglalásához.</small>
+                      </span>
                     </label>
 
-                    <label class="choice-card">
+                    <label class="choice-card radio-card">
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="projectTypes"
                         value="Portfólió oldal"
                       />
-                      <span>Portfólió oldal</span>
+                      <span class="choice-copy">
+                        <strong>Portfólió oldal</strong>
+                        <small>Munkák, referenciák vagy alkotások bemutatására.</small>
+                      </span>
                     </label>
 
-                    <label class="choice-card">
+                    <label class="choice-card radio-card">
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="projectTypes"
-                        value="Meglévő oldal átalakítása"
+                        value="Meglévő weboldal felújítása"
                       />
-                      <span>Meglévő oldal átalakítása</span>
+                      <span class="choice-copy">
+                        <strong>Meglévő weboldal felújítása</strong>
+                        <small>Újratervezés, gyorsítás vagy funkcióbővítés.</small>
+                      </span>
                     </label>
 
-                    <label class="choice-card">
+                    <label class="choice-card radio-card">
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="projectTypes"
-                        value="Egyedi webes rendszer"
+                        value="Egyedi webalkalmazás vagy rendszer"
                       />
-                      <span>Egyedi webes rendszer</span>
+                      <span class="choice-copy">
+                        <strong>Egyedi webalkalmazás vagy rendszer</strong>
+                        <small>Adminfelület, ügyfélkapu vagy speciális üzleti működés.</small>
+                      </span>
                     </label>
 
-                    <label class="choice-card">
+                    <label class="choice-card radio-card">
                       <input
-                        type="checkbox"
+                        type="radio"
                         name="projectTypes"
-                        value="Még nem tudom pontosan"
+                        value="Még nem tudom, segítséget kérek"
                       />
-                      <span>Még nem tudom pontosan</span>
+                      <span class="choice-copy">
+                        <strong>Még nem tudom pontosan</strong>
+                        <small>Segítséget kérek a megfelelő megoldás kiválasztásához.</small>
+                      </span>
                     </label>
                   </div>
                 </fieldset>
@@ -1971,6 +2095,58 @@
                     required
                   ></textarea>
                 </div>
+
+                <fieldset class="choice-group field-block">
+                  <legend class="fieldset-label">
+                    Mi számítana a projekt legfontosabb sikerének?
+                  </legend>
+
+                  <div class="choice-grid three">
+                    <label class="choice-card radio-card">
+                      <input type="radio" name="successMetric" value="Több érdeklődő" />
+                      <span>Több érdeklődő</span>
+                    </label>
+                    <label class="choice-card radio-card">
+                      <input type="radio" name="successMetric" value="Több vásárlás" />
+                      <span>Több vásárlás</span>
+                    </label>
+                    <label class="choice-card radio-card">
+                      <input type="radio" name="successMetric" value="Online foglalás" />
+                      <span>Online foglalás</span>
+                    </label>
+                    <label class="choice-card radio-card">
+                      <input type="radio" name="successMetric" value="Márkaépítés" />
+                      <span>Márkaépítés</span>
+                    </label>
+                    <label class="choice-card radio-card">
+                      <input type="radio" name="successMetric" value="Információ átadása" />
+                      <span>Információ átadása</span>
+                    </label>
+                    <label class="choice-card radio-card">
+                      <input type="radio" name="successMetric" value="Egyéb" />
+                      <span>Egyéb</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="choice-group field-block">
+                  <legend class="fieldset-label">
+                    Milyen oldalakat szeretnél?
+                  </legend>
+
+                  <div class="choice-grid three">
+                    <label class="choice-card"><input type="checkbox" name="plannedPages" value="Főoldal" /><span>Főoldal</span></label>
+                    <label class="choice-card"><input type="checkbox" name="plannedPages" value="Rólunk" /><span>Rólunk</span></label>
+                    <label class="choice-card"><input type="checkbox" name="plannedPages" value="Szolgáltatások" /><span>Szolgáltatások</span></label>
+                    <label class="choice-card"><input type="checkbox" name="plannedPages" value="Referenciák" /><span>Referenciák</span></label>
+                    <label class="choice-card"><input type="checkbox" name="plannedPages" value="Blog" /><span>Blog</span></label>
+                    <label class="choice-card"><input type="checkbox" name="plannedPages" value="Kapcsolat" /><span>Kapcsolat</span></label>
+                    <label class="choice-card"><input type="checkbox" name="plannedPages" value="GYIK" /><span>GYIK</span></label>
+                    <label class="choice-card"><input type="checkbox" name="plannedPages" value="Karrier" /><span>Karrier</span></label>
+                    <label class="choice-card"><input type="checkbox" name="plannedPages" value="Egyéb" /><span>Egyéb</span></label>
+                  </div>
+                </fieldset>
+
 
                 <div class="field-grid field-block">
                   <div class="field full">
@@ -2005,16 +2181,15 @@
                   <div class="step-number">03</div>
 
                   <div>
-                    <h2>Tartalom és anyagok</h2>
+                    <h2>Már meglévő tartalmak</h2>
                     <p>
-                      Milyen tartalmaid vannak már meg? Jelöld be, miből tudunk dolgozni, 
-                      és mi az, amiben még ránk lesz szükséged.
+                      Jelöld be, hogy milyen képek, szövegek és arculati elemek állnak már rendelkezésre, és miben lesz még szükséged segítségre.
                     </p>
                   </div>
                 </div>
 
                 <fieldset class="choice-group">
-                  <legend class="fieldset-label">Mi áll már rendelkezésre?</legend>
+                  <legend class="fieldset-label">Milyen tartalmak állnak már rendelkezésre?</legend>
 
                   <div class="choice-grid">
                     <label class="choice-card">
@@ -2023,7 +2198,7 @@
                         name="materials"
                         value="Van logó"
                       />
-                      <span>Van logó</span>
+                      <span>Van logóm</span>
                     </label>
 
                     <label class="choice-card">
@@ -2032,7 +2207,7 @@
                         name="materials"
                         value="Van arculat / színek"
                       />
-                      <span>Van arculat vagy meghatározott színvilág</span>
+                      <span>Van kialakított arculatom</span>
                     </label>
 
                     <label class="choice-card">
@@ -2041,7 +2216,7 @@
                         name="materials"
                         value="Vannak képek"
                       />
-                      <span>Vannak használható képek</span>
+                      <span>Vannak saját fotóim</span>
                     </label>
 
                     <label class="choice-card">
@@ -2050,7 +2225,7 @@
                         name="materials"
                         value="Vannak kész szövegek"
                       />
-                      <span>Vannak kész szövegek az oldalra</span>
+                      <span>Vannak kész szövegeim</span>
                     </label>
 
                     <label class="choice-card">
@@ -2059,7 +2234,7 @@
                         name="materials"
                         value="Kell szövegírás / átdolgozás"
                       />
-                      <span>Szövegírásban / szerkesztésben segítség kell</span>
+                      <span>Segítséget kérek a szövegírásban</span>
                     </label>
 
                     <label class="choice-card">
@@ -2068,14 +2243,14 @@
                         name="materials"
                         value="Kell többnyelvű oldal"
                       />
-                      <span>Többnyelvű oldalra lesz szükség</span>
+                      <span>Többnyelvű oldalra van szükségem</span>
                     </label>
                   </div>
                 </fieldset>
 
                 <div class="field field-block">
                   <label for="materialLinks">
-                    Anyagok, Drive vagy WeTransfer link
+                    Meglévő fájlok és tartalmak linkje
                   </label>
                   <p class="field-help">
                     Ide jöhet a logó, fotók, szövegek vagy bármilyen arculati dokumentum linkje.
@@ -2139,6 +2314,22 @@
                       placeholder="https://..."
                     ></textarea>
                   </div>
+
+                  <fieldset class="choice-group field-block">
+                    <legend class="fieldset-label">
+                      Mi tetszik ezekben az oldalakban?
+                    </legend>
+
+                    <div class="choice-grid three">
+                      <label class="choice-card"><input type="checkbox" name="likedElements" value="Színek" /><span>Színek</span></label>
+                      <label class="choice-card"><input type="checkbox" name="likedElements" value="Animációk" /><span>Animációk</span></label>
+                      <label class="choice-card"><input type="checkbox" name="likedElements" value="Elrendezés" /><span>Elrendezés</span></label>
+                      <label class="choice-card"><input type="checkbox" name="likedElements" value="Tipográfia" /><span>Tipográfia</span></label>
+                      <label class="choice-card"><input type="checkbox" name="likedElements" value="Egyszerűség" /><span>Egyszerűség</span></label>
+                      <label class="choice-card"><input type="checkbox" name="likedElements" value="Prémium megjelenés" /><span>Prémium megjelenés</span></label>
+                    </div>
+                  </fieldset>
+
 
                   <div class="field full">
                     <label for="avoid">Mit kerüljünk el?</label>
@@ -2327,7 +2518,7 @@
                         name="technical"
                         value="Kell domain"
                       />
-                      <span>Domain vásárlásában is segítsetek</span>
+                      <span>Domain vásárlásában is segítséget kérek</span>
                     </label>
 
                     <label class="choice-card">
@@ -2345,7 +2536,7 @@
                         name="technical"
                         value="Kell tárhely / szerver"
                       />
-                      <span>Tárhely vagy felhős szerver is szükséges</span>
+                      <span>Tárhely / szerver is szükséges</span>
                     </label>
 
                     <label class="choice-card">
@@ -2381,7 +2572,7 @@
                         name="technical"
                         value="Folyamatos karbantartás"
                       />
-                      <span>Szeretném, ha az oldal későbbi karbantartását is ti végeznétek</span>
+                      <span>Az oldal későbbi karbantartása</span>
                     </label>
                   </div>
                 </fieldset>
@@ -2404,7 +2595,18 @@
                       placeholder="Például: magyar, angol"
                     />
                   </div>
+                
+
+                <div class="field field-block">
+                  <label for="currentSiteProblem">
+                    Ha van jelenlegi weboldalad, mi a legnagyobb probléma vele?
+                  </label>
+                  <textarea
+                    id="currentSiteProblem"
+                    placeholder="Például: lassú, elavult, telefonon rosszul működik, nehéz kezelni vagy nem hoz elég érdeklődőt."
+                  ></textarea>
                 </div>
+</div>
               </section>
 
               <!-- ========================================================
@@ -2435,23 +2637,6 @@
                           <option>2–3 hónapon belül</option>
                           <option>Még csak tervezgetem, nincs fix dátum</option>
                         </select>
-                      </div>
-
-                      <div class="field">
-                        <label for="budget">Tervezett költségkeret</label>
-
-                        <select id="budget">
-                          <option value="">Válassz keretet</option>
-                          <option>100 000 Ft alatt</option>
-                          <option>100 000 – 250 000 Ft</option>
-                          <option>250 000 – 500 000 Ft</option>
-                          <option>500 000 – 1 000 000 Ft</option>
-                          <option>1 000 000 Ft felett</option>
-                        </select>
-
-                        <p class="field-help">
-                          Segít a reális technológia kiválasztásában.
-                        </p>
                       </div>
 
                       <div class="field full">
@@ -2489,7 +2674,7 @@
                       </div>
 
                       <div class="summary-item">
-                        <span>Cég vagy projekt</span>
+                        <span>Cégnév vagy projekt</span>
                         <strong id="summaryCompany">Még nincs megadva</strong>
                       </div>
 
@@ -2504,11 +2689,97 @@
                       </div>
 
                       <div class="summary-item">
-                        <span>Tervezett keret</span>
-                        <strong id="summaryBudget">Még nincs kiválasztva</strong>
+                        <span>Fő cél</span>
+                        <strong id="summaryMainGoal">Még nincs megadva</strong>
+                      </div>
+
+                      <div class="summary-item">
+                        <span>Funkciók száma</span>
+                        <strong id="summaryFeatureCount">0 kiválasztva</strong>
+                      </div>
+
+                      <div class="summary-item">
+                        <span>Tervezett oldalak száma</span>
+                        <strong id="summaryPageCount">0 kiválasztva</strong>
                       </div>
                     </div>
                   </aside>
+                </div>
+              </section>
+
+              <!-- ========================================================
+                   8. LÉPÉS – PRIORITÁSOK
+                   ======================================================== -->
+              <section class="form-step" data-step-panel="7">
+                <div class="step-heading">
+                  <div class="step-number">08</div>
+
+                  <div>
+                    <h2>Mi a legfontosabb?</h2>
+                    <p>
+                      Jelöld ki legfeljebb három olyan szempontot, amely a
+                      projekt sikerénél számodra a legfontosabb. Ez segít abban,
+                      hogy az ajánlatot és a megvalósítást valóban a prioritásaidhoz
+                      igazítsuk.
+                    </p>
+                  </div>
+                </div>
+
+                <fieldset class="choice-group">
+                  <legend class="fieldset-label">
+                    Válassz legfeljebb három prioritást
+                  </legend>
+
+                  <div class="priority-grid">
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Prémium dizájn" />
+                      <span class="priority-number">01</span>
+                      <span class="choice-copy"><strong>Prémium dizájn</strong><small>Erős vizuális megjelenés és márkaélmény.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Gyorsaság" />
+                      <span class="priority-number">02</span>
+                      <span class="choice-copy"><strong>Gyorsaság</strong><small>Gyors betöltés és gördülékeny használat.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="SEO" />
+                      <span class="priority-number">03</span>
+                      <span class="choice-copy"><strong>SEO</strong><small>Jobb keresőbeli láthatóság és technikai alapok.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Mobilos élmény" />
+                      <span class="priority-number">04</span>
+                      <span class="choice-copy"><strong>Mobilos élmény</strong><small>Kiemelkedő használhatóság telefonon is.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Könnyű adminisztráció" />
+                      <span class="priority-number">05</span>
+                      <span class="choice-copy"><strong>Könnyű adminisztráció</strong><small>Egyszerűen kezelhető tartalom és adatok.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Automatizáció" />
+                      <span class="priority-number">06</span>
+                      <span class="choice-copy"><strong>Automatizáció</strong><small>Kevesebb manuális feladat és gyorsabb folyamatok.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Költséghatékonyság" />
+                      <span class="priority-number">07</span>
+                      <span class="choice-copy"><strong>Költséghatékonyság</strong><small>A keret lehető legjobb felhasználása.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Gyors elkészülés" />
+                      <span class="priority-number">08</span>
+                      <span class="choice-copy"><strong>Gyors elkészülés</strong><small>Minél előbbi indulás és élesítés.</small></span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="field field-block">
+                  <label for="priorityNote">Van még valami, ami mindennél fontosabb?</label>
+                  <textarea
+                    id="priorityNote"
+                    placeholder="Írd le röviden, mire figyeljünk különösen a tervezés és fejlesztés során."
+                  ></textarea>
                 </div>
               </section>
 
@@ -2648,8 +2919,14 @@
           document.getElementById("summaryDeadline");
         const summaryBudget =
           document.getElementById("summaryBudget");
+        const summaryMainGoal =
+          document.getElementById("summaryMainGoal");
+        const summaryFeatureCount =
+          document.getElementById("summaryFeatureCount");
+        const summaryPageCount =
+          document.getElementById("summaryPageCount");
 
-        const draftStorageKey = "krilixProjectBriefDraftV2";
+        const draftStorageKey = "krilixProjectBriefDraftV3";
 
         const stepMeta = [
           {
@@ -2686,6 +2963,11 @@
             label: "07 / Indítás",
             title: "Határidő, keret és beküldés",
             progress: "Már csak az indulás részletei vannak hátra.",
+          },
+          {
+            label: "08 / Prioritások",
+            title: "A projekt legfontosabb szempontjai",
+            progress: "Végül állítsuk sorrendbe, mi számít igazán.",
           },
         ];
 
@@ -2771,6 +3053,20 @@
           .querySelectorAll(".choice-card input")
           .forEach((input) => {
             input.addEventListener("change", updateChoiceCards);
+          });
+
+        document
+          .querySelectorAll('input[name="priorities"]')
+          .forEach((input) => {
+            input.addEventListener("change", () => {
+              const selected = checkedValues("priorities");
+
+              if (selected.length > 3) {
+                input.checked = false;
+                updateChoiceCards();
+                showToast("Legfeljebb három prioritást választhatsz.");
+              }
+            });
           });
 
         /* ==============================================================
@@ -2890,7 +3186,7 @@
 
           if (firstInvalidField) {
             setFormNote(
-              stepIndex === 6
+              stepIndex === 7
                 ? "A beküldéshez kérlek, fogadd el az adatkezelési tájékoztatót."
                 : "Légy oly kedves, töltsd ki a csillaggal jelölt kötelező mezőket.",
               "error",
@@ -2950,6 +3246,8 @@
                 valueOf("budget") ||
                 valueOf("priority"),
             ),
+            checkedValues("priorities").length > 0 ||
+              valueOf("priorityNote"),
           ];
 
           stepCompletion.forEach((completed, index) => {
@@ -2974,28 +3272,58 @@
         /* ==============================================================
            06. ÖSSZEFOGLALÓ
            ============================================================== */
+        function setSummaryText(element, value) {
+          if (element) {
+            element.textContent = value;
+          }
+        }
+
         function updateSummary() {
-          summaryName.textContent =
-            valueOf("name") || "Még nincs megadva";
+          setSummaryText(
+            summaryName,
+            valueOf("name") || "Még nincs megadva",
+          );
 
-          summaryCompany.textContent =
-            valueOf("company") || "Még nincs megadva";
+          setSummaryText(
+            summaryCompany,
+            valueOf("company") || "Még nincs megadva",
+          );
 
-          const projectTypes =
-            checkedValues("projectTypes");
+          const projectTypes = checkedValues("projectTypes");
 
-          summaryProjectType.textContent =
+          setSummaryText(
+            summaryProjectType,
             projectTypes.length > 0
-              ? projectTypes.join(", ")
-              : "Még nincs kiválasztva";
+              ? projectTypes[0]
+              : "Még nincs kiválasztva",
+          );
 
-          summaryDeadline.textContent =
-            valueOf("deadline") ||
-            "Még nincs kiválasztva";
+          setSummaryText(
+            summaryDeadline,
+            valueOf("deadline") || "Még nincs kiválasztva",
+          );
 
-          summaryBudget.textContent =
-            valueOf("budget") ||
-            "Még nincs kiválasztva";
+          setSummaryText(
+            summaryBudget,
+            valueOf("budget") || "Még nincs kiválasztva",
+          );
+
+          setSummaryText(
+            summaryMainGoal,
+            valueOf("mainGoal") || "Még nincs megadva",
+          );
+
+          const selectedFeatures = checkedValues("features");
+          setSummaryText(
+            summaryFeatureCount,
+            `${selectedFeatures.length} kiválasztva`,
+          );
+
+          const selectedPages = checkedValues("plannedPages");
+          setSummaryText(
+            summaryPageCount,
+            `${selectedPages.length} kiválasztva`,
+          );
         }
 
         /* ==============================================================
@@ -3018,6 +3346,12 @@
 
                 if (field.checked) {
                   data[key].push(field.value || true);
+                }
+              } else if (field.type === "radio") {
+                if (field.checked) {
+                  data[key] = field.value;
+                } else if (!(key in data)) {
+                  data[key] = "";
                 }
               } else {
                 data[key] = field.value;
@@ -3080,13 +3414,13 @@
               elements.forEach((field) => {
                 if (field.type === "checkbox") {
                   field.checked = Array.isArray(savedValue)
-                    ? savedValue.includes(
-                        field.value || true,
-                      )
+                    ? savedValue.includes(field.value || true)
                     : Boolean(savedValue);
-                } else if (
-                  typeof savedValue === "string"
-                ) {
+                } else if (field.type === "radio") {
+                  field.checked =
+                    typeof savedValue === "string" &&
+                    field.value === savedValue;
+                } else if (typeof savedValue === "string") {
                   field.value = savedValue;
                 }
               });
@@ -3161,6 +3495,8 @@
             socialLink: valueOf("socialLink"),
             projectTypes: checkedValues("projectTypes"),
             mainGoal: valueOf("mainGoal"),
+            successMetric: checkedValues("successMetric")[0] || "",
+            plannedPages: checkedValues("plannedPages"),
             targetAudience: valueOf("targetAudience"),
             competitors: valueOf("competitors"),
             materials: checkedValues("materials"),
@@ -3168,6 +3504,7 @@
             styleDirection: valueOf("styleDirection"),
             colors: valueOf("colors"),
             references: valueOf("references"),
+            likedElements: checkedValues("likedElements"),
             avoid: valueOf("avoid"),
             features: checkedValues("features"),
             integrations: valueOf("integrations"),
@@ -3175,9 +3512,12 @@
             technical: checkedValues("technical"),
             domain: valueOf("domain"),
             languages: valueOf("languages"),
+            currentSiteProblem: valueOf("currentSiteProblem"),
             deadline: valueOf("deadline"),
             budget: valueOf("budget"),
             extraMessage: valueOf("extraMessage"),
+            priorities: checkedValues("priorities"),
+            priorityNote: valueOf("priorityNote"),
           };
         }
 
@@ -3187,7 +3527,19 @@
         form.addEventListener("submit", async (event) => {
           event.preventDefault();
 
-          if (!validateStep(6)) return;
+          if (!validateStep(7)) return;
+
+          const consent = document.getElementById("consent");
+
+          if (!consent?.checked) {
+            showStep(6);
+            setFormNote(
+              "A beküldéshez kérlek, fogadd el az adatkezelési tájékoztatót.",
+              "error",
+            );
+            consent?.focus();
+            return;
+          }
 
           const payload = buildPayload();
 
