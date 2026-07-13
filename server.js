@@ -3,6 +3,7 @@ const path = require("path");
 const crypto = require("crypto");
 const { Pool } = require("pg");
 const { Resend } = require("resend");
+const { createAdminAuth } = require("./admin-auth");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -14,8 +15,7 @@ const BASE_URL = (process.env.BASE_URL || `http://localhost:${PORT}`).replace(/\
 const resend = new Resend(process.env.RESEND_API_KEY || "missing-key");
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
-const COOKIE_NAME = "krilix_admin";
-const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || process.env.RESEND_API_KEY || "change-this-secret";
+const adminAuth = createAdminAuth({ pool, cookieName: "krilix_admin" });
 
 const BUSINESS_STATUSES = new Set([
   "new_lead",
@@ -29,7 +29,6 @@ const BUSINESS_STATUSES = new Set([
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static(publicPath));
 
-initDatabase();
 
 app.post("/api/contact", async (req, res) => {
   try {
@@ -201,45 +200,10 @@ app.get("/adatkezeles", (req, res) => {
   res.sendFile(path.join(publicPath, "adatkezeles.html"));
 });
 
-app.get("/api/admin/me", requireAdmin, (req, res) => {
-  return res.status(200).json({ ok: true });
-});
-
-app.post("/api/admin/login", (req, res) => {
-  const { password } = req.body;
-
-  if (!process.env.ADMIN_PASSWORD) {
-    return res.status(500).json({ ok: false, error: "Hiányzik az ADMIN_PASSWORD változó." });
-  }
-
-  if (!password || password !== process.env.ADMIN_PASSWORD) {
-    return res.status(401).json({ ok: false, error: "Hibás jelszó." });
-  }
-
-  const token = createSessionToken();
-  const secureCookie = req.secure || req.headers["x-forwarded-proto"] === "https";
-
-  res.setHeader(
-    "Set-Cookie",
-    `${COOKIE_NAME}=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=86400${secureCookie ? "; Secure" : ""}`
-  );
-
-  return res.status(200).json({ ok: true });
-});
-
-app.post("/api/admin/logout", requireAdmin, (req, res) => {
-  const secureCookie = req.secure || req.headers["x-forwarded-proto"] === "https";
-
-  res.setHeader(
-    "Set-Cookie",
-    `${COOKIE_NAME}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0${secureCookie ? "; Secure" : ""}`
-  );
-
-  return res.status(200).json({ ok: true });
-});
+adminAuth.mountRoutes(app);
 
 
-app.get("/api/admin/briefs", requireAdmin, async (req, res) => {
+app.get("/api/admin/briefs", adminAuth.requirePermission("briefs.read"), async (req, res) => {
   try {
     const result = await pool.query(
       `
@@ -255,7 +219,7 @@ app.get("/api/admin/briefs", requireAdmin, async (req, res) => {
   }
 });
 
-app.get("/api/admin/briefs/:id", requireAdmin, async (req, res) => {
+app.get("/api/admin/briefs/:id", adminAuth.requirePermission("briefs.read"), async (req, res) => {
   try {
     const result = await pool.query(`SELECT * FROM project_briefs WHERE id = $1`, [req.params.id]);
     if (!result.rows[0]) return res.status(404).json({ ok: false, error: "Brief nem található." });
@@ -266,7 +230,7 @@ app.get("/api/admin/briefs/:id", requireAdmin, async (req, res) => {
   }
 });
 
-app.patch("/api/admin/briefs/:id", requireAdmin, async (req, res) => {
+app.patch("/api/admin/briefs/:id", adminAuth.requirePermission("briefs.write"), async (req, res) => {
   try {
     const { status, adminNote } = req.body;
     const allowedStatuses = new Set(["new", "contacted", "processing", "offer_ready", "offer_sent", "accepted", "declined", "closed"]);
@@ -289,6 +253,10 @@ app.patch("/api/admin/briefs/:id", requireAdmin, async (req, res) => {
     );
 
     if (!result.rows[0]) return res.status(404).json({ ok: false, error: "Brief nem található." });
+    await adminAuth.logAudit(req, "brief.updated", "project_brief", req.params.id, {
+      status: status || undefined,
+      noteChanged: typeof adminNote === "string"
+    });
     return res.status(200).json({ ok: true, brief: formatBriefRow(result.rows[0]) });
   } catch (error) {
     console.error("Admin brief update error:", error);
@@ -296,10 +264,11 @@ app.patch("/api/admin/briefs/:id", requireAdmin, async (req, res) => {
   }
 });
 
-app.delete("/api/admin/briefs/:id", requireAdmin, async (req, res) => {
+app.delete("/api/admin/briefs/:id", adminAuth.requirePermission("briefs.delete"), async (req, res) => {
   try {
     const result = await pool.query(`DELETE FROM project_briefs WHERE id = $1 RETURNING id`, [req.params.id]);
     if (!result.rows[0]) return res.status(404).json({ ok: false, error: "Brief nem található." });
+    await adminAuth.logAudit(req, "brief.deleted", "project_brief", req.params.id);
     return res.status(200).json({ ok: true });
   } catch (error) {
     console.error("Admin brief delete error:", error);
@@ -307,7 +276,7 @@ app.delete("/api/admin/briefs/:id", requireAdmin, async (req, res) => {
   }
 });
 
-app.get("/api/admin/messages", requireAdmin, async (req, res) => {
+app.get("/api/admin/messages", adminAuth.requirePermission("messages.read"), async (req, res) => {
   try {
     const result = await pool.query(
       `
@@ -359,7 +328,7 @@ app.get("/api/admin/messages", requireAdmin, async (req, res) => {
   }
 });
 
-app.post("/api/admin/messages/:id/read", requireAdmin, async (req, res) => {
+app.post("/api/admin/messages/:id/read", adminAuth.requirePermission("messages.read"), async (req, res) => {
   try {
     await pool.query(
       `
@@ -372,6 +341,7 @@ app.post("/api/admin/messages/:id/read", requireAdmin, async (req, res) => {
       [req.params.id]
     );
 
+    await adminAuth.logAudit(req, "message.read", "contact_message", req.params.id);
     return res.status(200).json({ ok: true });
   } catch (error) {
     console.error("Mark read error:", error);
@@ -379,7 +349,7 @@ app.post("/api/admin/messages/:id/read", requireAdmin, async (req, res) => {
   }
 });
 
-app.patch("/api/admin/messages/:id", requireAdmin, async (req, res) => {
+app.patch("/api/admin/messages/:id", adminAuth.requirePermission("messages.write"), async (req, res) => {
   try {
     const { businessStatus, adminNote } = req.body;
 
@@ -414,6 +384,10 @@ app.patch("/api/admin/messages/:id", requireAdmin, async (req, res) => {
       return res.status(404).json({ ok: false, error: "A megkeresés nem található." });
     }
 
+    await adminAuth.logAudit(req, "message.updated", "contact_message", req.params.id, {
+      businessStatus: businessStatus || undefined,
+      noteChanged: adminNote !== undefined
+    });
     return res.status(200).json({ ok: true });
   } catch (error) {
     console.error("Admin update error:", error);
@@ -421,7 +395,7 @@ app.patch("/api/admin/messages/:id", requireAdmin, async (req, res) => {
   }
 });
 
-app.delete("/api/admin/messages/:id", requireAdmin, async (req, res) => {
+app.delete("/api/admin/messages/:id", adminAuth.requirePermission("messages.delete"), async (req, res) => {
   const client = await pool.connect();
   try {
     const { id } = req.params;
@@ -437,6 +411,7 @@ app.delete("/api/admin/messages/:id", requireAdmin, async (req, res) => {
     await client.query(`DELETE FROM contact_messages WHERE id = $1`, [id]);
     await client.query("COMMIT");
 
+    await adminAuth.logAudit(req, "message.deleted", "contact_message", id);
     return res.status(200).json({ ok: true, message: "A megkeresés törölve lett." });
   } catch (error) {
     await client.query("ROLLBACK");
@@ -466,7 +441,7 @@ app.get("/api/thread/:token", async (req, res) => {
 
     const messagesResult = await pool.query(
       `
-      SELECT id, sender, message, created_at
+      SELECT id, sender, message, sender_name, created_at
       FROM conversation_messages
       WHERE contact_message_id = $1
       ORDER BY created_at ASC
@@ -537,7 +512,7 @@ app.post("/api/thread/:token/reply", async (req, res) => {
   }
 });
 
-app.post("/api/admin/thread/:token/reply", requireAdmin, async (req, res) => {
+app.post("/api/admin/thread/:token/reply", adminAuth.requirePermission("messages.reply"), async (req, res) => {
   try {
     const { message } = req.body;
 
@@ -558,8 +533,12 @@ app.post("/api/admin/thread/:token/reply", requireAdmin, async (req, res) => {
     const threadUrl = `${BASE_URL}/thread/${contact.thread_token}`;
 
     await pool.query(
-      `INSERT INTO conversation_messages (contact_message_id, sender, message) VALUES ($1, 'admin', $2)`,
-      [contact.id, message.trim()]
+      `
+      INSERT INTO conversation_messages
+        (contact_message_id, sender, message, admin_user_id, sender_name)
+      VALUES ($1, 'admin', $2, $3, $4)
+      `,
+      [contact.id, message.trim(), req.adminUser.id, req.adminUser.name]
     );
 
     await pool.query(
@@ -588,6 +567,9 @@ app.post("/api/admin/thread/:token/reply", requireAdmin, async (req, res) => {
       })
     });
 
+    await adminAuth.logAudit(req, "message.replied", "contact_message", contact.id, {
+      projectCode: contact.project_code
+    });
     return res.status(200).json({ ok: true, message: "Krilix válasz elküldve." });
   } catch (error) {
     console.error("Admin thread reply error:", error);
@@ -595,13 +577,32 @@ app.post("/api/admin/thread/:token/reply", requireAdmin, async (req, res) => {
   }
 });
 
+app.use((error, req, res, next) => {
+  console.error("Unhandled server error:", error);
+  if (req.path.startsWith("/api/")) {
+    return res.status(500).json({ ok: false, error: "Váratlan szerverhiba történt." });
+  }
+  return next(error);
+});
+
 app.use((req, res) => {
   res.status(404).sendFile(path.join(publicPath, "404.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`Krilix site is running on port ${PORT}`);
-});
+async function startServer() {
+  try {
+    await initDatabase();
+    await adminAuth.init();
+    app.listen(PORT, () => {
+      console.log(`Krilix site is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Krilix server startup failed:", error);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 async function initDatabase() {
   try {
@@ -720,48 +721,6 @@ async function initDatabase() {
     console.error("Database init error:", error);
   }
 }
-
-function requireAdmin(req, res, next) {
-  const token = getCookie(req.headers.cookie || "", COOKIE_NAME);
-  if (!token || !verifySessionToken(token)) {
-    return res.status(401).json({ ok: false, error: "Nincs jogosultság." });
-  }
-  next();
-}
-
-function createSessionToken() {
-  const payload = { exp: Date.now() + 24 * 60 * 60 * 1000 };
-  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  const signature = crypto.createHmac("sha256", SESSION_SECRET).update(encodedPayload).digest("base64url");
-  return `${encodedPayload}.${signature}`;
-}
-
-function verifySessionToken(token) {
-  const [encodedPayload, signature] = token.split(".");
-  if (!encodedPayload || !signature) return false;
-
-  const expectedSignature = crypto.createHmac("sha256", SESSION_SECRET).update(encodedPayload).digest("base64url");
-  const a = Buffer.from(signature);
-  const b = Buffer.from(expectedSignature);
-  if (a.length !== b.length) return false;
-  if (!crypto.timingSafeEqual(a, b)) return false;
-
-  try {
-    const payload = JSON.parse(Buffer.from(encodedPayload, "base64url").toString());
-    return payload.exp && payload.exp > Date.now();
-  } catch {
-    return false;
-  }
-}
-
-function getCookie(cookieHeader, name) {
-  return cookieHeader
-    .split(";")
-    .map((part) => part.trim())
-    .find((part) => part.startsWith(`${name}=`))
-    ?.split("=")[1];
-}
-
 
 function normalizeBriefPayload(body) {
   const pick = key => cleanOptional(body[key]) || "";

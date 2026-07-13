@@ -909,21 +909,40 @@
           const response = await fetch("/api/admin/me", {
             credentials: "include",
           });
+          const result = await response.json().catch(() => ({}));
 
-          adminLoggedIn = response.ok;
+          const authenticated = response.ok && result.ok;
+          adminLoggedIn = Boolean(
+            authenticated &&
+              result.user?.permissions?.includes("messages.reply"),
+          );
+
+          if (!authenticated) {
+            setNote(
+              "Admin módban előbb jelentkezz be az adminfelületen.",
+              "error",
+            );
+            messageInput.disabled = true;
+            replyForm.querySelector("button").disabled = true;
+            return;
+          }
 
           if (!adminLoggedIn) {
             setNote(
-              "Admin módban csak bejelentkezve lehet Krilixként válaszolni.",
+              "Ezzel a fiókkal megtekintheted a beszélgetést, de nem küldhetsz választ.",
               "error",
             );
+            messageInput.disabled = true;
+            replyForm.querySelector("button").disabled = true;
           }
         } catch {
           adminLoggedIn = false;
           setNote(
-            "Nem sikerült ellenőrizni az admin belépést.",
+            "Nem sikerült ellenőrizni az admin jogosultságot.",
             "error",
           );
+          messageInput.disabled = true;
+          replyForm.querySelector("button").disabled = true;
         }
       }
 
@@ -1049,7 +1068,7 @@
           .map((item) => {
             const isAdmin = item.sender === "admin";
             const senderLabel = isAdmin
-              ? "Krilix"
+              ? item.sender_name || "Krilix"
               : isAdminMode
                 ? "Ügyfél"
                 : "Te";

@@ -856,6 +856,7 @@
       .field-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
         gap: 16px;
       }
 
@@ -865,6 +866,8 @@
 
       .field {
         display: grid;
+        grid-auto-rows: max-content;
+        align-content: start;
         gap: 8px;
       }
 
@@ -907,6 +910,8 @@
       }
 
       select {
+        height: 56px;
+        min-height: 56px;
         appearance: none;
         cursor: pointer;
         background-image:
@@ -2420,7 +2425,7 @@
 
                 <div class="final-grid">
                   <div>
-                    <div class="field-grid three">
+                    <div class="field-grid">
                       <div class="field">
                         <label for="deadline">Mikorra legyen kész?</label>
 
@@ -2434,7 +2439,7 @@
 
                       <div class="field">
                         <label for="budget">Tervezett költségkeret</label>
-                        <p class="field-help" style="margin-top:2px;">Segít a reális technológia kiválasztásában.</p>
+
                         <select id="budget">
                           <option value="">Válassz keretet</option>
                           <option>100 000 Ft alatt</option>
@@ -2443,6 +2448,10 @@
                           <option>500 000 – 1 000 000 Ft</option>
                           <option>1 000 000 Ft felett</option>
                         </select>
+
+                        <p class="field-help">
+                          Segít a reális technológia kiválasztásában.
+                        </p>
                       </div>
 
                       <div class="field full">

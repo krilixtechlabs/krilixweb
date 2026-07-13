@@ -43,6 +43,37 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 @media(max-width:900px){.app{grid-template-columns:82px 1fr}.sidebar{padding:18px 11px}.brand{padding:0 5px 24px}.brand img{width:45px;height:45px}.brand div,.menu-btn:not(.active) .menu-badge,.menu-btn{font-size:0}.menu-btn{justify-content:center;padding:0}.menu-icon{font-size:20px}.premium-card{display:none}.main{padding:18px 14px 44px}.topbar{grid-template-columns:1fr}.admin-area{justify-content:flex-start}.profile-box{display:none}.right-rail{grid-template-columns:1fr}.placeholder-grid{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr}.info-box.full{grid-column:auto}}
 @media(max-width:620px){.app{display:block}.sidebar{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;height:auto;padding:8px;z-index:200;border-right:0;border-top:1px solid var(--line);background:rgba(5,7,6,.96)}.sidebar .brand,.sidebar-spacer,.premium-card,.logout-link{display:none}.menu{grid-template-columns:repeat(5,1fr);gap:4px}.menu-btn{min-height:50px;border-radius:6px}.main{padding:14px 12px 82px}.topbar{gap:12px}.hello h1{font-size:19px}.hello p{font-size:12px}.admin-area{display:none}.stats{grid-template-columns:1fr}.stat{min-height:120px}.screen-heading{align-items:flex-start;flex-direction:column}.toolbar{grid-template-columns:1fr}.table-wrap{border-radius:7px}.overview-strip{display:block}.funnel{margin-bottom:12px}.status-donut-wrap{grid-template-columns:1fr}.donut{margin:auto}.quick-grid{grid-template-columns:1fr 1fr}.detail-drawer{width:100vw}.menu-btn.active{box-shadow:inset 0 3px 0 var(--gold2)}}
 
+  
+
+/* ================================================================
+   FIÓKRENDSZER ÉS JOGOSULTSÁGKEZELÉS
+   ================================================================ */
+.permission-hidden{display:none!important}
+.login-box{width:min(100%,500px)}
+.login-box .brand{padding-left:0}.login-box form{margin-top:22px}
+.login-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px}
+.login-actions .btn{min-width:150px}
+.account-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start}
+.account-panel{border:1px solid var(--line-soft);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,.012));overflow:hidden}
+.account-panel-head{padding:17px 19px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:14px}
+.account-panel-head h3{margin:0;color:var(--gold2);font-size:18px;font-weight:500}.account-panel-head p{margin:5px 0 0;color:var(--muted);font-size:11px}
+.account-list{display:grid}.account-row{padding:15px 18px;display:grid;grid-template-columns:minmax(220px,1.2fr) minmax(150px,.7fr) minmax(130px,.55fr) auto;gap:14px;align-items:center;border-bottom:1px solid var(--line-soft)}.account-row:last-child{border-bottom:0}
+.account-person{display:flex;align-items:center;gap:12px;min-width:0}.account-avatar{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--gold3);background:linear-gradient(145deg,#3a2a14,#17120b);color:var(--gold2);font-weight:800}.account-person strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}.account-person span{display:block;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:10px}
+.role-badge,.account-status{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:0 10px;border:1px solid var(--gold-line);border-radius:999px;color:var(--gold2);background:rgba(200,154,61,.07);font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}.account-status.active{color:var(--green);border-color:rgba(85,201,135,.24);background:rgba(85,201,135,.06)}.account-status.inactive{color:#ffaaa5;border-color:rgba(240,111,105,.25);background:rgba(240,111,105,.06)}
+.account-actions{display:flex;justify-content:flex-end;gap:6px;flex-wrap:wrap}.account-meta{color:var(--muted);font-size:10px;line-height:1.55}
+.audit-list{display:grid;max-height:620px;overflow:auto}.audit-item{padding:13px 15px;border-bottom:1px solid var(--line-soft)}.audit-item:last-child{border-bottom:0}.audit-item strong{display:block;color:#e9ece9;font-size:11px}.audit-item span{display:block;margin-top:5px;color:var(--muted);font-size:9px;line-height:1.5}.audit-item time{display:block;margin-top:6px;color:var(--gold);font-size:9px}
+.settings-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.settings-card{padding:22px;border:1px solid var(--line-soft);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,.012))}.settings-card h3{margin:0 0 7px;color:var(--gold2);font-size:19px;font-weight:500}.settings-card>p{margin:0 0 18px;color:var(--muted);font-size:12px;line-height:1.6}.profile-summary{display:grid;grid-template-columns:58px 1fr;gap:14px;align-items:center}.profile-summary .profile-avatar{width:58px;height:58px;font-size:18px}.profile-summary strong{display:block;font-size:16px}.profile-summary span{display:block;margin-top:4px;color:var(--gold);font-size:11px}.profile-permissions{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}.profile-permissions span{padding:6px 8px;border:1px solid var(--line-soft);border-radius:6px;color:var(--muted);background:rgba(255,255,255,.02);font-size:9px}
+.modal-box.large{width:min(100%,850px);max-height:92vh;overflow:auto}.modal-box.medium{width:min(100%,560px)}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}.modal-head h2{margin:0}.modal-head p{margin:7px 0 0;color:var(--muted);font-size:12px;line-height:1.55}.modal-close{width:38px;height:38px;border:1px solid var(--line-soft);border-radius:8px;background:transparent;color:#fff;cursor:pointer;font-size:20px}
+.user-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.user-form-grid .field{margin:0}.user-form-grid .full{grid-column:1/-1}.switch-row{min-height:48px;padding:10px 12px;display:flex;align-items:center;gap:10px;border:1px solid var(--line-soft);border-radius:7px;background:#090c0b;color:#d9ddd9;font-size:12px}.switch-row input{width:18px;height:18px;accent-color:var(--gold)}
+.permissions-title{margin:22px 0 10px;color:var(--gold2);font-size:11px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}.permission-editor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.permission-row{padding:11px;border:1px solid var(--line-soft);border-radius:8px;background:rgba(255,255,255,.018)}.permission-row strong{display:block;margin-bottom:7px;font-size:11px}.permission-row select{width:100%;min-height:38px;padding:0 9px;border:1px solid var(--line-soft);border-radius:6px;background:#090c0b;color:var(--text);font-size:10px}.permission-row small{display:block;margin-top:6px;color:var(--muted);font-size:9px}.role-preview{margin-top:10px;padding:11px 12px;border:1px solid var(--gold-line);border-radius:8px;color:var(--muted);background:rgba(200,154,61,.05);font-size:10px;line-height:1.55}
+.password-strength{height:5px;margin-top:7px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}.password-strength span{display:block;width:0;height:100%;background:var(--red);transition:.2s}.password-strength.medium span{width:55%;background:var(--orange)}.password-strength.strong span{width:100%;background:var(--green)}
+.force-modal{z-index:1500}.force-modal .modal-box:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold))}
+@media(max-width:1100px){.account-grid{grid-template-columns:1fr}.audit-list{max-height:360px}.account-row{grid-template-columns:minmax(220px,1fr) minmax(130px,.5fr) auto}.account-row .account-meta{display:none}}
+@media(max-width:900px){.settings-grid{grid-template-columns:1fr}.permission-editor{grid-template-columns:1fr}}
+@media(max-width:700px){.account-row{grid-template-columns:1fr;gap:10px}.account-actions{justify-content:flex-start}.user-form-grid{grid-template-columns:1fr}.user-form-grid .full{grid-column:auto}.login-actions{align-items:stretch;flex-direction:column}.login-actions .btn{width:100%}}
+@media(max-width:620px){.menu{display:flex!important;grid-template-columns:none!important;gap:4px;overflow-x:auto}.menu-btn{min-width:62px;flex:0 0 62px}.sidebar{overflow-x:auto}.modal-box.large{padding:20px}.header-status{display:none}}
+
   </style>
 </head>
 <body>
@@ -52,9 +83,18 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       <h1>Admin belépés.</h1>
       <p class="note">Brief-ek, ajánlatkérések és projektinformációk kezelése egy helyen.</p>
       <form id="loginForm">
-        <div class="field"><label for="password">Jelszó</label><input id="password" type="password" placeholder="Admin jelszó" required></div>
-        <button class="btn gold" type="submit">Belépés</button>
-        <p class="note" id="loginNote"></p>
+        <div class="field">
+          <label for="loginEmail">Email cím</label>
+          <input id="loginEmail" type="email" autocomplete="username" placeholder="hello@krilixtechlabs.com" required>
+        </div>
+        <div class="field">
+          <label for="password">Jelszó</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="A saját jelszavad" required>
+        </div>
+        <div class="login-actions">
+          <p class="note" id="loginNote">Minden munkatárs a saját fiókjával jelentkezik be.</p>
+          <button class="btn gold" type="submit">Belépés →</button>
+        </div>
       </form>
     </div>
   </section>
@@ -64,10 +104,11 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       <div class="brand"><img src="/krilix-logo.png" alt="Krilix logó"><div><strong>KRILIX</strong><span>Tech & Labs</span></div></div>
       <nav class="menu">
         <button class="menu-btn active" data-screen="dashboard"><span class="menu-icon">▦</span><span>Irányítópult</span></button>
-        <button class="menu-btn" data-screen="briefs"><span class="menu-icon">▤</span><span>Brief-ek</span><span class="menu-badge" id="briefMenuCount">0</span></button>
-        <button class="menu-btn" data-screen="messages"><span class="menu-icon">✉</span><span>Ajánlatkérések</span><span class="menu-badge" id="messageMenuCount">0</span></button>
-        <button class="menu-btn" data-screen="projects"><span class="menu-icon">□</span><span>Projektek</span></button>
-        <button class="menu-btn" data-screen="customers"><span class="menu-icon">♙</span><span>Ügyfelek</span></button>
+        <button class="menu-btn" data-screen="briefs" data-permission="briefs.read"><span class="menu-icon">▤</span><span>Brief-ek</span><span class="menu-badge" id="briefMenuCount">0</span></button>
+        <button class="menu-btn" data-screen="messages" data-permission="messages.read"><span class="menu-icon">✉</span><span>Ajánlatkérések</span><span class="menu-badge" id="messageMenuCount">0</span></button>
+        <button class="menu-btn" data-screen="projects" data-permission="projects.read"><span class="menu-icon">□</span><span>Projektek</span></button>
+        <button class="menu-btn" data-screen="customers" data-permission="customers.read"><span class="menu-icon">♙</span><span>Ügyfelek</span></button>
+        <button class="menu-btn" data-screen="users" data-permission-any="users.manage,audit.read"><span class="menu-icon">♧</span><span>Fiókok</span></button>
         <button class="menu-btn" data-screen="settings"><span class="menu-icon">⚙</span><span>Beállítások</span></button>
       </nav>
       <div class="sidebar-spacer"></div>
@@ -77,9 +118,9 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 
     <main class="main">
       <header class="topbar">
-        <div class="hello"><h1 id="pageTitle">Üdvözlünk újra, Admin!</h1></div>
+        <div class="hello"><h1 id="pageTitle">Üdvözlünk vissza, Admin!</h1><p id="pageSubtitle">Itt van, mi történik ma a KRILIX-nél.</p></div>
         <div class="top-search"><input class="search" id="globalSearch" type="search" placeholder="Keresés név, cég, email vagy projekt alapján..."><span class="search-shortcut">⌘ K</span></div>
-        <div class="admin-area"><button class="icon-btn" id="refreshBtn" title="Frissítés">↻</button><button class="icon-btn" title="Értesítések">♢<span class="notify-dot" id="notifyCount">0</span></button><button class="icon-btn" title="Üzenetek">✉<span class="notify-dot" id="messageNotifyCount">0</span></button><div class="profile-box"><div class="profile-avatar">A</div><div><strong>Admin</strong><span>Rendszergazda</span></div></div></div>
+        <div class="admin-area"><button class="icon-btn" id="refreshBtn" title="Frissítés">↻</button><button class="icon-btn" title="Értesítések">♢<span class="notify-dot" id="notifyCount">0</span></button><button class="icon-btn" title="Üzenetek">✉<span class="notify-dot" id="messageNotifyCount">0</span></button><div class="profile-box"><div class="profile-avatar" id="profileAvatar">A</div><div><strong id="profileName">Admin</strong><span id="profileRole">Rendszergazda</span></div></div></div>
       </header>
 
       <section class="screen active" id="dashboardScreen">
@@ -112,7 +153,43 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 
       <section class="screen" id="projectsScreen"><div class="screen-heading"><div><h2>Projektek</h2><p>Az elfogadott briefekből létrehozott munkák helye.</p></div></div><div class="placeholder-grid"><article class="placeholder-card"><b>□</b><h3>Aktív projektek</h3><p>Az elfogadott briefekből később egy kattintással projekt hozható létre.</p></article><article class="placeholder-card"><b>◷</b><h3>Határidők</h3><p>Projekt mérföldkövek és feladatok áttekintése.</p></article><article class="placeholder-card"><b>✓</b><h3>Lezárt munkák</h3><p>Korábbi projektek és ügyfélanyagok archiválása.</p></article></div></section>
       <section class="screen" id="customersScreen"><div class="screen-heading"><div><h2>Ügyfelek</h2><p>A briefekből és ajánlatkérésekből összegyűjtött ügyfélkapcsolatok.</p></div></div><div class="placeholder-grid"><article class="placeholder-card"><b>♙</b><h3>Ügyféladatbázis</h3><p>Név, cég, email, telefon és kapcsolódó projektek egy helyen.</p></article><article class="placeholder-card"><b>✉</b><h3>Kommunikáció</h3><p>Üzenetek és ajánlatok előzményei.</p></article><article class="placeholder-card"><b>◇</b><h3>Értékes ügyfelek</h3><p>Visszatérő és kiemelt ügyfélkapcsolatok kezelése.</p></article></div></section>
-      <section class="screen" id="settingsScreen"><div class="screen-heading"><div><h2>Beállítások</h2><p>Admin profil, státuszok és email sablonok.</p></div></div><div class="placeholder-grid"><article class="placeholder-card"><b>⚙</b><h3>Admin profil</h3><p>Jelszó és profilbeállítások kezelése.</p></article><article class="placeholder-card"><b>▤</b><h3>Státuszok</h3><p>Brief és ajánlatkérés státuszok testreszabása.</p></article><article class="placeholder-card"><b>✉</b><h3>Email sablonok</h3><p>Automatikus és kézi email szövegek kezelése.</p></article></div></section>
+      <section class="screen" id="usersScreen">
+        <div class="screen-heading">
+          <div><h2>Fiókok és jogosultságok</h2><p>Munkatársak, szerepkörök és egyedi hozzáférések kezelése.</p></div>
+          <div class="heading-actions"><button class="btn gold" id="createUserButton" data-permission="users.manage">+ Új fiók</button></div>
+        </div>
+        <div class="account-grid">
+          <section class="account-panel" data-permission="users.manage">
+            <div class="account-panel-head"><div><h3>Admin fiókok</h3><p>Minden munkatárs külön belépést és naplózható hozzáférést kap.</p></div><span class="role-badge" id="userCountBadge">0 fiók</span></div>
+            <div class="account-list" id="accountList"><div class="empty">Fiókok betöltése...</div></div>
+          </section>
+          <aside class="account-panel" data-permission="audit.read">
+            <div class="account-panel-head"><div><h3>Tevékenységnapló</h3><p>Belépések és fontos admin műveletek.</p></div></div>
+            <div class="audit-list" id="auditList"><div class="empty">Napló betöltése...</div></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen" id="settingsScreen">
+        <div class="screen-heading"><div><h2>Saját fiók</h2><p>Profiladatok, hozzáférések és jelszóbiztonság.</p></div></div>
+        <div class="settings-grid">
+          <article class="settings-card">
+            <h3>Profil és szerepkör</h3><p>A bejelentkezett fiók adatai és jelenlegi hozzáférései.</p>
+            <div class="profile-summary"><div class="profile-avatar" id="settingsAvatar">A</div><div><strong id="settingsName">Admin</strong><span id="settingsRole">Rendszergazda</span><div class="account-meta" id="settingsEmail"></div></div></div>
+            <div class="profile-permissions" id="profilePermissions"></div>
+          </article>
+          <article class="settings-card">
+            <h3>Jelszó módosítása</h3><p>A jelszócsere után a többi eszközön futó munkamenet kijelentkezik.</p>
+            <form id="changePasswordForm">
+              <div class="field"><label for="currentPassword">Jelenlegi jelszó</label><input id="currentPassword" type="password" autocomplete="current-password" required></div>
+              <div class="field"><label for="newPassword">Új jelszó</label><input id="newPassword" type="password" autocomplete="new-password" minlength="10" required><div class="password-strength" id="passwordStrength"><span></span></div></div>
+              <div class="field"><label for="confirmPassword">Új jelszó újra</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="10" required></div>
+              <button class="btn gold" type="submit">Jelszó frissítése</button>
+              <p class="note" id="passwordNote"></p>
+            </form>
+          </article>
+        </div>
+      </section>
     </main>
   </section>
 
@@ -121,9 +198,43 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 
   <div class="modal" id="confirmModal"><div class="modal-box"><h2>Törlés?</h2><p class="note" id="confirmText">Ez a művelet nem vonható vissza.</p><div class="modal-actions"><button class="btn" id="cancelDelete">Mégse</button><button class="btn danger" id="approveDelete">Törlés</button></div></div></div>
 
+  <div class="modal" id="userModal">
+    <div class="modal-box large">
+      <div class="modal-head"><div><h2 id="userModalTitle">Új admin fiók</h2><p id="userModalSubtitle">Adj külön belépést és pontos jogosultságokat a munkatársnak.</p></div><button class="modal-close" id="closeUserModal" type="button">×</button></div>
+      <form id="userForm">
+        <input id="editUserId" type="hidden">
+        <div class="user-form-grid">
+          <div class="field"><label for="userName">Név</label><input id="userName" type="text" autocomplete="off" required></div>
+          <div class="field"><label for="userEmail">Email cím</label><input id="userEmail" type="email" autocomplete="off" required></div>
+          <div class="field"><label for="userRole">Szerepkör</label><select id="userRole" required></select><div class="role-preview" id="rolePreview"></div></div>
+          <div class="field" id="userPasswordField"><label for="userPassword">Ideiglenes jelszó</label><input id="userPassword" type="password" autocomplete="new-password" minlength="10"><p class="note">Első belépés után kötelező lesz megváltoztatni.</p></div>
+          <label class="switch-row full" id="userActiveRow"><input id="userActive" type="checkbox" checked><span>A fiók aktív és bejelentkezhet</span></label>
+        </div>
+        <div class="permissions-title">Egyedi jogosultságok</div>
+        <p class="note">A „szerepkör szerint” beállítás a kiválasztott szerepkör alapjogosultságát használja. Ettől külön engedélyezhetsz vagy letilthatsz egy-egy műveletet.</p>
+        <div class="permission-editor" id="permissionEditor"></div>
+        <div class="modal-actions"><button class="btn" id="cancelUserModal" type="button">Mégse</button><button class="btn gold" type="submit">Fiók mentése</button></div>
+        <p class="note" id="userFormNote"></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal force-modal" id="forcePasswordModal">
+    <div class="modal-box medium">
+      <div class="modal-head"><div><h2>Jelszócsere szükséges</h2><p>Az ideiglenes jelszót az első belépéskor saját jelszóra kell cserélni.</p></div></div>
+      <form id="forcePasswordForm">
+        <div class="field"><label for="forceCurrentPassword">Ideiglenes jelszó</label><input id="forceCurrentPassword" type="password" autocomplete="current-password" required></div>
+        <div class="field"><label for="forceNewPassword">Új jelszó</label><input id="forceNewPassword" type="password" minlength="10" autocomplete="new-password" required></div>
+        <div class="field"><label for="forceConfirmPassword">Új jelszó újra</label><input id="forceConfirmPassword" type="password" minlength="10" autocomplete="new-password" required></div>
+        <button class="btn gold" type="submit" style="width:100%">Új jelszó beállítása</button>
+        <p class="note" id="forcePasswordNote"></p>
+      </form>
+    </div>
+  </div>
+
   <script>
 
-    const state={briefs:[],messages:[],selectedBriefId:null,deleteTarget:null};
+    const state={briefs:[],messages:[],users:[],audit:[],roles:{},permissions:{},user:null,selectedBriefId:null,deleteTarget:null};
     const briefStatusLabels={new:"Új",contacted:"Kontaktálva",processing:"Feldolgozás alatt",offer_ready:"Ajánlat készül",offer_sent:"Ajánlat elküldve",accepted:"Elfogadva",declined:"Elutasítva",closed:"Lezárva"};
     const messageStatusLabels={new_lead:"Új érdeklődő",in_discussion:"Egyeztetés alatt",offer_sent:"Ajánlat kiküldve",accepted:"Elfogadva",declined:"Elutasítva",closed:"Lezárva"};
     const priorityRank={"Nagyon sürgős":1,"Sürgős":2,"Minél hamarabb":2,"1-2 héten belül":3,"Normál":4,"Rugalmas":5};
@@ -131,7 +242,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
     const $=id=>document.getElementById(id);
     const loginScreen=$("loginScreen"), appScreen=$("appScreen"), loginForm=$("loginForm"), loginNote=$("loginNote");
     const pageTitle=$("pageTitle"), globalSearch=$("globalSearch");
-    const screens={dashboard:$("dashboardScreen"),briefs:$("briefsScreen"),messages:$("messagesScreen"),projects:$("projectsScreen"),customers:$("customersScreen"),settings:$("settingsScreen")};
+    const screens={dashboard:$("dashboardScreen"),briefs:$("briefsScreen"),messages:$("messagesScreen"),projects:$("projectsScreen"),customers:$("customersScreen"),users:$("usersScreen"),settings:$("settingsScreen")};
 
     init();
 
@@ -152,7 +263,16 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       $("closeDrawer").addEventListener("click",closeDetailDrawer);
       $("drawerBackdrop").addEventListener("click",closeDetailDrawer);
       $("saveQuickNote").addEventListener("click",saveQuickNote);
-      document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDetailDrawer()});
+      $("createUserButton").addEventListener("click",()=>openUserModal());
+      $("closeUserModal").addEventListener("click",closeUserModal);
+      $("cancelUserModal").addEventListener("click",closeUserModal);
+      $("userModal").addEventListener("click",e=>{if(e.target.id==="userModal")closeUserModal()});
+      $("userForm").addEventListener("submit",saveUser);
+      $("userRole").addEventListener("change",()=>{renderRolePreview();renderPermissionEditor(readPermissionOverrides())});
+      $("changePasswordForm").addEventListener("submit",e=>changeOwnPassword(e,false));
+      $("forcePasswordForm").addEventListener("submit",e=>changeOwnPassword(e,true));
+      $("newPassword").addEventListener("input",()=>updatePasswordStrength($("newPassword").value));
+      document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeDetailDrawer();closeUserModal()}});
       renderSavedNotes();
       checkAuth();
     }
@@ -160,7 +280,14 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
     async function checkAuth(){
       try{
         const res=await fetch("/api/admin/me",{credentials:"include"});
-        if(res.ok){showApp();await loadAll()}else showLogin();
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok||!data.ok){showLogin();return}
+        state.user=data.user;
+        await loadAuthMeta();
+        applyCurrentUser();
+        showApp();
+        await loadAll();
+        if(state.user.mustChangePassword)openForcePasswordModal();
       }catch{showLogin()}
     }
 
@@ -169,20 +296,41 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       loginNote.textContent="Belépés folyamatban...";
       loginNote.className="note";
       try{
-        const res=await fetch("/api/admin/login",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:$("password").value})});
-        const data=await res.json();
+        const res=await fetch("/api/admin/login",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:$("loginEmail").value.trim(),password:$("password").value})});
+        const data=await res.json().catch(()=>({}));
         if(!res.ok||!data.ok)throw new Error(data.error||"Sikertelen belépés.");
-        showApp(); await loadAll();
+        state.user=data.user;
+        await loadAuthMeta();
+        applyCurrentUser();
+        showApp();
+        loginForm.reset();
+        await loadAll();
+        if(state.user.mustChangePassword)openForcePasswordModal();
       }catch(err){loginNote.textContent=err.message;loginNote.className="note error"}
     }
 
-    async function logout(){await fetch("/api/admin/logout",{method:"POST",credentials:"include"});showLogin()}
+    async function logout(){
+      await fetch("/api/admin/logout",{method:"POST",credentials:"include"});
+      state.user=null;state.users=[];state.audit=[];
+      showLogin();
+    }
     function showApp(){loginScreen.style.display="none";appScreen.style.display="grid"}
     function showLogin(){loginScreen.style.display="grid";appScreen.style.display="none"}
 
+    async function loadAuthMeta(){
+      const res=await fetch("/api/admin/auth-meta",{credentials:"include"});
+      const data=await res.json().catch(()=>({}));
+      if(res.ok&&data.ok){state.roles=data.roles||{};state.permissions=data.permissions||{}}
+    }
+
     async function loadAll(){
-      await Promise.all([loadBriefs(),loadMessages()]);
-      renderStats(); renderBriefs(); renderMessages(); renderDashboard();
+      const tasks=[];
+      if(can("briefs.read"))tasks.push(loadBriefs());else state.briefs=[];
+      if(can("messages.read"))tasks.push(loadMessages());else state.messages=[];
+      if(can("users.manage"))tasks.push(loadUsers());
+      if(can("audit.read"))tasks.push(loadAudit());
+      await Promise.all(tasks);
+      renderStats(); renderBriefs(); renderMessages(); renderDashboard(); renderUsers(); renderAudit();
     }
 
     async function loadBriefs(){
@@ -207,21 +355,30 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
     }
 
     function switchScreen(name){
-      Object.values(screens).forEach(s=>s.classList.remove("active"));
+      if(!screens[name])return;
+      const button=document.querySelector(`.menu-btn[data-screen="${name}"]`);
+      if(button?.classList.contains("permission-hidden"))return;
+      Object.values(screens).forEach(s=>s?.classList.remove("active"));
       screens[name].classList.add("active");
       document.querySelectorAll(".menu-btn").forEach(b=>b.classList.toggle("active",b.dataset.screen===name));
+      const firstName=(state.user?.name||"Admin").split(" ")[0];
       const titles={
-        dashboard:["Üdvözlünk vissza, Admin!","Itt van, mi történik ma a KRILIX-nél."],
+        dashboard:[`Üdvözlünk vissza, ${firstName}!`,"Itt van, mi történik ma a KRILIX-nél."],
         briefs:["Brief-ek","Összes beérkezett projekt brief áttekintése és kezelése."],
         messages:["Ajánlatkérések","A főoldalról érkezett érdeklődők és beszélgetések."],
         projects:["Projektek","Aktív és lezárt munkák kezelése."],
         customers:["Ügyfelek","Kapcsolatok és ügyfélelőzmények."],
-        settings:["Beállítások","Admin és rendszerbeállítások."]
+        users:["Fiókok és jogosultságok","Munkatársak, szerepkörök és admin tevékenységek."],
+        settings:["Saját fiók","Profil, jelszó és a hozzád rendelt jogosultságok."]
       };
       const info=titles[name]||["Krilix Admin",""];
       pageTitle.textContent=info[0];
       $("pageSubtitle").textContent=info[1];
       if(name!=="briefs")closeDetailDrawer();
+      if(name==="users"){
+        if(can("users.manage"))loadUsers();
+        if(can("audit.read"))loadAudit();
+      }
     }
 
     function renderStats(){
@@ -319,18 +476,21 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       if(!b){$("briefDetail").innerHTML=`<div class="empty">Nincs kiválasztott brief.</div>`;return}
       $("detailHint").textContent=`${b.briefCode||("#"+b.id)} · ${date(b.createdAt)}`;
       const mailSubject=encodeURIComponent(`Ajánlat / ${b.briefCode||"brief"} - Krilix Tech & Labs`);
+      const canWrite=can("briefs.write");
+      const canDelete=can("briefs.delete");
       $("briefDetail").innerHTML=`
         <div class="detail">
           <div class="detail-title">
             <div><h2>${esc(b.name)}</h2><p>${esc(b.company||"")} · ${esc(b.email)}</p></div>
             <div class="detail-actions">
               <a class="btn small" href="mailto:${esc(b.email)}?subject=${mailSubject}">Email</a>
-              <button class="btn small danger" onclick="confirmDelete('brief',${b.id},'${jsq(b.name)}')">Törlés</button>
+              ${canDelete?`<button class="btn small danger" onclick="confirmDelete('brief',${b.id},'${jsq(b.name)}')">Törlés</button>`:""}
             </div>
           </div>
           <div class="detail-grid">
-            <div class="field"><label>Státusz</label><select onchange="updateBrief(${b.id},{status:this.value})">${Object.entries(briefStatusLabels).map(([v,l])=>`<option value="${v}" ${b.status===v?"selected":""}>${l}</option>`).join("")}</select></div>
-            <div class="field"><label>Belső jegyzet</label><textarea onblur="updateBrief(${b.id},{adminNote:this.value})">${esc(b.adminNote||"")}</textarea></div>
+            <div class="field"><label>Státusz</label><select ${canWrite?"":"disabled"} onchange="updateBrief(${b.id},{status:this.value})">${Object.entries(briefStatusLabels).map(([v,l])=>`<option value="${v}" ${b.status===v?"selected":""}>${l}</option>`).join("")}</select></div>
+            <div class="field"><label>Belső jegyzet</label><textarea ${canWrite?"":"readonly"} onblur="updateBrief(${b.id},{adminNote:this.value})">${esc(b.adminNote||"")}</textarea></div>
+            ${!canWrite?`<div class="info-box full"><small>Jogosultság</small><div>Ez a fiók csak megtekintési hozzáféréssel rendelkezik.</div></div>`:""}
             ${info("Alap adatok",`Email: ${b.email||"—"}\nTelefon: ${b.phone||"—"}\nCég: ${b.company||"—"}\nWeboldal: ${b.currentWebsite||"—"}\nSocial: ${b.socialLink||"—"}`)}
             ${info("Projekt típus",chips(b.projectTypes),false)}
             ${info("Fő cél",b.mainGoal||"—",true)}
@@ -369,11 +529,12 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
           <td>${esc(m.email||"—")}</td>
           <td>${date(m.last_activity_at||m.created_at)}</td>
           <td>${messageStatusTag(m.business_status)} ${m.has_unread_customer_message?'<span class="tag">Új üzenet</span>':""}</td>
-          <td><a class="btn small gold" href="/thread/${esc(m.thread_token)}?admin=1" target="_blank" onclick="markRead(${m.id})">Beszélgetés</a></td>
+          <td><a class="btn small gold" href="/thread/${esc(m.thread_token)}?admin=1" target="_blank" onclick="markRead(${m.id})">${can("messages.reply")?"Válasz":"Megtekintés"}</a></td>
         </tr>`).join(""):`<tr><td colspan="5">Nincs ilyen megkeresés.</td></tr>`;
     }
 
     async function updateBrief(id,payload){
+      if(!can("briefs.write")){alert("Ehhez nincs módosítási jogosultságod.");return}
       try{
         const res=await fetch(`/api/admin/briefs/${id}`,{method:"PATCH",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
         const data=await res.json();
@@ -385,7 +546,11 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 
     async function markRead(id){try{await fetch(`/api/admin/messages/${id}/read`,{method:"POST",credentials:"include"})}catch{}}
 
-    function confirmDelete(type,id,name){state.deleteTarget={type,id,name};$("confirmText").textContent=`A(z) "${name}" elem törlődni fog.`;$("confirmModal").classList.add("show")}
+    function confirmDelete(type,id,name){
+      const permission=type==="brief"?"briefs.delete":"messages.delete";
+      if(!can(permission))return;
+      state.deleteTarget={type,id,name};$("confirmText").textContent=`A(z) "${name}" elem törlődni fog.`;$("confirmModal").classList.add("show")
+    }
     function closeConfirm(){state.deleteTarget=null;$("confirmModal").classList.remove("show")}
     async function approveDelete(){
       if(!state.deleteTarget)return;
@@ -416,7 +581,213 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
     function initials(name=""){return String(name).split(" ").filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"?"}
     function esc(v=""){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
     function jsq(v=""){return String(v??"").replaceAll("\\","\\\\").replaceAll("'","\\'").replaceAll("\n"," ")}
+
     function countBy(arr,fn){return arr.reduce((a,x)=>{const k=fn(x);a[k]=(a[k]||0)+1;return a},{})}
+
+    /* ================================================================
+       FIÓKRENDSZER ÉS JOGOSULTSÁGOK
+       ================================================================ */
+    function can(permission){return Boolean(state.user?.permissions?.includes(permission))}
+
+    function applyCurrentUser(){
+      if(!state.user)return;
+      const avatar=initials(state.user.name);
+      $("profileAvatar").textContent=avatar;
+      $("profileName").textContent=state.user.name;
+      $("profileRole").textContent=state.user.roleLabel||state.user.role;
+      $("settingsAvatar").textContent=avatar;
+      $("settingsName").textContent=state.user.name;
+      $("settingsRole").textContent=state.user.roleLabel||state.user.role;
+      $("settingsEmail").textContent=state.user.email;
+      $("profilePermissions").innerHTML=(state.user.permissions||[]).map(p=>`<span>${esc(state.permissions[p]?.label||p)}</span>`).join("")||"<span>Nincs hozzárendelt jogosultság</span>";
+      document.querySelectorAll("[data-permission]").forEach(el=>el.classList.toggle("permission-hidden",!can(el.dataset.permission)));
+      document.querySelectorAll("[data-permission-any]").forEach(el=>{
+        const permissions=String(el.dataset.permissionAny||"").split(",").map(item=>item.trim()).filter(Boolean);
+        el.classList.toggle("permission-hidden",!permissions.some(can));
+      });
+      const firstName=(state.user.name||"Admin").split(" ")[0];
+      pageTitle.textContent=`Üdvözlünk vissza, ${firstName}!`;
+      $("pageSubtitle").textContent="Itt van, mi történik ma a KRILIX-nél.";
+      populateRoleSelect();
+    }
+
+    async function loadUsers(){
+      if(!can("users.manage"))return;
+      try{
+        const res=await fetch("/api/admin/users",{credentials:"include"});
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok||!data.ok)throw new Error(data.error||"Nem sikerült betölteni a fiókokat.");
+        state.users=data.users||[];
+        renderUsers();
+      }catch(error){$("accountList").innerHTML=`<div class="empty">${esc(error.message)}</div>`}
+    }
+
+    async function loadAudit(){
+      if(!can("audit.read")){$("auditList").innerHTML='<div class="empty">Nincs hozzáférés a naplóhoz.</div>';return}
+      try{
+        const res=await fetch("/api/admin/audit-log?limit=100",{credentials:"include"});
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok||!data.ok)throw new Error(data.error||"Nem sikerült betölteni a naplót.");
+        state.audit=data.entries||[];
+        renderAudit();
+      }catch(error){$("auditList").innerHTML=`<div class="empty">${esc(error.message)}</div>`}
+    }
+
+    function renderUsers(){
+      if(!can("users.manage")){
+        if($("accountList"))$("accountList").innerHTML='<div class="empty">Nincs jogosultságod a fiókok kezeléséhez.</div>';
+        return;
+      }
+      $("userCountBadge").textContent=`${state.users.length} fiók`;
+      $("accountList").innerHTML=state.users.length?state.users.map(user=>{
+        const canManageTarget=state.user?.role==="owner"||user.role!=="owner";
+        return `
+        <article class="account-row">
+          <div class="account-person"><div class="account-avatar">${initials(user.name)}</div><div><strong>${esc(user.name)}</strong><span>${esc(user.email)}</span></div></div>
+          <div><span class="role-badge">${esc(user.roleLabel||user.role)}</span><div class="account-meta">${user.mustChangePassword?"Jelszócsere szükséges":"Jelszó rendben"}</div></div>
+          <div><span class="account-status ${user.isActive?"active":"inactive"}">${user.isActive?"Aktív":"Letiltva"}</span><div class="account-meta">Utolsó belépés: ${user.lastLoginAt?date(user.lastLoginAt):"még nem lépett be"}</div></div>
+          <div class="account-actions">
+            ${canManageTarget?`<button class="btn small" onclick="openUserModal(${user.id})">Szerkesztés</button><button class="btn small" onclick="resetUserPassword(${user.id})">Új jelszó</button>`:`<span class="account-meta">Csak tulajdonos kezelheti</span>`}
+            ${canManageTarget&&user.id!==state.user.id?`<button class="btn small ${user.isActive?"danger":""}" onclick="toggleUserActive(${user.id},${!user.isActive})">${user.isActive?"Letiltás":"Aktiválás"}</button>`:""}
+          </div>
+        </article>`}).join(""):'<div class="empty">Még nincs létrehozott fiók.</div>';
+    }
+
+    function renderAudit(){
+      if(!$("auditList"))return;
+      const labels={
+        "auth.login":"Sikeres belépés","auth.login_failed":"Sikertelen belépés","auth.logout":"Kijelentkezés","auth.password_changed":"Jelszó módosítva",
+        "user.created":"Fiók létrehozva","user.updated":"Fiók módosítva","user.password_reset":"Jelszó alaphelyzetbe állítva",
+        "brief.updated":"Brief módosítva","brief.deleted":"Brief törölve","message.read":"Üzenet megnyitva","message.updated":"Ajánlatkérés módosítva","message.deleted":"Ajánlatkérés törölve","message.replied":"Ügyfélválasz elküldve"
+      };
+      $("auditList").innerHTML=state.audit.length?state.audit.map(item=>`
+        <div class="audit-item"><strong>${esc(labels[item.action]||item.action)}</strong><span>${esc(item.user_name||item.user_email||"Rendszer")}${item.target_id?` · ${esc(item.target_type||"elem")} #${esc(item.target_id)}`:""}</span><time>${date(item.created_at)}</time></div>`).join(""):'<div class="empty">Még nincs naplózott művelet.</div>';
+    }
+
+    function populateRoleSelect(){
+      const select=$("userRole");
+      if(!select)return;
+      const current=select.value;
+      const availableRoles=Object.entries(state.roles).filter(([key])=>key!=="owner"||state.user?.role==="owner");
+      select.innerHTML=availableRoles.map(([key,role])=>`<option value="${key}">${esc(role.label)}</option>`).join("");
+      if(current&&state.roles[current])select.value=current;
+      renderRolePreview();
+    }
+
+    function renderRolePreview(){
+      const role=state.roles[$("userRole").value];
+      $("rolePreview").textContent=role?`${role.description} Alapból ${role.permissions.length} jogosultság.`:"Válassz szerepkört.";
+    }
+
+    function renderPermissionEditor(overrides={}){
+      const role=state.roles[$("userRole").value]||{permissions:[]};
+      const grouped=Object.entries(state.permissions);
+      $("permissionEditor").innerHTML=grouped.map(([key,permission])=>{
+        const inherited=role.permissions.includes(key);
+        const override=Object.prototype.hasOwnProperty.call(overrides,key)?String(overrides[key]):"inherit";
+        return `<div class="permission-row"><strong>${esc(permission.label)}</strong><select data-permission-key="${esc(key)}"><option value="inherit" ${override==="inherit"?"selected":""}>Szerepkör szerint (${inherited?"engedélyezve":"tiltva"})</option><option value="true" ${override==="true"?"selected":""}>Külön engedélyezve</option><option value="false" ${override==="false"?"selected":""}>Külön letiltva</option></select><small>${esc(permission.group)}</small></div>`;
+      }).join("");
+    }
+
+    function readPermissionOverrides(){
+      const overrides={};
+      document.querySelectorAll("[data-permission-key]").forEach(select=>{if(select.value!=="inherit")overrides[select.dataset.permissionKey]=select.value==="true"});
+      return overrides;
+    }
+
+    function openUserModal(userId=null){
+      if(!can("users.manage"))return;
+      const user=userId?state.users.find(item=>item.id===userId):null;
+      $("userForm").reset();
+      $("editUserId").value=user?.id||"";
+      $("userModalTitle").textContent=user?"Fiók szerkesztése":"Új admin fiók";
+      $("userModalSubtitle").textContent=user?"Módosítsd a szerepkört, az állapotot vagy az egyedi jogosultságokat.":"Adj külön belépést és pontos jogosultságokat a munkatársnak.";
+      populateRoleSelect();
+      $("userName").value=user?.name||"";
+      $("userEmail").value=user?.email||"";
+      $("userRole").value=user?.role||"viewer";
+      $("userActive").checked=user?user.isActive:true;
+      $("userActiveRow").style.display=user?"flex":"none";
+      $("userPasswordField").style.display=user?"none":"grid";
+      $("userPassword").required=!user;
+      $("userFormNote").textContent="";
+      renderRolePreview();
+      renderPermissionEditor(user?.permissionOverrides||{});
+      $("userModal").classList.add("show");
+    }
+
+    function closeUserModal(){$("userModal").classList.remove("show")}
+
+    async function saveUser(event){
+      event.preventDefault();
+      const id=Number($("editUserId").value)||null;
+      const payload={name:$("userName").value.trim(),email:$("userEmail").value.trim(),role:$("userRole").value,permissionOverrides:readPermissionOverrides()};
+      if(id)payload.isActive=$("userActive").checked;else payload.password=$("userPassword").value;
+      const note=$("userFormNote");note.textContent="Mentés folyamatban...";note.className="note";
+      try{
+        const res=await fetch(id?`/api/admin/users/${id}`:"/api/admin/users",{method:id?"PATCH":"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok||!data.ok)throw new Error(data.error||"Nem sikerült menteni a fiókot.");
+        closeUserModal();await loadUsers();await loadAudit();
+      }catch(error){note.textContent=error.message;note.className="note error"}
+    }
+
+    async function resetUserPassword(userId){
+      const user=state.users.find(item=>item.id===userId);if(!user)return;
+      const password=prompt(`${user.name} új ideiglenes jelszava (legalább 10 karakter):`);
+      if(password===null)return;
+      if(password.length<10){alert("A jelszó legalább 10 karakter legyen.");return}
+      try{
+        const res=await fetch(`/api/admin/users/${userId}/reset-password`,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({password})});
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok||!data.ok)throw new Error(data.error||"Nem sikerült új jelszót beállítani.");
+        alert("Az ideiglenes jelszó elkészült. A felhasználónak az első belépéskor meg kell változtatnia.");await loadUsers();await loadAudit();
+      }catch(error){alert(error.message)}
+    }
+
+    async function toggleUserActive(userId,isActive){
+      const user=state.users.find(item=>item.id===userId);if(!user)return;
+      if(!confirm(`${isActive?"Aktiválod":"Letiltod"} ${user.name} fiókját?`))return;
+      try{
+        const res=await fetch(`/api/admin/users/${userId}`,{method:"PATCH",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({isActive})});
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok||!data.ok)throw new Error(data.error||"Nem sikerült módosítani a fiókot.");
+        await loadUsers();await loadAudit();
+      }catch(error){alert(error.message)}
+    }
+
+    async function changeOwnPassword(event,forced){
+      event.preventDefault();
+      const current=forced?$("forceCurrentPassword").value:$("currentPassword").value;
+      const next=forced?$("forceNewPassword").value:$("newPassword").value;
+      const confirmation=forced?$("forceConfirmPassword").value:$("confirmPassword").value;
+      const note=forced?$("forcePasswordNote"):$("passwordNote");
+      if(next.length<10){note.textContent="Az új jelszó legalább 10 karakter legyen.";note.className="note error";return}
+      if(next!==confirmation){note.textContent="A két új jelszó nem egyezik.";note.className="note error";return}
+      note.textContent="Jelszó frissítése...";note.className="note";
+      try{
+        const res=await fetch("/api/admin/change-password",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({currentPassword:current,newPassword:next})});
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok||!data.ok)throw new Error(data.error||"Nem sikerült módosítani a jelszót.");
+        state.user.mustChangePassword=false;
+        event.target.reset();
+        note.textContent="A jelszó sikeresen megváltozott.";note.className="note success";
+        if(forced){
+          setTimeout(()=>$("forcePasswordModal").classList.remove("show"),650);
+          await loadAll();
+        }else{
+          await loadAudit();
+        }
+      }catch(error){note.textContent=error.message;note.className="note error"}
+    }
+
+    function openForcePasswordModal(){$("forcePasswordModal").classList.add("show")}
+
+    function updatePasswordStrength(value){
+      const el=$("passwordStrength");el.className="password-strength";
+      if(value.length>=14&&/[A-ZÁÉÍÓÖŐÚÜŰ]/.test(value)&&/[0-9]/.test(value)&&/[^A-Za-z0-9]/.test(value))el.classList.add("strong");
+      else if(value.length>=10)el.classList.add("medium");
+    }
   
   </script>
 </body>
