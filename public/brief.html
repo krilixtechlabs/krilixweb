@@ -574,7 +574,7 @@
       }
 
       .progress-bar {
-        width: 12.5%;
+        width: 0%;
         height: 100%;
         border-radius: inherit;
         background: var(--gold-gradient);
@@ -954,6 +954,18 @@
       textarea.invalid {
         border-color: rgba(255, 150, 144, 0.6);
         box-shadow: 0 0 0 3px rgba(255, 150, 144, 0.07);
+      }
+
+      .choice-group.invalid-group {
+        padding: 14px;
+        border: 1px solid rgba(255, 150, 144, 0.6);
+        border-radius: 14px;
+        background: rgba(255, 150, 144, 0.035);
+        box-shadow: 0 0 0 3px rgba(255, 150, 144, 0.05);
+      }
+
+      .choice-group.invalid-group .fieldset-label {
+        color: var(--error);
       }
 
       .choice-group {
@@ -1676,7 +1688,7 @@
 
         <div class="header-status">
           <span class="save-status" id="saveStatus">Vázlat mentése</span>
-          <span class="private-badge">Privát projekt brief</span>
+          <span class="private-badge">Privát projekt</span>
         </div>
       </nav>
     </header>
@@ -1688,14 +1700,14 @@
       <section class="hero">
         <div class="container hero-grid">
           <div>
-            <span class="eyebrow">Projektindító brief</span>
+            <span class="eyebrow">Projektindító </span>
 
             <h1 class="display">
-              Mondd el, mit építsünk <span class="gold-text">fel neked.</span>
+              A következő <span class="gold-text">projekted</span>
             </h1>
 
             <p class="hero-lead">
-              Ebből a briefből indulunk ki. Minél pontosabban válaszolsz, annál
+              Ebből indulunk ki. Minél pontosabban válaszolsz, annál
               jobb ajánlatot és ütemtervet tudunk készíteni az egyedi projektedhez.
             </p>
           </div>
@@ -1716,14 +1728,10 @@
 
               <div class="hero-fact">
                 <strong>Auto</strong>
-                <span>helyi vázlatmentés</span>
+                <span>vázlatmentés</span>
               </div>
             </div>
 
-            <p>
-              Nem kell minden kérdésre azonnal tökéletes választ adnod. Az alapirány,
-              a főbb célok és az elvárások már elegendők a közös munkánk elindításához.
-            </p>
           </aside>
         </div>
       </section>
@@ -1741,7 +1749,7 @@
               <div class="progress-heading">
                 <div>
                   <small>Kitöltöttség</small>
-                  <strong id="progressPercent">13%</strong>
+                  <strong id="progressPercent">0%</strong>
                 </div>
 
                 <small id="stepCounter">1 / 8</small>
@@ -1752,7 +1760,7 @@
               </div>
 
               <p class="progress-copy" id="progressCopy">
-                Kezdjük az alapadatokkal.
+                0 / 30 kérdés megválaszolva.
               </p>
             </div>
 
@@ -1814,8 +1822,8 @@
               <button class="step-nav-button" type="button" data-step="6">
                 <span class="step-nav-index">07</span>
                 <span class="step-nav-text">
-                  <strong>Indítás</strong>
-                  <span>Határidő és keret</span>
+                  <strong>Prioritások</strong>
+                  <span>Mi a legfontosabb?</span>
                 </span>
                 <span class="step-nav-check">✓</span>
               </button>
@@ -1823,8 +1831,8 @@
               <button class="step-nav-button" type="button" data-step="7">
                 <span class="step-nav-index">08</span>
                 <span class="step-nav-text">
-                  <strong>Prioritások</strong>
-                  <span>Mi a legfontosabb?</span>
+                  <strong>Indítás</strong>
+                  <span>Határidő és beküldés</span>
                 </span>
                 <span class="step-nav-check">✓</span>
               </button>
@@ -1979,6 +1987,7 @@
                 <fieldset class="choice-group">
                   <legend class="fieldset-label">
                     Milyen elsődleges projektről van szó?
+                    <span class="required-mark">*</span>
                   </legend>
 
                   <p class="field-help">
@@ -2189,7 +2198,10 @@
                 </div>
 
                 <fieldset class="choice-group">
-                  <legend class="fieldset-label">Milyen tartalmak állnak már rendelkezésre?</legend>
+                  <legend class="fieldset-label">
+                    Milyen tartalmak állnak már rendelkezésre?
+                    <span class="required-mark">*</span>
+                  </legend>
 
                   <div class="choice-grid">
                     <label class="choice-card">
@@ -2282,7 +2294,7 @@
                   <div class="field">
                     <label for="styleDirection">Milyen stílus illik hozzátok?</label>
 
-                    <select id="styleDirection">
+                    <select id="styleDirection" required>
                       <option value="">Válassz vizuális irányt</option>
                       <option>Prémium / luxus</option>
                       <option>Modern / letisztult</option>
@@ -2361,7 +2373,10 @@
                 </div>
 
                 <fieldset class="choice-group">
-                  <legend class="fieldset-label">Tervezett funkciók</legend>
+                  <legend class="fieldset-label">
+                    Tervezett funkciók
+                    <span class="required-mark">*</span>
+                  </legend>
 
                   <div class="choice-grid">
                     <label class="choice-card">
@@ -2500,6 +2515,7 @@
                 <fieldset class="choice-group">
                   <legend class="fieldset-label">
                     Mi van már meg, és mire lesz szükség?
+                    <span class="required-mark">*</span>
                   </legend>
 
                   <div class="choice-grid">
@@ -2610,17 +2626,94 @@
               </section>
 
               <!-- ========================================================
-                   7. LÉPÉS – HATÁRIDŐ, KERET ÉS KÜLDÉS
+                   7. LÉPÉS – PRIORITÁSOK
                    ======================================================== -->
               <section class="form-step" data-step-panel="6">
                 <div class="step-heading">
                   <div class="step-number">07</div>
 
                   <div>
+                    <h2>Mi a legfontosabb?</h2>
+                    <p>
+                      Jelöld ki legfeljebb három olyan szempontot, amely a
+                      projekt sikerénél számodra a legfontosabb. Ez segít abban,
+                      hogy az ajánlatot és a megvalósítást valóban a prioritásaidhoz
+                      igazítsuk.
+                    </p>
+                  </div>
+                </div>
+
+                <fieldset class="choice-group">
+                  <legend class="fieldset-label">
+                    Válassz legfeljebb három prioritást
+                    <span class="required-mark">*</span>
+                  </legend>
+
+                  <div class="priority-grid">
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Prémium dizájn" />
+                      <span class="priority-number">01</span>
+                      <span class="choice-copy"><strong>Prémium dizájn</strong><small>Erős vizuális megjelenés és márkaélmény.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Gyorsaság" />
+                      <span class="priority-number">02</span>
+                      <span class="choice-copy"><strong>Gyorsaság</strong><small>Gyors betöltés és gördülékeny használat.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="SEO" />
+                      <span class="priority-number">03</span>
+                      <span class="choice-copy"><strong>SEO</strong><small>Jobb keresőbeli láthatóság és technikai alapok.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Mobilos élmény" />
+                      <span class="priority-number">04</span>
+                      <span class="choice-copy"><strong>Mobilos élmény</strong><small>Kiemelkedő használhatóság telefonon is.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Könnyű adminisztráció" />
+                      <span class="priority-number">05</span>
+                      <span class="choice-copy"><strong>Könnyű adminisztráció</strong><small>Egyszerűen kezelhető tartalom és adatok.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Automatizáció" />
+                      <span class="priority-number">06</span>
+                      <span class="choice-copy"><strong>Automatizáció</strong><small>Kevesebb manuális feladat és gyorsabb folyamatok.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Költséghatékonyság" />
+                      <span class="priority-number">07</span>
+                      <span class="choice-copy"><strong>Költséghatékonyság</strong><small>A keret lehető legjobb felhasználása.</small></span>
+                    </label>
+                    <label class="choice-card priority-card">
+                      <input type="checkbox" name="priorities" value="Gyors elkészülés" />
+                      <span class="priority-number">08</span>
+                      <span class="choice-copy"><strong>Gyors elkészülés</strong><small>Minél előbbi indulás és élesítés.</small></span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="field field-block">
+                  <label for="priorityNote">Van még valami, ami mindennél fontosabb?</label>
+                  <textarea
+                    id="priorityNote"
+                    placeholder="Írd le röviden, mire figyeljünk különösen a tervezés és fejlesztés során."
+                  ></textarea>
+                </div>
+              </section>
+
+              <!-- ========================================================
+                   8. LÉPÉS – HATÁRIDŐ ÉS KÜLDÉS
+                   ======================================================== -->
+              <section class="form-step" data-step-panel="7">
+                <div class="step-heading">
+                  <div class="step-number">08</div>
+
+                  <div>
                     <h2>Indulás és keretek</h2>
                     <p>
                       Már csak a matek és az időzítés van hátra. Mikorra szeretnéd 
-                      élesben látni a projektet?
+                      élesben látni a projektet, és milyen keretekkel számolhatunk a tervezésnél?
                     </p>
                   </div>
                 </div>
@@ -2631,7 +2724,7 @@
                       <div class="field">
                         <label for="deadline">Mikorra legyen kész?</label>
 
-                        <select id="deadline">
+                        <select id="deadline" required>
                           <option value="">Válassz időzítést</option>
                           <option>1 hónapon belül</option>
                           <option>2–3 hónapon belül</option>
@@ -2704,77 +2797,6 @@
                       </div>
                     </div>
                   </aside>
-                </div>
-              </section>
-
-              <!-- ========================================================
-                   8. LÉPÉS – PRIORITÁSOK
-                   ======================================================== -->
-              <section class="form-step" data-step-panel="7">
-                <div class="step-heading">
-                  <div class="step-number">08</div>
-
-                  <div>
-                    <h2>Mi a legfontosabb?</h2>
-                    <p>
-                      Jelöld ki legfeljebb három olyan szempontot, amely a
-                      projekt sikerénél számodra a legfontosabb. Ez segít abban,
-                      hogy az ajánlatot és a megvalósítást valóban a prioritásaidhoz
-                      igazítsuk.
-                    </p>
-                  </div>
-                </div>
-
-                <fieldset class="choice-group">
-                  <legend class="fieldset-label">
-                    Válassz legfeljebb három prioritást
-                  </legend>
-
-                  <div class="priority-grid">
-                    <label class="choice-card priority-card">
-                      <input type="checkbox" name="priorities" value="Prémium dizájn" />
-                      <span class="priority-number">01</span>
-                      <span class="choice-copy"><strong>Prémium dizájn</strong><small>Erős vizuális megjelenés és márkaélmény.</small></span>
-                    </label>
-                    <label class="choice-card priority-card">
-                      <input type="checkbox" name="priorities" value="Gyorsaság" />
-                      <span class="priority-number">02</span>
-                      <span class="choice-copy"><strong>Gyorsaság</strong><small>Gyors betöltés és gördülékeny használat.</small></span>
-                    </label>
-                    <label class="choice-card priority-card">
-                      <input type="checkbox" name="priorities" value="SEO" />
-                      <span class="priority-number">03</span>
-                      <span class="choice-copy"><strong>SEO</strong><small>Jobb keresőbeli láthatóság és technikai alapok.</small></span>
-                    </label>
-                    <label class="choice-card priority-card">
-                      <input type="checkbox" name="priorities" value="Mobilos élmény" />
-                      <span class="priority-number">04</span>
-                      <span class="choice-copy"><strong>Mobilos élmény</strong><small>Kiemelkedő használhatóság telefonon is.</small></span>
-                    </label>
-                    <label class="choice-card priority-card">
-                      <input type="checkbox" name="priorities" value="Könnyű adminisztráció" />
-                      <span class="priority-number">05</span>
-                      <span class="choice-copy"><strong>Könnyű adminisztráció</strong><small>Egyszerűen kezelhető tartalom és adatok.</small></span>
-                    </label>
-                    <label class="choice-card priority-card">
-                      <input type="checkbox" name="priorities" value="Automatizáció" />
-                      <span class="priority-number">06</span>
-                      <span class="choice-copy"><strong>Automatizáció</strong><small>Kevesebb manuális feladat és gyorsabb folyamatok.</small></span>
-                    </label>
-                    <label class="choice-card priority-card">
-                      <input type="checkbox" name="priorities" value="Gyors elkészülés" />
-                      <span class="priority-number">07</span>
-                      <span class="choice-copy"><strong>Gyors elkészülés</strong><small>Minél előbbi indulás és élesítés.</small></span>
-                    </label>
-                  </div>
-                </fieldset>
-
-                <div class="field field-block">
-                  <label for="priorityNote">Van még valami, ami mindennél fontosabb?</label>
-                  <textarea
-                    id="priorityNote"
-                    placeholder="Írd le röviden, mire figyeljünk különösen a tervezés és fejlesztés során."
-                  ></textarea>
                 </div>
               </section>
 
@@ -2955,14 +2977,14 @@
             progress: "Átnézzük a technikai hátteret.",
           },
           {
-            label: "07 / Indítás",
-            title: "Határidő, keret és beküldés",
-            progress: "Már csak az indulás részletei vannak hátra.",
+            label: "07 / Prioritások",
+            title: "A projekt legfontosabb szempontjai",
+            progress: "Jelöld meg, mi számít a leginkább.",
           },
           {
-            label: "08 / Prioritások",
-            title: "A projekt legfontosabb szempontjai",
-            progress: "Végül állítsuk sorrendbe, mi számít igazán.",
+            label: "08 / Indítás",
+            title: "Határidő és beküldés",
+            progress: "Már csak az indulás részletei vannak hátra.",
           },
         ];
 
@@ -2985,6 +3007,110 @@
               `input[name="${name}"]:checked`,
             ),
           ).map((input) => input.value);
+        }
+
+        const stepRequirements = [
+          {
+            fields: ["name", "email", "phone"],
+            groups: [],
+          },
+          {
+            fields: ["mainGoal"],
+            groups: ["projectTypes"],
+          },
+          {
+            fields: [],
+            groups: ["materials"],
+          },
+          {
+            fields: ["styleDirection"],
+            groups: [],
+          },
+          {
+            fields: [],
+            groups: ["features"],
+          },
+          {
+            fields: [],
+            groups: ["technical"],
+          },
+          {
+            fields: [],
+            groups: ["priorities"],
+          },
+          {
+            fields: ["deadline", "consent"],
+            groups: [],
+          },
+        ];
+
+        const progressQuestions = [
+          { type: "field", id: "name" },
+          { type: "field", id: "email" },
+          { type: "field", id: "phone" },
+          { type: "field", id: "company" },
+          { type: "field", id: "currentWebsite" },
+          { type: "field", id: "socialLink" },
+
+          { type: "group", name: "projectTypes" },
+          { type: "field", id: "mainGoal" },
+          { type: "group", name: "successMetric" },
+          { type: "group", name: "plannedPages" },
+          { type: "field", id: "targetAudience" },
+          { type: "field", id: "competitors" },
+
+          { type: "group", name: "materials" },
+          { type: "field", id: "materialLinks" },
+
+          { type: "field", id: "styleDirection" },
+          { type: "field", id: "colors" },
+          { type: "field", id: "references" },
+          { type: "group", name: "likedElements" },
+          { type: "field", id: "avoid" },
+
+          { type: "group", name: "features" },
+          { type: "field", id: "integrations" },
+          { type: "field", id: "customFeatures" },
+
+          { type: "group", name: "technical" },
+          { type: "field", id: "domain" },
+          { type: "field", id: "languages" },
+          { type: "field", id: "currentSiteProblem" },
+
+          { type: "group", name: "priorities" },
+          { type: "field", id: "priorityNote" },
+
+          { type: "field", id: "deadline" },
+          { type: "field", id: "extraMessage" },
+        ];
+
+        function calculateRealProgress() {
+          const answered = progressQuestions.filter((question) => {
+            if (question.type === "group") {
+              return checkedValues(question.name).length > 0;
+            }
+
+            return valueOf(question.id).length > 0;
+          }).length;
+
+          const total = progressQuestions.length;
+          const percentage =
+            total > 0 ? Math.round((answered / total) * 100) : 0;
+
+          return {
+            answered,
+            total,
+            percentage,
+          };
+        }
+
+        function updateRealProgress() {
+          const progress = calculateRealProgress();
+
+          progressBar.style.width = `${progress.percentage}%`;
+          progressPercent.textContent = `${progress.percentage}%`;
+          progressCopy.textContent =
+            `${progress.answered} / ${progress.total} kérdés megválaszolva.`;
         }
 
         function setFormNote(message, type = "") {
@@ -3101,12 +3227,6 @@
             isFinalStep,
           );
 
-          const completedPercentage = Math.round(
-            ((currentStep + 1) / stepPanels.length) * 100,
-          );
-
-          progressBar.style.width = `${completedPercentage}%`;
-          progressPercent.textContent = `${completedPercentage}%`;
           stepCounter.textContent = `${currentStep + 1} / ${stepPanels.length}`;
           mobileStepCounter.textContent = `${currentStep + 1}/${stepPanels.length}`;
 
@@ -3114,8 +3234,8 @@
             stepMeta[currentStep].label;
           currentStepTitle.textContent =
             stepMeta[currentStep].title;
-          progressCopy.textContent =
-            stepMeta[currentStep].progress;
+
+          updateRealProgress();
 
           updateSummary();
 
@@ -3133,10 +3253,19 @@
               return;
             }
 
-            if (validateStep(currentStep)) {
-              markStepCompleted(currentStep);
-              showStep(targetStep);
+            if (!validateStepsBefore(targetStep)) {
+              return;
             }
+
+            for (
+              let stepIndex = 0;
+              stepIndex < targetStep;
+              stepIndex += 1
+            ) {
+              markStepCompleted(stepIndex);
+            }
+
+            showStep(targetStep);
           });
         });
 
@@ -3149,59 +3278,149 @@
             .forEach((element) => {
               element.classList.remove("invalid");
             });
+
+          panel
+            .querySelectorAll(".invalid-group")
+            .forEach((element) => {
+              element.classList.remove("invalid-group");
+            });
         }
 
-        function validateStep(stepIndex) {
-          const panel = stepPanels[stepIndex];
-          clearInvalidStates(panel);
-
-          let firstInvalidField = null;
-
-          const requiredFields = Array.from(
-            panel.querySelectorAll(
-              "input[required], select[required], textarea[required]",
-            ),
+        function getGroupContainer(name) {
+          const input = document.querySelector(
+            `input[name="${name}"]`,
           );
 
-          requiredFields.forEach((field) => {
+          return input?.closest(".choice-group") || null;
+        }
+
+        function validateStep(stepIndex, options = {}) {
+          const {
+            focusFirstInvalid = true,
+            showMessage = true,
+          } = options;
+
+          const panel = stepPanels[stepIndex];
+          const requirements = stepRequirements[stepIndex];
+
+          clearInvalidStates(panel);
+
+          let firstInvalidElement = null;
+          let hasInvalidField = false;
+
+          requirements.fields.forEach((fieldId) => {
+            const field = document.getElementById(fieldId);
+
+            if (!field) return;
+
             const isCheckbox = field.type === "checkbox";
             const isValid = isCheckbox
               ? field.checked
               : field.checkValidity() &&
-                field.value.trim().length > 0;
+                String(field.value || "").trim().length > 0;
 
             if (!isValid) {
               field.classList.add("invalid");
+              hasInvalidField = true;
 
-              if (!firstInvalidField) {
-                firstInvalidField = field;
+              if (!firstInvalidElement) {
+                firstInvalidElement = field;
               }
             }
           });
 
-          if (firstInvalidField) {
-            setFormNote(
-              stepIndex === 7
-                ? "A beküldéshez kérlek, fogadd el az adatkezelési tájékoztatót."
-                : "Légy oly kedves, töltsd ki a csillaggal jelölt kötelező mezőket.",
-              "error",
-            );
+          requirements.groups.forEach((groupName) => {
+            const selectedValues = checkedValues(groupName);
 
-            firstInvalidField.focus({
-              preventScroll: true,
-            });
+            if (selectedValues.length === 0) {
+              const groupContainer =
+                getGroupContainer(groupName);
 
-            firstInvalidField.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
+              groupContainer?.classList.add(
+                "invalid-group",
+              );
+
+              hasInvalidField = true;
+
+              if (!firstInvalidElement) {
+                firstInvalidElement =
+                  groupContainer ||
+                  document.querySelector(
+                    `input[name="${groupName}"]`,
+                  );
+              }
+            }
+          });
+
+          if (hasInvalidField) {
+            if (showMessage) {
+              setFormNote(
+                stepIndex === 7
+                  ? "A továbblépéshez add meg a határidőt, és fogadd el az adatkezelési tájékoztatót."
+                  : "A továbblépéshez válaszold meg a csillaggal jelölt kötelező kérdéseket.",
+                "error",
+              );
+            }
+
+            if (
+              focusFirstInvalid &&
+              firstInvalidElement
+            ) {
+              const focusTarget =
+                firstInvalidElement.matches?.(
+                  "input, select, textarea, button",
+                )
+                  ? firstInvalidElement
+                  : firstInvalidElement.querySelector?.(
+                      "input, select, textarea, button",
+                    );
+
+              focusTarget?.focus({
+                preventScroll: true,
+              });
+
+              firstInvalidElement.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            }
 
             return false;
           }
 
-          setFormNote(
-            "A válaszaid automatikusan mentésre kerülnek ezen az eszközön.",
-          );
+          if (showMessage) {
+            setFormNote(
+              "A válaszaid automatikusan mentésre kerülnek ezen az eszközön.",
+            );
+          }
+
+          return true;
+        }
+
+        function validateStepsBefore(targetStep) {
+          for (
+            let stepIndex = 0;
+            stepIndex < targetStep;
+            stepIndex += 1
+          ) {
+            if (
+              !validateStep(stepIndex, {
+                focusFirstInvalid: false,
+                showMessage: false,
+              })
+            ) {
+              showStep(stepIndex);
+
+              window.setTimeout(() => {
+                validateStep(stepIndex, {
+                  focusFirstInvalid: true,
+                  showMessage: true,
+                });
+              }, 80);
+
+              return false;
+            }
+          }
 
           return true;
         }
@@ -3434,6 +3653,7 @@
           updateChoiceCards();
           refreshCompletedSteps();
           updateSummary();
+          updateRealProgress();
           showStep(currentStep, false);
           setSaveStatus("Vázlat mentve", "saved");
           showToast(
@@ -3441,17 +3661,29 @@
           );
         }
 
-        form.addEventListener("input", () => {
+        form.addEventListener("input", (event) => {
+          event.target.classList.remove("invalid");
+          event.target
+            .closest(".choice-group")
+            ?.classList.remove("invalid-group");
+
           queueDraftSave();
           refreshCompletedSteps();
           updateSummary();
+          updateRealProgress();
         });
 
-        form.addEventListener("change", () => {
+        form.addEventListener("change", (event) => {
+          event.target.classList.remove("invalid");
+          event.target
+            .closest(".choice-group")
+            ?.classList.remove("invalid-group");
+
           queueDraftSave();
           updateChoiceCards();
           refreshCompletedSteps();
           updateSummary();
+          updateRealProgress();
         });
 
         clearDraftButton.addEventListener("click", () => {
@@ -3473,6 +3705,7 @@
           });
 
           showStep(0);
+          updateRealProgress();
           setSaveStatus("Nincs mentett vázlat");
           showToast("A mentett vázlat törölve lett.");
         });
@@ -3522,17 +3755,7 @@
         form.addEventListener("submit", async (event) => {
           event.preventDefault();
 
-          if (!validateStep(7)) return;
-
-          const consent = document.getElementById("consent");
-
-          if (!consent?.checked) {
-            showStep(6);
-            setFormNote(
-              "A beküldéshez kérlek, fogadd el az adatkezelési tájékoztatót.",
-              "error",
-            );
-            consent?.focus();
+          if (!validateStepsBefore(stepPanels.length)) {
             return;
           }
 
@@ -3680,6 +3903,7 @@
         updateChoiceCards();
         refreshCompletedSteps();
         updateSummary();
+        updateRealProgress();
         showStep(currentStep, false);
       });
     </script>
