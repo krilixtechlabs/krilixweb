@@ -1113,6 +1113,58 @@
         margin-top: 20px;
       }
 
+      /* ================================================================
+         FELTÉTELES „EGYÉB” VÁLASZMEZŐK
+         ================================================================ */
+      .other-detail-wrap {
+        display: grid;
+        grid-template-rows: 0fr;
+        margin-top: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition:
+          grid-template-rows 0.28s var(--ease),
+          margin-top 0.28s var(--ease),
+          opacity 0.22s ease;
+      }
+
+      .other-detail-wrap > .other-detail-inner {
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .other-detail-wrap.show {
+        grid-template-rows: 1fr;
+        margin-top: 14px;
+        opacity: 1;
+      }
+
+      .other-detail-field {
+        display: grid;
+        gap: 8px;
+        padding: 14px;
+        border: 1px solid var(--gold-line);
+        border-radius: 13px;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(199, 151, 60, 0.075),
+            rgba(255, 255, 255, 0.018)
+          );
+      }
+
+      .other-detail-field label {
+        color: var(--gold-light);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .other-detail-field input {
+        min-height: 52px;
+      }
+
       .required-mark {
         color: var(--error);
       }
@@ -3009,6 +3061,196 @@
           ).map((input) => input.value);
         }
 
+        /* ==============================================================
+           FELTÉTELES „EGYÉB” VÁLASZOK
+           - automatikusan működik minden value="Egyéb" opciónál
+           ============================================================== */
+        function isOtherOptionValue(value) {
+          return String(value || "")
+            .trim()
+            .toLocaleLowerCase("hu-HU") === "egyéb";
+        }
+
+        function otherDetailId(groupName) {
+          return `${groupName}Other`;
+        }
+
+        function otherDetailValue(groupName) {
+          return valueOf(otherDetailId(groupName));
+        }
+
+        function expandedCheckedValues(groupName) {
+          const detail = otherDetailValue(groupName);
+
+          return checkedValues(groupName).map((value) => {
+            if (isOtherOptionValue(value) && detail) {
+              return `Egyéb: ${detail}`;
+            }
+
+            return value;
+          });
+        }
+
+        function isChoiceGroupAnswered(groupName) {
+          const values = checkedValues(groupName);
+
+          if (values.length === 0) {
+            return false;
+          }
+
+          if (
+            values.some(isOtherOptionValue) &&
+            !otherDetailValue(groupName)
+          ) {
+            return false;
+          }
+
+          return true;
+        }
+
+        function getOtherLabel(groupName) {
+          const labels = {
+            successMetric: "Egyéb siker meghatározása",
+            plannedPages: "Egyéb oldal megnevezése",
+          };
+
+          return labels[groupName] || "Egyéb válasz";
+        }
+
+        function getOtherPlaceholder(groupName) {
+          const placeholders = {
+            successMetric:
+              "Írd le, mi számítana még a projekt sikerének.",
+            plannedPages:
+              "Írd le, milyen további oldalt vagy aloldalt szeretnél.",
+          };
+
+          return (
+            placeholders[groupName] ||
+            "Írd le röviden az egyéb választ."
+          );
+        }
+
+        function setupOtherDetailFields() {
+          const otherInputs = Array.from(
+            form.querySelectorAll(
+              'input[type="checkbox"], input[type="radio"]',
+            ),
+          ).filter((input) =>
+            isOtherOptionValue(input.value),
+          );
+
+          const processedGroups = new Set();
+
+          otherInputs.forEach((input) => {
+            const groupName = input.name;
+
+            if (
+              !groupName ||
+              processedGroups.has(groupName)
+            ) {
+              return;
+            }
+
+            const choiceGroup =
+              input.closest(".choice-group");
+
+            if (!choiceGroup) {
+              return;
+            }
+
+            processedGroups.add(groupName);
+
+            otherInputs
+              .filter(
+                (candidate) =>
+                  candidate.name === groupName,
+              )
+              .forEach((candidate) => {
+                candidate.dataset.otherOption = "true";
+              });
+
+            const wrap = document.createElement("div");
+            wrap.className = "other-detail-wrap";
+            wrap.dataset.otherFor = groupName;
+
+            const inner =
+              document.createElement("div");
+            inner.className = "other-detail-inner";
+
+            const field =
+              document.createElement("div");
+            field.className = "other-detail-field";
+
+            const label =
+              document.createElement("label");
+            label.htmlFor = otherDetailId(groupName);
+            label.innerHTML =
+              `${getOtherLabel(groupName)} ` +
+              '<span class="required-mark">*</span>';
+
+            const detailInput =
+              document.createElement("input");
+            detailInput.id = otherDetailId(groupName);
+            detailInput.type = "text";
+            detailInput.autocomplete = "off";
+            detailInput.placeholder =
+              getOtherPlaceholder(groupName);
+            detailInput.dataset.otherDetail = groupName;
+
+            field.append(label, detailInput);
+            inner.appendChild(field);
+            wrap.appendChild(inner);
+            choiceGroup.appendChild(wrap);
+          });
+        }
+
+        function updateOtherDetailFields({
+          clearHidden = true,
+        } = {}) {
+          form
+            .querySelectorAll(".other-detail-wrap")
+            .forEach((wrap) => {
+              const groupName =
+                wrap.dataset.otherFor;
+
+              const detailInput =
+                document.getElementById(
+                  otherDetailId(groupName),
+                );
+
+              const isOtherSelected = Array.from(
+                form.querySelectorAll(
+                  `input[name="${groupName}"]:checked`,
+                ),
+              ).some((input) =>
+                isOtherOptionValue(input.value),
+              );
+
+              wrap.classList.toggle(
+                "show",
+                isOtherSelected,
+              );
+
+              if (!detailInput) {
+                return;
+              }
+
+              detailInput.required = isOtherSelected;
+              detailInput.disabled = !isOtherSelected;
+
+              if (
+                !isOtherSelected &&
+                clearHidden
+              ) {
+                detailInput.value = "";
+                detailInput.classList.remove(
+                  "invalid",
+                );
+              }
+            });
+        }
+
         const stepRequirements = [
           {
             fields: ["name", "email", "phone"],
@@ -3087,7 +3329,9 @@
         function calculateRealProgress() {
           const answered = progressQuestions.filter((question) => {
             if (question.type === "group") {
-              return checkedValues(question.name).length > 0;
+              return isChoiceGroupAnswered(
+                question.name,
+              );
             }
 
             return valueOf(question.id).length > 0;
@@ -3173,7 +3417,10 @@
         document
           .querySelectorAll(".choice-card input")
           .forEach((input) => {
-            input.addEventListener("change", updateChoiceCards);
+            input.addEventListener("change", () => {
+              updateChoiceCards();
+              updateOtherDetailFields();
+            });
           });
 
         document
@@ -3257,14 +3504,7 @@
               return;
             }
 
-            for (
-              let stepIndex = 0;
-              stepIndex < targetStep;
-              stepIndex += 1
-            ) {
-              markStepCompleted(stepIndex);
-            }
-
+            refreshCompletedSteps();
             showStep(targetStep);
           });
         });
@@ -3352,6 +3592,36 @@
             }
           });
 
+          panel
+            .querySelectorAll(
+              'input[data-other-option="true"]:checked',
+            )
+            .forEach((otherOption) => {
+              const detailInput =
+                document.getElementById(
+                  otherDetailId(otherOption.name),
+                );
+
+              if (
+                !detailInput ||
+                detailInput.value.trim().length === 0
+              ) {
+                detailInput?.classList.add(
+                  "invalid",
+                );
+
+                hasInvalidField = true;
+
+                if (!firstInvalidElement) {
+                  firstInvalidElement =
+                    detailInput ||
+                    otherOption.closest(
+                      ".choice-group",
+                    );
+                }
+              }
+            });
+
           if (hasInvalidField) {
             if (showMessage) {
               setFormNote(
@@ -3433,41 +3703,67 @@
           }
         }
 
+        function isStepComplete(stepIndex) {
+          const panel = stepPanels[stepIndex];
+          const requirements = stepRequirements[stepIndex];
+
+          if (!panel || !requirements) {
+            return false;
+          }
+
+          const requiredFieldsComplete =
+            requirements.fields.every((fieldId) => {
+              const field =
+                document.getElementById(fieldId);
+
+              if (!field) {
+                return false;
+              }
+
+              if (field.type === "checkbox") {
+                return field.checked;
+              }
+
+              return (
+                field.checkValidity() &&
+                String(field.value || "").trim().length > 0
+              );
+            });
+
+          const requiredGroupsComplete =
+            requirements.groups.every((groupName) =>
+              isChoiceGroupAnswered(groupName),
+            );
+
+          const selectedOtherDetailsComplete =
+            Array.from(
+              panel.querySelectorAll(
+                'input[data-other-option="true"]:checked',
+              ),
+            ).every((otherOption) => {
+              const detailInput =
+                document.getElementById(
+                  otherDetailId(otherOption.name),
+                );
+
+              return Boolean(
+                detailInput &&
+                detailInput.value.trim().length > 0,
+              );
+            });
+
+          return (
+            requiredFieldsComplete &&
+            requiredGroupsComplete &&
+            selectedOtherDetailsComplete
+          );
+        }
+
         function refreshCompletedSteps() {
-          const hasBasicData =
-            valueOf("name") &&
-            valueOf("email");
-
-          const hasProjectData =
-            valueOf("mainGoal");
-
-          const stepCompletion = [
-            Boolean(hasBasicData),
-            Boolean(hasProjectData),
-            checkedValues("materials").length > 0 ||
-              valueOf("materialLinks"),
-            valueOf("styleDirection") ||
-              valueOf("colors") ||
-              valueOf("references") ||
-              valueOf("avoid"),
-            checkedValues("features").length > 0 ||
-              valueOf("customFeatures") || valueOf("integrations"),
-            checkedValues("technical").length > 0 ||
-              valueOf("domain") ||
-              valueOf("languages"),
-            Boolean(
-              valueOf("deadline") ||
-                valueOf("budget") ||
-                valueOf("priority"),
-            ),
-            checkedValues("priorities").length > 0 ||
-              valueOf("priorityNote"),
-          ];
-
-          stepCompletion.forEach((completed, index) => {
-            stepButtons[index].classList.toggle(
+          stepButtons.forEach((button, index) => {
+            button.classList.toggle(
               "completed",
-              Boolean(completed),
+              isStepComplete(index),
             );
           });
         }
@@ -3475,7 +3771,7 @@
         nextButton.addEventListener("click", () => {
           if (!validateStep(currentStep)) return;
 
-          markStepCompleted(currentStep);
+          refreshCompletedSteps();
           showStep(currentStep + 1);
         });
 
@@ -3503,7 +3799,7 @@
             valueOf("company") || "Még nincs megadva",
           );
 
-          const projectTypes = checkedValues("projectTypes");
+          const projectTypes = expandedCheckedValues("projectTypes");
 
           setSummaryText(
             summaryProjectType,
@@ -3651,6 +3947,9 @@
             : 0;
 
           updateChoiceCards();
+          updateOtherDetailFields({
+            clearHidden: false,
+          });
           refreshCompletedSteps();
           updateSummary();
           updateRealProgress();
@@ -3679,6 +3978,7 @@
             .closest(".choice-group")
             ?.classList.remove("invalid-group");
 
+          updateOtherDetailFields();
           queueDraftSave();
           updateChoiceCards();
           refreshCompletedSteps();
@@ -3699,6 +3999,7 @@
 
           form.reset();
           updateChoiceCards();
+          updateOtherDetailFields();
 
           stepButtons.forEach((button) => {
             button.classList.remove("completed");
@@ -3721,30 +4022,30 @@
             company: valueOf("company"),
             currentWebsite: valueOf("currentWebsite"),
             socialLink: valueOf("socialLink"),
-            projectTypes: checkedValues("projectTypes"),
+            projectTypes: expandedCheckedValues("projectTypes"),
             mainGoal: valueOf("mainGoal"),
-            successMetric: checkedValues("successMetric")[0] || "",
-            plannedPages: checkedValues("plannedPages"),
+            successMetric: expandedCheckedValues("successMetric")[0] || "",
+            plannedPages: expandedCheckedValues("plannedPages"),
             targetAudience: valueOf("targetAudience"),
             competitors: valueOf("competitors"),
-            materials: checkedValues("materials"),
+            materials: expandedCheckedValues("materials"),
             materialLinks: valueOf("materialLinks"),
             styleDirection: valueOf("styleDirection"),
             colors: valueOf("colors"),
             references: valueOf("references"),
-            likedElements: checkedValues("likedElements"),
+            likedElements: expandedCheckedValues("likedElements"),
             avoid: valueOf("avoid"),
-            features: checkedValues("features"),
+            features: expandedCheckedValues("features"),
             integrations: valueOf("integrations"),
             customFeatures: valueOf("customFeatures"),
-            technical: checkedValues("technical"),
+            technical: expandedCheckedValues("technical"),
             domain: valueOf("domain"),
             languages: valueOf("languages"),
             currentSiteProblem: valueOf("currentSiteProblem"),
             deadline: valueOf("deadline"),
             budget: valueOf("budget"),
             extraMessage: valueOf("extraMessage"),
-            priorities: checkedValues("priorities"),
+            priorities: expandedCheckedValues("priorities"),
             priorityNote: valueOf("priorityNote"),
           };
         }
@@ -3819,6 +4120,7 @@
 
             form.reset();
             updateChoiceCards();
+          updateOtherDetailFields();
 
             stepButtons.forEach((button) => {
               button.classList.remove("completed");
@@ -3899,8 +4201,12 @@
         /* ==============================================================
            11. INDÍTÁS
            ============================================================== */
+        setupOtherDetailFields();
         restoreDraft();
         updateChoiceCards();
+        updateOtherDetailFields({
+          clearHidden: false,
+        });
         refreshCompletedSteps();
         updateSummary();
         updateRealProgress();
