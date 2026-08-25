@@ -12,6 +12,10 @@ const ROLE_DEFINITIONS = {
       "messages.write",
       "messages.reply",
       "messages.delete",
+      "quotes.read",
+      "quotes.write",
+      "quotes.publish",
+      "quotes.delete",
       "projects.read",
       "projects.write",
       "customers.read",
@@ -32,6 +36,10 @@ const ROLE_DEFINITIONS = {
       "messages.write",
       "messages.reply",
       "messages.delete",
+      "quotes.read",
+      "quotes.write",
+      "quotes.publish",
+      "quotes.delete",
       "projects.read",
       "projects.write",
       "customers.read",
@@ -49,6 +57,9 @@ const ROLE_DEFINITIONS = {
       "messages.read",
       "messages.write",
       "messages.reply",
+      "quotes.read",
+      "quotes.write",
+      "quotes.publish",
       "projects.read",
       "projects.write",
       "customers.read",
@@ -64,6 +75,9 @@ const ROLE_DEFINITIONS = {
       "messages.read",
       "messages.write",
       "messages.reply",
+      "quotes.read",
+      "quotes.write",
+      "quotes.publish",
       "customers.read",
       "customers.write"
     ]
@@ -74,6 +88,7 @@ const ROLE_DEFINITIONS = {
     permissions: [
       "briefs.read",
       "messages.read",
+      "quotes.read",
       "projects.read",
       "projects.write",
       "customers.read"
@@ -85,6 +100,7 @@ const ROLE_DEFINITIONS = {
     permissions: [
       "briefs.read",
       "messages.read",
+      "quotes.read",
       "projects.read",
       "customers.read"
     ]
@@ -99,6 +115,10 @@ const PERMISSION_DEFINITIONS = {
   "messages.write": { label: "Ajánlatkérések állapotának módosítása", group: "Üzenetek" },
   "messages.reply": { label: "Válasz küldése ügyfeleknek", group: "Üzenetek" },
   "messages.delete": { label: "Ajánlatkérések törlése", group: "Üzenetek" },
+  "quotes.read": { label: "Ajánlatok megtekintése", group: "Ajánlatok" },
+  "quotes.write": { label: "Ajánlatok létrehozása és módosítása", group: "Ajánlatok" },
+  "quotes.publish": { label: "Ajánlatok publikálása", group: "Ajánlatok" },
+  "quotes.delete": { label: "Ajánlatok törlése", group: "Ajánlatok" },
   "projects.read": { label: "Projektek megtekintése", group: "Projektek" },
   "projects.write": { label: "Projektek kezelése", group: "Projektek" },
   "customers.read": { label: "Ügyfelek megtekintése", group: "Ügyfelek" },

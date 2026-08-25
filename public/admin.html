@@ -75,6 +75,11 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 @media(max-width:700px){.account-row{grid-template-columns:1fr;gap:10px}.account-actions{justify-content:flex-start}.user-form-grid{grid-template-columns:1fr}.user-form-grid .full{grid-column:auto}.login-actions{align-items:stretch;flex-direction:column}.login-actions .btn{width:100%}}
 @media(max-width:620px){.menu{display:flex!important;grid-template-columns:none!important;gap:4px;overflow-x:auto}.menu-btn{min-width:62px;flex:0 0 62px}.sidebar{overflow-x:auto}.modal-box.large{padding:20px}.header-status{display:none}}
 
+  
+/* ===== AJÁNLATOK MODUL ===== */
+.quote-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}.quote-kpi{padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:#0c100f}.quote-kpi small{display:block;color:var(--muted);font-size:8px;letter-spacing:.12em;text-transform:uppercase}.quote-kpi strong{display:block;margin-top:7px;color:var(--gold2);font-size:22px}.quote-link{display:flex;align-items:center;gap:7px;color:var(--gold2);font-size:10px;text-decoration:none}.quote-link:hover{text-decoration:underline}.quote-status{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;border:1px solid var(--line);font-size:8px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.quote-status:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--muted)}.quote-status.draft:before{background:#88908d}.quote-status.published:before{background:var(--gold2);box-shadow:0 0 10px rgba(240,205,120,.35)}.quote-status.accepted:before{background:var(--green)}.quote-status.expired:before{background:var(--red)}.quote-row-actions{display:flex;gap:6px;flex-wrap:wrap}.quote-modal-box{width:min(1180px,100%);max-height:94vh;overflow:auto;padding:0}.quote-modal-head{position:sticky;top:0;z-index:12;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;border-bottom:1px solid var(--line);background:rgba(13,17,16,.97);backdrop-filter:blur(16px)}.quote-modal-head h2{font-family:Georgia,serif;font-size:27px;color:var(--gold2)}.quote-modal-head p{margin:4px 0 0;color:var(--muted);font-size:10px}.quote-editor{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:0}.quote-form-area{padding:24px;border-right:1px solid var(--line)}.quote-summary-side{position:sticky;top:85px;align-self:start;padding:24px}.quote-summary-card{padding:20px;border:1px solid var(--gold-line);border-radius:12px;background:linear-gradient(145deg,#101513,#090c0b)}.quote-summary-card small{display:block;color:var(--gold2);font-size:8px;letter-spacing:.14em;text-transform:uppercase}.quote-summary-card h3{margin:9px 0 0;font-family:Georgia,serif;font-size:31px;color:var(--text)}.quote-summary-card .quote-total{margin:18px 0;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:Georgia,serif;font-size:37px;color:var(--gold2)}.quote-summary-meta{display:grid;gap:10px;color:var(--muted);font-size:9px}.quote-summary-meta div{display:flex;justify-content:space-between;gap:10px}.quote-form-section{padding:18px 0;border-bottom:1px solid var(--line)}.quote-form-section:first-child{padding-top:0}.quote-form-section:last-child{border-bottom:0}.quote-section-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}.quote-section-head h3{margin:0;color:var(--text);font-size:13px}.quote-section-head p{margin:3px 0 0;color:var(--muted);font-size:9px}.quote-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.quote-fields .full{grid-column:1/-1}.quote-fields .field{margin:0}.quote-array{display:grid;gap:8px}.quote-array-row{display:grid;grid-template-columns:minmax(130px,.8fr) minmax(180px,1.5fr) 110px auto;gap:8px;align-items:start;padding:10px;border:1px solid var(--line);border-radius:9px;background:#090c0b}.quote-array-row.feature-row{grid-template-columns:minmax(150px,.8fr) minmax(220px,1.6fr) 90px auto}.quote-array-row.timeline-row,.quote-array-row.term-row{grid-template-columns:minmax(130px,.7fr) minmax(220px,1.6fr) 90px auto}.quote-array-row.term-row{grid-template-columns:120px 170px minmax(220px,1.5fr) auto}.quote-array-row input,.quote-array-row textarea{min-height:39px}.quote-array-row textarea{resize:vertical}.quote-array-row .btn{min-height:39px}.quote-logo-control{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:center}.quote-logo-preview{width:72px;height:72px;border-radius:50%;border:1px solid var(--line);background:#090c0b;display:grid;place-items:center;overflow:hidden;color:var(--gold2);font-family:Georgia,serif;font-size:24px}.quote-logo-preview img{width:100%;height:100%;object-fit:cover}.quote-color-row{display:flex;align-items:center;gap:10px}.quote-color-row input[type=color]{width:48px;height:39px;padding:3px}.quote-url-preview{word-break:break-all;color:var(--gold2);font-size:9px;line-height:1.5}.quote-modal-actions{position:sticky;bottom:0;z-index:11;display:flex;justify-content:space-between;gap:10px;padding:16px 24px;border-top:1px solid var(--line);background:rgba(13,17,16,.98);backdrop-filter:blur(16px)}.quote-modal-actions .right{display:flex;gap:8px}.quote-mini-check{display:flex!important;align-items:center;gap:8px!important;min-height:39px;padding:0 10px;border:1px solid var(--line);border-radius:8px}.quote-mini-check input{width:auto!important}.quote-empty{padding:32px;text-align:center;border:1px dashed var(--line);border-radius:10px;color:var(--muted)}
+@media(max-width:1000px){.quote-editor{grid-template-columns:1fr}.quote-form-area{border-right:0}.quote-summary-side{position:relative;top:auto;border-top:1px solid var(--line)}.quote-kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.quote-fields{grid-template-columns:1fr}.quote-array-row,.quote-array-row.feature-row,.quote-array-row.timeline-row,.quote-array-row.term-row{grid-template-columns:1fr}.quote-modal-actions{flex-direction:column}.quote-modal-actions .right{display:grid;grid-template-columns:1fr}.quote-kpis{grid-template-columns:1fr 1fr}}
+
   </style>
 </head>
 <body>
@@ -107,13 +112,14 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
         <button class="menu-btn active" data-screen="dashboard"><span class="menu-icon">▦</span><span>Irányítópult</span></button>
         <button class="menu-btn" data-screen="briefs" data-permission="briefs.read"><span class="menu-icon">▤</span><span>Brief-ek</span><span class="menu-badge" id="briefMenuCount">0</span></button>
         <button class="menu-btn" data-screen="messages" data-permission="messages.read"><span class="menu-icon">✉</span><span>Ajánlatkérések</span><span class="menu-badge" id="messageMenuCount">0</span></button>
+        <button class="menu-btn" data-screen="quotes" data-permission="quotes.read"><span class="menu-icon">◇</span><span>Ajánlatok</span><span class="menu-badge" id="quoteMenuCount">0</span></button>
         <button class="menu-btn" data-screen="projects" data-permission="projects.read"><span class="menu-icon">□</span><span>Projektek</span></button>
         <button class="menu-btn" data-screen="customers" data-permission="customers.read"><span class="menu-icon">♙</span><span>Ügyfelek</span></button>
         <button class="menu-btn" data-screen="users" data-permission-any="users.manage,audit.read"><span class="menu-icon">♧</span><span>Fiókok</span></button>
         <button class="menu-btn" data-screen="settings"><span class="menu-icon">⚙</span><span>Beállítások</span></button>
       </nav>
       <div class="sidebar-spacer"></div>
-      <div class="premium-card"><div class="premium-icon">◇</div><strong>Krilix Premium</strong><p>Brief → ajánlat → projekt. Egy rendezett ügyfélfolyamatban.</p><button class="btn small" data-go="briefs">Részletek →</button></div>
+      <div class="premium-card"><div class="premium-icon">◇</div><strong>Krilix Premium</strong><p>Brief → ajánlat → projekt. Egy rendezett ügyfélfolyamatban.</p><button class="btn small" data-go="quotes">Ajánlatok →</button></div>
       <button class="logout-link" id="logoutBtn">Kijelentkezés</button>
     </aside>
 
@@ -191,7 +197,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
           </section>
           <aside class="right-rail">
             <section class="rail-panel"><h3>Legutóbbi aktivitások</h3><div class="activity-list" id="activityFeed"></div></section>
-            <section class="rail-panel"><h3>Gyors műveletek</h3><div class="quick-grid"><button class="quick-action" onclick="location.href='/brief'"><b>▤</b>Új brief rögzítése</button><button class="quick-action" data-go="briefs"><b>▣</b>Ajánlat készítése</button><button class="quick-action" data-go="projects"><b>□</b>Új projekt létrehozása</button><button class="quick-action" data-go="customers"><b>♙</b>Ügyfél keresése</button></div></section>
+            <section class="rail-panel"><h3>Gyors műveletek</h3><div class="quick-grid"><button class="quick-action" onclick="location.href='/brief'"><b>▤</b>Új brief rögzítése</button><button class="quick-action" data-go="quotes"><b>▣</b>Ajánlat készítése</button><button class="quick-action" data-go="projects"><b>□</b>Új projekt létrehozása</button><button class="quick-action" data-go="customers"><b>♙</b>Ügyfél keresése</button></div></section>
           </aside>
         </div>
         <div class="overview-strip"><section class="funnel" id="quickSummary"></section><section class="funnel" id="statusOverview"></section></div>
@@ -210,7 +216,27 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
         <section class="panel"><div class="panel-body"><div class="toolbar"><input id="messageSearch" type="search" placeholder="Keresés név, email vagy üzenet alapján..."><select id="messageBusinessFilter"><option value="all">Összes üzleti státusz</option></select><select id="messageFilter"><option value="all">Összes üzenet</option><option value="unread">Új ügyfélüzenet</option><option value="replied">Megválaszolva</option></select><span></span></div><div class="table-wrap"><table><thead><tr><th>Név</th><th>Email</th><th>Utolsó aktivitás</th><th>Státusz</th><th>Művelet</th></tr></thead><tbody id="messageRows"></tbody></table></div></div></section>
       </section>
 
-      <section class="screen" id="projectsScreen"><div class="screen-heading"><div><h2>Projektek</h2><p>Az elfogadott briefekből létrehozott munkák helye.</p></div></div><div class="placeholder-grid"><article class="placeholder-card"><b>□</b><h3>Aktív projektek</h3><p>Az elfogadott briefekből később egy kattintással projekt hozható létre.</p></article><article class="placeholder-card"><b>◷</b><h3>Határidők</h3><p>Projekt mérföldkövek és feladatok áttekintése.</p></article><article class="placeholder-card"><b>✓</b><h3>Lezárt munkák</h3><p>Korábbi projektek és ügyfélanyagok archiválása.</p></article></div></section>
+
+
+      <section class="screen" id="quotesScreen">
+        <div class="screen-heading">
+          <div><h2>Ajánlatok</h2><p>Interaktív ügyfélajánlatok létrehozása, publikálása és követése.</p></div>
+          <div class="heading-actions"><button class="btn gold" id="createQuoteButton" data-permission="quotes.write">+ Új ajánlat</button></div>
+        </div>
+        <div class="quote-kpis" id="quoteKpis"></div>
+        <section class="panel">
+          <div class="panel-body">
+            <div class="toolbar">
+              <input id="quoteSearch" type="search" placeholder="Keresés ügyfél, projekt vagy ajánlatkód alapján...">
+              <select id="quoteStatusFilter"><option value="all">Minden státusz</option><option value="draft">Piszkozat</option><option value="published">Publikált</option><option value="accepted">Elfogadva</option><option value="expired">Lejárt</option></select>
+              <span></span><span></span>
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>Ügyfél / projekt</th><th>Összeg</th><th>Státusz</th><th>Megtekintés</th><th>Frissítve</th><th>Művelet</th></tr></thead><tbody id="quoteRows"></tbody></table></div>
+          </div>
+        </section>
+      </section>
+
+            <section class="screen" id="projectsScreen"><div class="screen-heading"><div><h2>Projektek</h2><p>Az elfogadott briefekből létrehozott munkák helye.</p></div></div><div class="placeholder-grid"><article class="placeholder-card"><b>□</b><h3>Aktív projektek</h3><p>Az elfogadott briefekből később egy kattintással projekt hozható létre.</p></article><article class="placeholder-card"><b>◷</b><h3>Határidők</h3><p>Projekt mérföldkövek és feladatok áttekintése.</p></article><article class="placeholder-card"><b>✓</b><h3>Lezárt munkák</h3><p>Korábbi projektek és ügyfélanyagok archiválása.</p></article></div></section>
       <section class="screen" id="customersScreen"><div class="screen-heading"><div><h2>Ügyfelek</h2><p>A briefekből és ajánlatkérésekből összegyűjtött ügyfélkapcsolatok.</p></div></div><div class="placeholder-grid"><article class="placeholder-card"><b>♙</b><h3>Ügyféladatbázis</h3><p>Név, cég, email, telefon és kapcsolódó projektek egy helyen.</p></article><article class="placeholder-card"><b>✉</b><h3>Kommunikáció</h3><p>Üzenetek és ajánlatok előzményei.</p></article><article class="placeholder-card"><b>◇</b><h3>Értékes ügyfelek</h3><p>Visszatérő és kiemelt ügyfélkapcsolatok kezelése.</p></article></div></section>
       <section class="screen" id="usersScreen">
         <div class="screen-heading">
@@ -280,7 +306,100 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
     </div>
   </div>
 
-  <div class="modal force-modal" id="forcePasswordModal">
+
+
+  <div class="modal" id="quoteModal">
+    <div class="modal-box quote-modal-box">
+      <div class="quote-modal-head">
+        <div><h2 id="quoteModalTitle">Új ajánlat</h2><p id="quoteModalSubtitle">Egy adatforrásból készül a webes ajánlat és a nyomtatható PDF.</p></div>
+        <button class="modal-close" id="closeQuoteModal" type="button">×</button>
+      </div>
+      <form id="quoteForm">
+        <input type="hidden" id="quoteId"><input type="hidden" id="quoteSourceBriefId"><input type="hidden" id="quoteLogoValue">
+        <div class="quote-editor">
+          <div class="quote-form-area">
+            <section class="quote-form-section">
+              <div class="quote-section-head"><div><h3>01 — Ügyfél és ajánlat</h3><p>Az ajánlat alapadatai és publikus URL-je.</p></div></div>
+              <div class="quote-fields">
+                <div class="field"><label for="quoteClientName">Ügyfél / kapcsolattartó</label><input id="quoteClientName" required></div>
+                <div class="field"><label for="quoteClientCompany">Cég neve</label><input id="quoteClientCompany"></div>
+                <div class="field"><label for="quoteClientEmail">E-mail</label><input id="quoteClientEmail" type="email"></div>
+                <div class="field"><label for="quoteSlug">URL azonosító</label><input id="quoteSlug" placeholder="pl. vibehouse" required><small class="quote-url-preview" id="quoteUrlPreview"></small></div>
+                <div class="field"><label for="quoteTitle">Projekt neve</label><input id="quoteTitle" required placeholder="pl. Vibe House weboldal"></div>
+                <div class="field"><label for="quoteValidity">Érvényesség (nap)</label><input id="quoteValidity" type="number" min="1" max="120" value="14"></div>
+              </div>
+            </section>
+
+            <section class="quote-form-section">
+              <div class="quote-section-head"><div><h3>02 — Megjelenés</h3><p>Ügyféllogó és finom márkaakcentus.</p></div></div>
+              <div class="quote-fields">
+                <div class="field full"><label>Ügyfél logó</label><div class="quote-logo-control"><div class="quote-logo-preview" id="quoteLogoPreview">LOGO</div><div><input id="quoteLogoFile" type="file" accept="image/png,image/jpeg,image/webp"><p class="note">PNG/JPG/WebP, lehetőleg négyzetes. Az ajánlat adatába kerül, nem külön deploy.</p><button class="btn small" type="button" id="clearQuoteLogo">Logó törlése</button></div></div></div>
+                <div class="field"><label for="quoteAccent">Akcentusszín</label><div class="quote-color-row"><input id="quoteAccent" type="color" value="#D94E87"><input id="quoteAccentText" value="#D94E87" maxlength="7"></div></div>
+                <div class="field"><label for="quoteEyebrow">Felső címke</label><input id="quoteEyebrow" value="Személyre szabott ajánlat"></div>
+              </div>
+            </section>
+
+            <section class="quote-form-section">
+              <div class="quote-section-head"><div><h3>03 — Hero és projektáttekintés</h3><p>A publikus ajánlat fő szövegei.</p></div></div>
+              <div class="quote-fields">
+                <div class="field"><label for="quoteProjectTitle">Hero főcím</label><input id="quoteProjectTitle" placeholder="Vibe House"></div>
+                <div class="field"><label for="quoteProjectAccent">Hero arany cím</label><input id="quoteProjectAccent" placeholder="weboldal"></div>
+                <div class="field full"><label for="quoteDescription">Rövid leírás</label><textarea id="quoteDescription" rows="3"></textarea></div>
+                <div class="field"><label for="quoteOverviewTitle">Áttekintés főcím</label><input id="quoteOverviewTitle" placeholder="Egy egyszerű oldal,"></div>
+                <div class="field"><label for="quoteOverviewAccent">Áttekintés arany cím</label><input id="quoteOverviewAccent" placeholder="ami él."></div>
+                <div class="field full"><label for="quoteOverviewDescription">Projekt célja</label><textarea id="quoteOverviewDescription" rows="4"></textarea></div>
+                <div class="field"><label for="quoteDuration">Átfutás</label><input id="quoteDuration" value="2–3 hét"></div>
+                <div class="field"><label for="quotePayment">Fizetési feltétel</label><input id="quotePayment" value="100% a végleges átadáskor"></div>
+              </div>
+            </section>
+
+            <section class="quote-form-section">
+              <div class="quote-section-head"><div><h3>04 — Funkciók</h3><p>A projekt fő elemei az ajánlatoldalon.</p></div><button class="btn small" type="button" id="addQuoteFeature">+ Funkció</button></div>
+              <div class="quote-array" id="quoteFeatures"></div>
+            </section>
+
+            <section class="quote-form-section">
+              <div class="quote-section-head"><div><h3>05 — Tételes árazás</h3><p>A végösszeg automatikusan ezekből számolódik.</p></div><button class="btn small" type="button" id="addQuoteItem">+ Tétel</button></div>
+              <div class="quote-array" id="quoteItems"></div>
+            </section>
+
+            <section class="quote-form-section">
+              <div class="quote-section-head"><div><h3>06 — Ütemezés</h3><p>Mérföldkövek a projekt folyamatához.</p></div><button class="btn small" type="button" id="addQuoteTimeline">+ Lépés</button></div>
+              <div class="quote-array" id="quoteTimeline"></div>
+            </section>
+
+            <section class="quote-form-section">
+              <div class="quote-section-head"><div><h3>07 — Feltételek</h3><p>Utókövetés, tárhely, domain vagy egyéb megjegyzések.</p></div><button class="btn small" type="button" id="addQuoteTerm">+ Feltétel</button></div>
+              <div class="quote-array" id="quoteTerms"></div>
+            </section>
+
+            <section class="quote-form-section">
+              <div class="quote-section-head"><div><h3>08 — Elfogadás</h3><p>Az ügyfél az ajánlat alján digitálisan rögzítheti az elfogadást.</p></div></div>
+              <div class="quote-fields">
+                <label class="quote-mini-check full"><input id="quoteAcceptanceEnabled" type="checkbox" checked> Elfogadás engedélyezve</label>
+                <div class="field"><label for="quoteAcceptTitle">Főcím</label><input id="quoteAcceptTitle" value="Indulhat a"></div>
+                <div class="field"><label for="quoteAcceptAccent">Arany cím</label><input id="quoteAcceptAccent" value="projekt."></div>
+                <div class="field full"><label for="quoteAcceptDescription">Leírás</label><textarea id="quoteAcceptDescription" rows="3">Az ajánlat elfogadása után egyeztetjük a következő lépéseket.</textarea></div>
+              </div>
+            </section>
+          </div>
+
+          <aside class="quote-summary-side">
+            <div class="quote-summary-card">
+              <small>AJÁNLAT ÖSSZESÍTŐ</small><h3 id="quoteSummaryClient">Új ügyfél</h3><div class="quote-total" id="quoteSummaryTotal">0 Ft</div>
+              <div class="quote-summary-meta"><div><span>Státusz</span><b id="quoteSummaryStatus">Piszkozat</b></div><div><span>Átfutás</span><b id="quoteSummaryDuration">2–3 hét</b></div><div><span>Érvényes</span><b id="quoteSummaryValidity">14 nap</b></div><div><span>Forrás</span><b id="quoteSummarySource">Kézi ajánlat</b></div></div>
+              <div style="margin-top:18px"><small>PUBLIKUS LINK</small><div class="quote-url-preview" id="quoteSummaryUrl">Mentés után elérhető</div></div>
+            </div>
+          </aside>
+        </div>
+        <div class="quote-modal-actions"><button class="btn" type="button" id="quotePreviewButton">Előnézet ↗</button><div class="right"><button class="btn" type="button" id="saveQuoteDraft">Piszkozat mentése</button><button class="btn gold" type="button" id="saveQuotePublish" data-permission="quotes.publish">Mentés és publikálás →</button></div></div>
+        <p class="note" id="quoteFormNote" style="padding:0 24px 18px;margin:0"></p>
+      </form>
+    </div>
+  </div>
+
+
+    <div class="modal force-modal" id="forcePasswordModal">
     <div class="modal-box medium">
       <div class="modal-head"><div><h2>Jelszócsere szükséges</h2><p>Az ideiglenes jelszót az első belépéskor saját jelszóra kell cserélni.</p></div></div>
       <form id="forcePasswordForm">
@@ -295,17 +414,18 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 
   <script>
 
-    const state={briefs:[],messages:[],users:[],audit:[],roles:{},permissions:{},user:null,selectedBriefId:null,deleteTarget:null};
+    const state={briefs:[],messages:[],quotes:[],users:[],audit:[],roles:{},permissions:{},user:null,selectedBriefId:null,selectedQuoteId:null,deleteTarget:null};
     let adminToastTimer=null;
     const briefStatusLabels={new:"Új",contacted:"Kontaktálva",processing:"Feldolgozás alatt",offer_ready:"Ajánlat készül",offer_sent:"Ajánlat elküldve",accepted:"Elfogadva",declined:"Elutasítva",closed:"Lezárva"};
     const messageStatusLabels={new_lead:"Új érdeklődő",in_discussion:"Egyeztetés alatt",offer_sent:"Ajánlat kiküldve",accepted:"Elfogadva",declined:"Elutasítva",closed:"Lezárva"};
+    const quoteStatusLabels={draft:"Piszkozat",published:"Publikált",accepted:"Elfogadva",expired:"Lejárt"};
     const priorityRank={"Nagyon sürgős":1,"Sürgős":2,"Minél hamarabb":2,"1-2 héten belül":3,"Normál":4,"Rugalmas":5};
 
     const $=id=>document.getElementById(id);
     const loginScreen=$("loginScreen"), appScreen=$("appScreen"), loginForm=$("loginForm"), loginNote=$("loginNote");
     const pageTitle=$("pageTitle"), globalSearch=$("globalSearch");
     const globalSearchResults=$("globalSearchResults");
-    const screens={dashboard:$("dashboardScreen"),briefs:$("briefsScreen"),messages:$("messagesScreen"),projects:$("projectsScreen"),customers:$("customersScreen"),users:$("usersScreen"),settings:$("settingsScreen")};
+    const screens={dashboard:$("dashboardScreen"),briefs:$("briefsScreen"),messages:$("messagesScreen"),quotes:$("quotesScreen"),projects:$("projectsScreen"),customers:$("customersScreen"),users:$("usersScreen"),settings:$("settingsScreen")};
 
     init();
 
@@ -335,6 +455,27 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       document.querySelectorAll("[data-go]").forEach(btn=>btn.addEventListener("click",()=>switchScreen(btn.dataset.go)));
       ["briefSearch","briefStatusFilter","briefTypeFilter","globalSearch"].forEach(id=>$(id).addEventListener("input",renderBriefs));
       ["messageSearch","messageBusinessFilter","messageFilter","globalSearch"].forEach(id=>$(id).addEventListener("input",renderMessages));
+      ["quoteSearch","quoteStatusFilter"].forEach(id=>$(id).addEventListener("input",renderQuotes));
+      $("createQuoteButton").addEventListener("click",()=>openQuoteModal());
+      $("closeQuoteModal").addEventListener("click",closeQuoteModal);
+      $("quoteModal").addEventListener("click",e=>{if(e.target.id==="quoteModal")closeQuoteModal()});
+      $("quoteForm").addEventListener("submit",e=>e.preventDefault());
+      $("addQuoteFeature").addEventListener("click",()=>addQuoteFeatureRow());
+      $("addQuoteItem").addEventListener("click",()=>addQuoteItemRow());
+      $("addQuoteTimeline").addEventListener("click",()=>addQuoteTimelineRow());
+      $("addQuoteTerm").addEventListener("click",()=>addQuoteTermRow());
+      $("quoteAccent").addEventListener("input",()=>{$("quoteAccentText").value=$("quoteAccent").value.toUpperCase();updateQuoteSummary()});
+      $("quoteAccentText").addEventListener("input",()=>{if(/^#[0-9a-fA-F]{6}$/.test($("quoteAccentText").value))$("quoteAccent").value=$("quoteAccentText").value;updateQuoteSummary()});
+      $("quoteLogoFile").addEventListener("change",handleQuoteLogoFile);
+      $("clearQuoteLogo").addEventListener("click",()=>{setQuoteLogo("");$("quoteLogoFile").value=""});
+      $("quoteClientName").addEventListener("input",()=>{if(!$("quoteId").value&&!$("quoteSlug").dataset.touched)$("quoteSlug").value=slugify($("quoteClientCompany").value||$("quoteClientName").value);updateQuoteSummary()});
+      $("quoteClientCompany").addEventListener("input",()=>{if(!$("quoteId").value&&!$("quoteSlug").dataset.touched)$("quoteSlug").value=slugify($("quoteClientCompany").value||$("quoteClientName").value);updateQuoteSummary()});
+      $("quoteSlug").addEventListener("input",()=>{$("quoteSlug").dataset.touched="1";updateQuoteSummary()});
+      ["quoteValidity","quoteDuration","quoteProjectTitle","quoteProjectAccent"].forEach(id=>$(id).addEventListener("input",updateQuoteSummary));
+      $("quoteItems").addEventListener("input",updateQuoteSummary);
+      $("saveQuoteDraft").addEventListener("click",()=>saveQuote(false));
+      $("saveQuotePublish").addEventListener("click",()=>saveQuote(true));
+      $("quotePreviewButton").addEventListener("click",previewQuote);
       $("exportBriefsBtn").addEventListener("click",exportBriefs);
       $("cancelDelete").addEventListener("click",closeConfirm);
       $("approveDelete").addEventListener("click",approveDelete);
@@ -367,6 +508,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 
           closeDetailDrawer();
           closeUserModal();
+          closeQuoteModal();
         }
       });
       renderSavedNotes();
@@ -459,7 +601,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       const query=globalSearch.value.trim().toLowerCase();
 
       if(query.length<2){
-        return {briefs:[],messages:[]};
+        return {briefs:[],messages:[],quotes:[]};
       }
 
       const briefs=can("briefs.read")
@@ -491,7 +633,14 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
           }).slice(0,5)
         : [];
 
-      return {briefs,messages};
+      const quotes=can("quotes.read")
+        ? state.quotes.filter(quote=>{
+            const haystack=[quote.quoteCode,quote.clientName,quote.clientCompany,quote.clientEmail,quote.title,quote.slug].join(" ").toLowerCase();
+            return haystack.includes(query);
+          }).slice(0,5)
+        : [];
+
+      return {briefs,messages,quotes};
     }
 
     function renderGlobalSearchResults(){
@@ -509,7 +658,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 
       const results=globalSearchMatches();
       const resultCount=
-        results.briefs.length+results.messages.length;
+        results.briefs.length+results.messages.length+results.quotes.length;
 
       if(!resultCount){
         globalSearchResults.innerHTML=`
@@ -561,7 +710,19 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
           `).join("")}`
         : "";
 
-      globalSearchResults.innerHTML=briefHtml+messageHtml;
+      const quoteHtml=results.quotes.length
+        ? `
+          <div class="global-search-section">Ajánlatok</div>
+          ${results.quotes.map(quote=>`
+            <button class="global-search-item" type="button" data-search-kind="quote" data-search-id="${quote.id}">
+              <span class="global-search-item-icon">◇</span>
+              <span><strong>${esc(quote.clientCompany||quote.clientName||"Ajánlat")}</strong><small>${esc(quote.title||quote.quoteCode||"")}</small></span>
+              <span class="global-search-item-type">${quoteMoney(quote.totalPrice,quote.currency)}</span>
+            </button>
+          `).join("")}`
+        : "";
+
+      globalSearchResults.innerHTML=briefHtml+messageHtml+quoteHtml;
       globalSearchResults.classList.add("show");
       globalSearch.setAttribute("aria-expanded","true");
     }
@@ -591,6 +752,12 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 
         switchScreen("messages");
         renderMessages();
+      }
+
+      if(kind==="quote"){
+        globalSearch.value="";
+        switchScreen("quotes");
+        openQuoteModal(id);
       }
 
       closeGlobalSearchResults();
@@ -630,7 +797,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
 
     async function logout(){
       await fetch("/api/admin/logout",{method:"POST",credentials:"include"});
-      state.user=null;state.users=[];state.audit=[];
+      state.user=null;state.quotes=[];state.users=[];state.audit=[];
       showLogin();
     }
     function showApp(){loginScreen.style.display="none";appScreen.style.display="grid"}
@@ -646,10 +813,11 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       const tasks=[];
       if(can("briefs.read"))tasks.push(loadBriefs());else state.briefs=[];
       if(can("messages.read"))tasks.push(loadMessages());else state.messages=[];
+      if(can("quotes.read"))tasks.push(loadQuotes());else state.quotes=[];
       if(can("users.manage"))tasks.push(loadUsers());
       if(can("audit.read"))tasks.push(loadAudit());
       await Promise.all(tasks);
-      renderStats(); renderBriefs(); renderMessages(); renderDashboard(); renderUsers(); renderAudit();
+      renderStats(); renderBriefs(); renderMessages(); renderQuotes(); renderDashboard(); renderUsers(); renderAudit();
     }
 
     async function loadBriefs(){
@@ -673,6 +841,16 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       }catch(err){state.messages=[];console.error(err)}
     }
 
+    async function loadQuotes(){
+      try{
+        const res=await fetch("/api/admin/quotes",{credentials:"include"});
+        if(res.status===401){showLogin();return}
+        const data=await res.json();
+        if(!res.ok||!data.ok)throw new Error(data.error);
+        state.quotes=data.quotes||[];
+      }catch(err){state.quotes=[];console.error(err)}
+    }
+
     function switchScreen(name){
       if(!screens[name])return;
       closeGlobalSearchResults();
@@ -686,6 +864,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
         dashboard:[`Üdvözlünk vissza, ${firstName}!`,"Itt van, mi történik ma a KRILIX-nél."],
         briefs:["Brief-ek","Összes beérkezett projekt brief áttekintése és kezelése."],
         messages:["Ajánlatkérések","A főoldalról érkezett érdeklődők és beszélgetések."],
+        quotes:["Ajánlatok","Interaktív ajánlatok létrehozása, publikálása és követése."],
         projects:["Projektek","Aktív és lezárt munkák kezelése."],
         customers:["Ügyfelek","Kapcsolatok és ügyfélelőzmények."],
         users:["Fiókok és jogosultságok","Munkatársak, szerepkörök és admin tevékenységek."],
@@ -704,17 +883,19 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
     function renderStats(){
       const newBriefs=state.briefs.filter(b=>b.status==="new").length;
       const activeBriefs=state.briefs.filter(b=>!["closed","declined","accepted"].includes(b.status)).length;
-      const pendingOffers=state.briefs.filter(b=>["processing","offer_ready"].includes(b.status)).length + state.messages.filter(m=>["in_discussion","new_lead"].includes(m.business_status)).length;
-      const accepted=state.briefs.filter(b=>b.status==="accepted").length;
-      const conversion=state.briefs.length?Math.round((accepted/state.briefs.length)*100):0;
+      const pendingOffers=state.quotes.filter(q=>["draft","published"].includes(q.status)&&!q.isExpired).length;
+      const publishedQuotes=state.quotes.filter(q=>["published","accepted"].includes(q.status));
+      const accepted=state.quotes.filter(q=>q.status==="accepted").length;
+      const conversion=publishedQuotes.length?Math.round((accepted/publishedQuotes.length)*100):0;
       $("stats").innerHTML=[
         stat("Új brief-ek",newBriefs,"az elmúlt időszakban","▤","↑ áttekintés"),
         stat("Folyamatban lévő projektek",activeBriefs,"aktív briefek","▣","↑ folyamatban"),
-        stat("Függő ajánlatkérések",pendingOffers,"válaszra vár","◷","teendő"),
-        stat("Konverziós ráta",conversion+"%","elfogadott briefek","↗","↑ eredmény")
+        stat("Aktív ajánlatok",pendingOffers,"piszkozat / kiküldve","◷","teendő"),
+        stat("Ajánlat konverzió",conversion+"%","elfogadott ajánlatok","↗","↑ eredmény")
       ].join("");
       $("briefMenuCount").textContent=state.briefs.length;
       $("messageMenuCount").textContent=state.messages.length;
+      $("quoteMenuCount").textContent=state.quotes.length;
       $("notifyCount").textContent=newBriefs;
       $("messageNotifyCount").textContent=state.messages.filter(m=>m.has_unread_customer_message).length;
     }
@@ -804,6 +985,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
             <div><h2>${esc(b.name)}</h2><p>${esc(b.company||"")} · ${esc(b.email)}</p></div>
             <div class="detail-actions">
               <a class="btn small" href="mailto:${esc(b.email)}?subject=${mailSubject}">Email</a>
+              ${can("quotes.write")?`<button class="btn small gold" onclick="openQuoteModal(null,${b.id})">Ajánlat készítése</button>`:""}
               ${canDelete?`<button class="btn small danger" onclick="confirmDelete('brief',${b.id},'${jsq(b.name)}')">Törlés</button>`:""}
             </div>
           </div>
@@ -849,7 +1031,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
           <td>${esc(m.email||"—")}</td>
           <td>${date(m.last_activity_at||m.created_at)}</td>
           <td>${messageStatusTag(m.business_status)} ${m.has_unread_customer_message?'<span class="tag">Új üzenet</span>':""}</td>
-          <td><a class="btn small gold" href="/thread/${esc(m.thread_token)}?admin=1" target="_blank" onclick="markRead(${m.id})">${can("messages.reply")?"Válasz":"Megtekintés"}</a></td>
+          <td><div class="quote-row-actions"><a class="btn small gold" href="/thread/${esc(m.thread_token)}?admin=1" target="_blank" onclick="markRead(${m.id})">${can("messages.reply")?"Válasz":"Megtekintés"}</a>${can("quotes.write")?`<button class="btn small" onclick="openQuoteFromMessage(${m.id})">Ajánlat</button>`:""}</div></td>
         </tr>`).join(""):`<tr><td colspan="5">Nincs ilyen megkeresés.</td></tr>`;
     }
 
@@ -961,6 +1143,152 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       }catch(error){$("auditList").innerHTML=`<div class="empty">${esc(error.message)}</div>`}
     }
 
+
+    function quoteStatusKey(quote){return quote?.isExpired&&quote.status==="published"?"expired":quote?.status||"draft"}
+    function quoteStatusTag(quote){const key=quoteStatusKey(quote);return `<span class="quote-status ${key}">${esc(quoteStatusLabels[key]||key)}</span>`}
+    function quoteMoney(value,currency="Ft"){return `${new Intl.NumberFormat("hu-HU").format(Number(value)||0)} ${esc(currency||"Ft")}`}
+
+    function renderQuotes(){
+      if(!$("quoteRows"))return;
+      const q=($("quoteSearch").value||"").trim().toLowerCase();
+      const status=$("quoteStatusFilter").value;
+      const rows=state.quotes.filter(quote=>{
+        const hay=[quote.quoteCode,quote.clientName,quote.clientCompany,quote.clientEmail,quote.title,quote.slug].join(" ").toLowerCase();
+        if(q&&!hay.includes(q))return false;
+        if(status!=="all"&&quoteStatusKey(quote)!==status)return false;
+        return true;
+      });
+      const published=state.quotes.filter(item=>item.status==="published"&&!item.isExpired).length;
+      const accepted=state.quotes.filter(item=>item.status==="accepted").length;
+      const drafts=state.quotes.filter(item=>item.status==="draft").length;
+      const value=state.quotes.filter(item=>item.status==="accepted").reduce((sum,item)=>sum+Number(item.totalPrice||0),0);
+      $("quoteKpis").innerHTML=[
+        ["Piszkozat",drafts],["Aktív / kiküldve",published],["Elfogadva",accepted],["Elfogadott érték",quoteMoney(value,"Ft")]
+      ].map(([label,val])=>`<article class="quote-kpi"><small>${esc(label)}</small><strong>${esc(val)}</strong></article>`).join("");
+      $("quoteRows").innerHTML=rows.length?rows.map(quote=>{
+        const publicUrl=`${location.origin}/ajanlat/${quote.slug}`;
+        const isLocked=quote.status==="accepted";
+        return `<tr>
+          <td><div class="person"><div class="avatar">${initials(quote.clientCompany||quote.clientName)}</div><div><strong>${esc(quote.clientCompany||quote.clientName)}</strong><small>${esc(quote.title||quote.quoteCode||"")}</small></div></div></td>
+          <td><strong style="color:var(--gold2)">${quoteMoney(quote.totalPrice,quote.currency)}</strong><small style="display:block;color:var(--muted);margin-top:4px">${esc(quote.quoteCode||"")}</small></td>
+          <td>${quoteStatusTag(quote)}${quote.status==="accepted"&&quote.acceptedName?`<small style="display:block;margin-top:5px;color:var(--muted)">${esc(quote.acceptedName)}</small>`:""}</td>
+          <td>${Number(quote.viewCount||0)}×${quote.lastViewedAt?`<small style="display:block;color:var(--muted)">${date(quote.lastViewedAt)}</small>`:""}</td>
+          <td>${date(quote.updatedAt||quote.createdAt)}</td>
+          <td><div class="quote-row-actions">
+            <button class="btn small" onclick="openQuoteModal(${quote.id})">${isLocked?"Részletek":"Szerkesztés"}</button>
+            ${["published","accepted"].includes(quote.status)?`<a class="btn small gold" href="${esc(publicUrl)}" target="_blank">Megnyitás ↗</a><button class="btn small" onclick="copyQuoteLink(${quote.id})">Link</button>`:""}
+            ${can("quotes.publish")&&quote.status==="draft"?`<button class="btn small gold" onclick="publishQuote(${quote.id})">Publikálás</button>`:""}
+            ${can("quotes.publish")&&quote.status==="published"?`<button class="btn small" onclick="unpublishQuote(${quote.id})">Visszavonás</button>`:""}
+            ${can("quotes.write")?`<button class="btn small" onclick="duplicateQuote(${quote.id})">Másolat</button>`:""}
+            ${can("quotes.delete")&&!isLocked?`<button class="btn small danger" onclick="deleteQuote(${quote.id})">Törlés</button>`:""}
+          </div></td>
+        </tr>`;
+      }).join(""):'<tr><td colspan="6">Még nincs ilyen ajánlat.</td></tr>';
+    }
+
+    function slugify(value){
+      return String(value||"ajanlat").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,80)||"ajanlat";
+    }
+
+    function quoteDefaultsFromBrief(brief){
+      const company=brief?.company||"";
+      const name=brief?.name||"";
+      const projectTypes=Array.isArray(brief?.projectTypes)?brief.projectTypes:[];
+      const features=Array.isArray(brief?.features)?brief.features:[];
+      const projectAccent=projectTypes[0]||"weboldal";
+      return {
+        sourceBriefId:brief?.id||null,clientName:name,clientCompany:company,clientEmail:brief?.email||"",slug:slugify(company||name),title:`${company||name} ${projectAccent}`.trim(),validityDays:14,
+        content:{eyebrow:"Személyre szabott ajánlat",accent:"#D7AF55",clientLogo:"",projectTitle:company||name,projectAccent,description:brief?.mainGoal||"",overviewTitle:"A projekt,",overviewAccent:"röviden.",overviewDescription:brief?.mainGoal||"",duration:brief?.deadline||"2–3 hét",payment:"100% a végleges átadáskor",
+        features:features.slice(0,8).map((title,index)=>({title,description:"A projekt részeként megvalósítandó funkció.",accent:index===features.length-1&&/admin/i.test(title)})),
+        items:[{title:"UI/UX + reszponzív design",description:"Oldalstruktúra, mobilos és asztali megjelenés",price:0},{title:"Fejlesztés",description:"A briefben rögzített oldalak és funkciók kivitelezése",price:0},{title:"Tesztelés + élesítés",description:"Technikai ellenőrzés és publikálás",price:0}],
+        timeline:[{title:"Indítás",description:"Igények véglegesítése, tartalmak átadása."},{title:"Első verzió",description:"Design és működő oldalak bemutatása.",accent:true},{title:"Élesítés",description:"Finomhangolás, átadás és publikálás."}],
+        terms:[{label:"Utókövetés",title:"30 nap hibajavítás",description:"Az átadást követően, a projektár részeként."},{label:"Külső költség",title:"Domain + tárhely / szerver",description:"A megrendelő saját költsége, nem része a projekt díjának."}],
+        acceptance:{enabled:true,title:"Indulhat a",accent:company?`${company}.`:"projekt.",description:"Az ajánlat elfogadása után egyeztetjük a szükséges anyagokat és indulhat a kivitelezés."}}
+      };
+    }
+
+    function blankQuoteData(){return quoteDefaultsFromBrief(null)}
+
+    function openQuoteFromMessage(id){
+      const message=state.messages.find(item=>item.id===Number(id));if(!message)return;const data=blankQuoteData();data.clientName=message.name||"";data.clientEmail=message.email||"";data.clientCompany="";data.slug=slugify(message.name||"ajanlat");data.title=`${message.name||"Ügyfél"} projekt`;data.content.projectTitle=message.name||"Projekt";data.content.projectAccent="weboldal";data.content.description=message.message||message.last_message||"";data.content.overviewDescription=message.message||message.last_message||"";fillQuoteForm(data);$("quoteModal").classList.add("show");
+    }
+
+    async function openQuoteModal(id=null,sourceBriefId=null){
+      if(!can("quotes.read")&&!can("quotes.write"))return;
+      let data=null;
+      if(id){
+        try{
+          const res=await fetch(`/api/admin/quotes/${id}`,{credentials:"include"});const result=await res.json();if(!res.ok||!result.ok)throw new Error(result.error);data=result.quote;
+        }catch(error){showAdminToast(error.message||"Nem sikerült betölteni az ajánlatot.","error");return}
+      }else{
+        const brief=sourceBriefId?state.briefs.find(item=>item.id===Number(sourceBriefId)):null;data=quoteDefaultsFromBrief(brief);
+      }
+      fillQuoteForm(data);
+      $("quoteModal").classList.add("show");
+    }
+
+    function fillQuoteForm(data){
+      const c=data.content||{};const locked=data.status==="accepted";
+      $("quoteForm").reset();$("quoteId").value=data.id||"";$("quoteSourceBriefId").value=data.sourceBriefId||"";$("quoteSlug").dataset.touched=data.id?"1":"";
+      $("quoteClientName").value=data.clientName||"";$("quoteClientCompany").value=data.clientCompany||"";$("quoteClientEmail").value=data.clientEmail||"";$("quoteSlug").value=data.slug||slugify(data.clientCompany||data.clientName);$("quoteTitle").value=data.title||"";$("quoteValidity").value=data.validityDays||14;
+      $("quoteEyebrow").value=c.eyebrow||"Személyre szabott ajánlat";$("quoteAccent").value=/^#[0-9a-fA-F]{6}$/.test(c.accent||"")?c.accent:"#D94E87";$("quoteAccentText").value=$("quoteAccent").value.toUpperCase();setQuoteLogo(c.clientLogo||"");
+      $("quoteProjectTitle").value=c.projectTitle||data.clientCompany||data.clientName||"";$("quoteProjectAccent").value=c.projectAccent||"weboldal";$("quoteDescription").value=c.description||"";$("quoteOverviewTitle").value=c.overviewTitle||"Projekt áttekintése,";$("quoteOverviewAccent").value=c.overviewAccent||"röviden.";$("quoteOverviewDescription").value=c.overviewDescription||"";$("quoteDuration").value=c.duration||"2–3 hét";$("quotePayment").value=c.payment||"100% a végleges átadáskor";
+      renderQuoteFeatureRows(c.features||[]);renderQuoteItemRows(c.items||[]);renderQuoteTimelineRows(c.timeline||[]);renderQuoteTermRows(c.terms||[]);
+      const acceptance=c.acceptance||{};$("quoteAcceptanceEnabled").checked=acceptance.enabled!==false;$("quoteAcceptTitle").value=acceptance.title||"Indulhat a";$("quoteAcceptAccent").value=acceptance.accent||"projekt.";$("quoteAcceptDescription").value=acceptance.description||"Az ajánlat elfogadása után egyeztetjük a következő lépéseket.";
+      $("quoteModalTitle").textContent=data.id?`${data.clientCompany||data.clientName} ajánlata`:"Új ajánlat";$("quoteModalSubtitle").textContent=data.quoteCode?`${data.quoteCode} · ${quoteStatusLabels[quoteStatusKey(data)]||data.status}`:"Az ajánlat webes és nyomtatható verziója ugyanebből az adatból készül.";$("quoteFormNote").textContent=locked?"Az ajánlatot az ügyfél már elfogadta, ezért zárolva van.":"";$("quoteFormNote").className=locked?"note success":"note";
+      $("saveQuoteDraft").style.display=locked||!can("quotes.write")?"none":"";$("saveQuotePublish").style.display=locked||!can("quotes.publish")?"none":"";$("saveQuotePublish").textContent=data.status==="published"?"Mentés →":"Mentés és publikálás →";
+      [...$("quoteForm").querySelectorAll("input,textarea")].forEach(el=>{if(el.type!=="hidden"&&el.id!=="quoteLogoFile")el.disabled=locked});$("quoteLogoFile").disabled=locked;$("clearQuoteLogo").disabled=locked;["addQuoteFeature","addQuoteItem","addQuoteTimeline","addQuoteTerm"].forEach(key=>$(key).disabled=locked);
+      updateQuoteSummary(data.status||"draft");
+    }
+
+    function closeQuoteModal(){$("quoteModal").classList.remove("show")}
+
+    function setQuoteLogo(value){
+      $("quoteLogoValue").value=value||"";const box=$("quoteLogoPreview");if(value){box.innerHTML=`<img src="${esc(value)}" alt="Logo">`}else{box.textContent="LOGO"}
+    }
+
+    function handleQuoteLogoFile(event){
+      const file=event.target.files?.[0];if(!file)return;if(file.size>2.4*1024*1024){showAdminToast("A logó legfeljebb 2,4 MB lehet.","error");event.target.value="";return}
+      const reader=new FileReader();reader.onload=()=>setQuoteLogo(String(reader.result||""));reader.onerror=()=>showAdminToast("Nem sikerült beolvasni a logót.","error");reader.readAsDataURL(file);
+    }
+
+    function renderQuoteFeatureRows(items){$("quoteFeatures").innerHTML="";(items.length?items:[{title:"",description:""}]).forEach(addQuoteFeatureRow)}
+    function addQuoteFeatureRow(item={}){$("quoteFeatures").insertAdjacentHTML("beforeend",`<div class="quote-array-row feature-row" data-quote-feature><input data-key="title" placeholder="Funkció neve" value="${esc(item.title||"")}"><textarea data-key="description" rows="2" placeholder="Rövid leírás">${esc(item.description||"")}</textarea><label class="quote-mini-check"><input data-key="accent" type="checkbox" ${item.accent?"checked":""}> Akcentus</label><button class="btn small danger" type="button" onclick="this.closest('[data-quote-feature]').remove()">×</button></div>`)}
+    function renderQuoteItemRows(items){$("quoteItems").innerHTML="";(items.length?items:[{title:"",description:"",price:0}]).forEach(addQuoteItemRow)}
+    function addQuoteItemRow(item={}){$("quoteItems").insertAdjacentHTML("beforeend",`<div class="quote-array-row" data-quote-item><input data-key="title" placeholder="Tétel neve" value="${esc(item.title||"")}"><textarea data-key="description" rows="2" placeholder="Leírás">${esc(item.description||"")}</textarea><input data-key="price" type="number" min="0" step="1000" placeholder="0" value="${Number(item.price||0)}"><button class="btn small danger" type="button" onclick="this.closest('[data-quote-item]').remove();updateQuoteSummary()">×</button></div>`)}
+    function renderQuoteTimelineRows(items){$("quoteTimeline").innerHTML="";(items.length?items:[{title:"Indítás",description:""},{title:"Első verzió",description:"",accent:true},{title:"Élesítés",description:""}]).forEach(addQuoteTimelineRow)}
+    function addQuoteTimelineRow(item={}){$("quoteTimeline").insertAdjacentHTML("beforeend",`<div class="quote-array-row timeline-row" data-quote-timeline><input data-key="title" placeholder="Lépés" value="${esc(item.title||"")}"><textarea data-key="description" rows="2" placeholder="Leírás">${esc(item.description||"")}</textarea><label class="quote-mini-check"><input data-key="accent" type="checkbox" ${item.accent?"checked":""}> Akcentus</label><button class="btn small danger" type="button" onclick="this.closest('[data-quote-timeline]').remove()">×</button></div>`)}
+    function renderQuoteTermRows(items){$("quoteTerms").innerHTML="";(items.length?items:[{label:"Utókövetés",title:"30 nap hibajavítás",description:"Az átadást követően, a projektár részeként."}]).forEach(addQuoteTermRow)}
+    function addQuoteTermRow(item={}){$("quoteTerms").insertAdjacentHTML("beforeend",`<div class="quote-array-row term-row" data-quote-term><input data-key="label" placeholder="Címke" value="${esc(item.label||"")}"><input data-key="title" placeholder="Főcím" value="${esc(item.title||"")}"><textarea data-key="description" rows="2" placeholder="Leírás">${esc(item.description||"")}</textarea><button class="btn small danger" type="button" onclick="this.closest('[data-quote-term]').remove()">×</button></div>`)}
+
+    function readQuoteRows(selector,keys){return [...document.querySelectorAll(selector)].map(row=>{const result={};keys.forEach(key=>{const input=row.querySelector(`[data-key="${key}"]`);result[key]=input?.type==="checkbox"?!!input.checked:input?.type==="number"?Number(input.value||0):String(input?.value||"").trim()});return result}).filter(item=>item.title||item.label)}
+    function collectQuotePayload(){
+      return {sourceBriefId:Number($("quoteSourceBriefId").value)||null,clientName:$("quoteClientName").value.trim(),clientCompany:$("quoteClientCompany").value.trim(),clientEmail:$("quoteClientEmail").value.trim(),slug:slugify($("quoteSlug").value),title:$("quoteTitle").value.trim(),currency:"Ft",validityDays:Number($("quoteValidity").value||14),content:{eyebrow:$("quoteEyebrow").value.trim(),accent:$("quoteAccentText").value.trim(),clientLogo:$("quoteLogoValue").value,projectTitle:$("quoteProjectTitle").value.trim(),projectAccent:$("quoteProjectAccent").value.trim(),description:$("quoteDescription").value.trim(),overviewTitle:$("quoteOverviewTitle").value.trim(),overviewAccent:$("quoteOverviewAccent").value.trim(),overviewDescription:$("quoteOverviewDescription").value.trim(),duration:$("quoteDuration").value.trim(),payment:$("quotePayment").value.trim(),features:readQuoteRows("[data-quote-feature]",["title","description","accent"]),items:readQuoteRows("[data-quote-item]",["title","description","price"]),timeline:readQuoteRows("[data-quote-timeline]",["title","description","accent"]),terms:readQuoteRows("[data-quote-term]",["label","title","description"]),acceptance:{enabled:$("quoteAcceptanceEnabled").checked,title:$("quoteAcceptTitle").value.trim(),accent:$("quoteAcceptAccent").value.trim(),description:$("quoteAcceptDescription").value.trim()}}};
+    }
+
+    function updateQuoteSummary(status){
+      const items=readQuoteRows("[data-quote-item]",["title","description","price"]);const total=items.reduce((sum,item)=>sum+Number(item.price||0),0);const company=$("quoteClientCompany").value.trim()||$("quoteClientName").value.trim()||"Új ügyfél";const slug=slugify($("quoteSlug").value||company);const briefId=Number($("quoteSourceBriefId").value)||null;const current=state.quotes.find(q=>q.id===Number($("quoteId").value));
+      $("quoteSummaryClient").textContent=company;$("quoteSummaryTotal").textContent=quoteMoney(total,"Ft");$("quoteSummaryDuration").textContent=$("quoteDuration").value||"—";$("quoteSummaryValidity").textContent=`${$("quoteValidity").value||14} nap`;$("quoteSummaryStatus").textContent=quoteStatusLabels[status||quoteStatusKey(current)||"draft"]||"Piszkozat";$("quoteSummarySource").textContent=briefId?`Brief #${briefId}`:"Kézi ajánlat";const url=`${location.origin}/ajanlat/${slug}`;$("quoteUrlPreview").textContent=url;$("quoteSummaryUrl").textContent=$("quoteId").value?url:"Mentés után: "+url;
+    }
+
+    async function saveQuote(publish=false){
+      if(!can("quotes.write")){showAdminToast("Nincs jogosultságod ajánlat mentéséhez.","error");return}
+      const payload=collectQuotePayload();if(!payload.clientName||!payload.title){showAdminToast("Az ügyfél és a projekt neve kötelező.","error");return}if(!payload.content.items.length){showAdminToast("Adj hozzá legalább egy árazási tételt.","error");return}
+      const id=Number($("quoteId").value)||null;const note=$("quoteFormNote");note.textContent="Mentés folyamatban...";note.className="note";
+      try{
+        let res=await fetch(id?`/api/admin/quotes/${id}`:"/api/admin/quotes",{method:id?"PATCH":"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});let data=await res.json().catch(()=>({}));if(!res.ok||!data.ok)throw new Error(data.error||"Nem sikerült menteni az ajánlatot.");let saved=data.quote;$("quoteId").value=saved.id;$("quoteSlug").value=saved.slug;
+        if(publish){if(!can("quotes.publish"))throw new Error("Nincs publikálási jogosultságod.");res=await fetch(`/api/admin/quotes/${saved.id}/publish`,{method:"POST",credentials:"include"});data=await res.json().catch(()=>({}));if(!res.ok||!data.ok)throw new Error(data.error||"Nem sikerült publikálni az ajánlatot.");saved=data.quote}
+        await Promise.all([loadQuotes(),can("briefs.read")?loadBriefs():Promise.resolve()]);renderQuotes();renderStats();renderBriefs();note.textContent=publish?"Az ajánlat publikálva.":"Piszkozat elmentve.";note.className="note success";fillQuoteForm(saved);showAdminToast(publish?"Ajánlat publikálva.":"Ajánlat elmentve.","success");if(publish)setTimeout(closeQuoteModal,500)
+      }catch(error){note.textContent=error.message;note.className="note error";showAdminToast(error.message,"error")}
+    }
+
+    function previewQuote(){const id=Number($("quoteId").value)||null;if(!id){showAdminToast("Előbb mentsd el az ajánlatot.","error");return}window.open(`/ajanlat-preview/${id}`,"_blank","noopener")}
+    async function publishQuote(id){try{const res=await fetch(`/api/admin/quotes/${id}/publish`,{method:"POST",credentials:"include"});const data=await res.json();if(!res.ok||!data.ok)throw new Error(data.error);await loadQuotes();renderQuotes();renderStats();showAdminToast("Ajánlat publikálva.","success")}catch(e){showAdminToast(e.message||"Nem sikerült publikálni.","error")}}
+    async function unpublishQuote(id){if(!confirm("Visszavonod a publikus ajánlatot? A link átmenetileg nem lesz elérhető."))return;try{const res=await fetch(`/api/admin/quotes/${id}/unpublish`,{method:"POST",credentials:"include"});const data=await res.json();if(!res.ok||!data.ok)throw new Error(data.error);await loadQuotes();renderQuotes();renderStats();showAdminToast("Ajánlat visszavonva.","success")}catch(e){showAdminToast(e.message||"Nem sikerült visszavonni.","error")}}
+    async function duplicateQuote(id){try{const res=await fetch(`/api/admin/quotes/${id}/duplicate`,{method:"POST",credentials:"include"});const data=await res.json();if(!res.ok||!data.ok)throw new Error(data.error);await loadQuotes();renderQuotes();openQuoteModal(data.quote.id);showAdminToast("Másolat létrehozva.","success")}catch(e){showAdminToast(e.message||"Nem sikerült másolni.","error")}}
+    async function deleteQuote(id){const quote=state.quotes.find(item=>item.id===id);if(!quote||!confirm(`Törlöd ezt az ajánlatot?\n${quote.clientCompany||quote.clientName} — ${quoteMoney(quote.totalPrice,quote.currency)}`))return;try{const res=await fetch(`/api/admin/quotes/${id}`,{method:"DELETE",credentials:"include"});const data=await res.json();if(!res.ok||!data.ok)throw new Error(data.error);await loadQuotes();renderQuotes();renderStats();showAdminToast("Ajánlat törölve.","success")}catch(e){showAdminToast(e.message||"Nem sikerült törölni.","error")}}
+    async function copyQuoteLink(id){const quote=state.quotes.find(item=>item.id===id);if(!quote)return;const url=`${location.origin}/ajanlat/${quote.slug}`;try{await navigator.clipboard.writeText(url);showAdminToast("Ajánlat link másolva.","success")}catch{prompt("Ajánlat link:",url)}}
+
     function renderUsers(){
       if(!can("users.manage")){
         if($("accountList"))$("accountList").innerHTML='<div class="empty">Nincs jogosultságod a fiókok kezeléséhez.</div>';
@@ -986,7 +1314,7 @@ a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.
       const labels={
         "auth.login":"Sikeres belépés","auth.login_failed":"Sikertelen belépés","auth.logout":"Kijelentkezés","auth.password_changed":"Jelszó módosítva",
         "user.created":"Fiók létrehozva","user.updated":"Fiók módosítva","user.password_reset":"Jelszó alaphelyzetbe állítva",
-        "brief.updated":"Brief módosítva","brief.deleted":"Brief törölve","message.read":"Üzenet megnyitva","message.updated":"Ajánlatkérés módosítva","message.deleted":"Ajánlatkérés törölve","message.replied":"Ügyfélválasz elküldve"
+        "brief.updated":"Brief módosítva","brief.deleted":"Brief törölve","message.read":"Üzenet megnyitva","message.updated":"Ajánlatkérés módosítva","message.deleted":"Ajánlatkérés törölve","message.replied":"Ügyfélválasz elküldve","quote.created":"Ajánlat létrehozva","quote.updated":"Ajánlat módosítva","quote.published":"Ajánlat publikálva","quote.unpublished":"Ajánlat visszavonva","quote.duplicated":"Ajánlat másolva","quote.deleted":"Ajánlat törölve"
       };
       $("auditList").innerHTML=state.audit.length?state.audit.map(item=>`
         <div class="audit-item"><strong>${esc(labels[item.action]||item.action)}</strong><span>${esc(item.user_name||item.user_email||"Rendszer")}${item.target_id?` · ${esc(item.target_type||"elem")} #${esc(item.target_id)}`:""}</span><time>${date(item.created_at)}</time></div>`).join(""):'<div class="empty">Még nincs naplózott művelet.</div>';

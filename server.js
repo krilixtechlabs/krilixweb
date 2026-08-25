@@ -26,7 +26,7 @@ const BUSINESS_STATUSES = new Set([
   "closed"
 ]);
 
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "5mb" }));
 app.use(express.static(publicPath));
 
 
@@ -196,11 +196,357 @@ app.get("/brief", (req, res) => {
   res.sendFile(path.join(publicPath, "brief.html"));
 });
 
+app.get("/ajanlat/:slug", (req, res) => {
+  res.sendFile(path.join(publicPath, "quote.html"));
+});
+
+app.get("/ajanlat-preview/:id", (req, res) => {
+  res.sendFile(path.join(publicPath, "quote.html"));
+});
+
 app.get("/adatkezeles", (req, res) => {
   res.sendFile(path.join(publicPath, "adatkezeles.html"));
 });
 
 adminAuth.mountRoutes(app);
+
+// -----------------------------------------------------------------------------
+// API - QUOTES / AJÁNLATOK
+// -----------------------------------------------------------------------------
+
+app.get("/api/admin/quotes", adminAuth.requirePermission("quotes.read"), async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        id, quote_code, slug, source_brief_id, client_name, client_company,
+        client_email, title, total_price, currency, status, validity_days,
+        published_at, accepted_at, accepted_name, accepted_email,
+        view_count, first_viewed_at, last_viewed_at, created_at, updated_at
+      FROM quotes
+      ORDER BY updated_at DESC, created_at DESC
+    `);
+
+    return res.status(200).json({
+      ok: true,
+      quotes: result.rows.map(formatQuoteSummary)
+    });
+  } catch (error) {
+    console.error("Admin quotes error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült betölteni az ajánlatokat." });
+  }
+});
+
+app.get("/api/admin/quotes/:id", adminAuth.requirePermission("quotes.read"), async (req, res) => {
+  try {
+    const result = await pool.query(`SELECT * FROM quotes WHERE id = $1`, [req.params.id]);
+    if (!result.rows[0]) return res.status(404).json({ ok: false, error: "Az ajánlat nem található." });
+    return res.status(200).json({ ok: true, quote: formatQuoteDetail(result.rows[0], true) });
+  } catch (error) {
+    console.error("Admin quote detail error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült betölteni az ajánlatot." });
+  }
+});
+
+app.post("/api/admin/quotes", adminAuth.requirePermission("quotes.write"), async (req, res) => {
+  try {
+    const quote = normalizeQuotePayload(req.body || {});
+    if (!quote.clientName || !quote.title) {
+      return res.status(400).json({ ok: false, error: "Az ügyfél neve és a projekt címe kötelező." });
+    }
+
+    const slug = await uniqueQuoteSlug(quote.slug || quote.clientCompany || quote.clientName);
+    const totalPrice = quote.content.items.reduce((sum, item) => sum + Number(item.price || 0), 0);
+
+    const result = await pool.query(
+      `
+      INSERT INTO quotes
+        (slug, source_brief_id, client_name, client_company, client_email, title,
+         total_price, currency, status, validity_days, content, created_by, updated_by,
+         created_at, updated_at)
+      VALUES
+        ($1, $2, $3, $4, $5, $6, $7, $8, 'draft', $9, $10::jsonb, $11, $11, NOW(), NOW())
+      RETURNING *
+      `,
+      [
+        slug,
+        quote.sourceBriefId,
+        quote.clientName,
+        quote.clientCompany,
+        quote.clientEmail,
+        quote.title,
+        totalPrice,
+        quote.currency,
+        quote.validityDays,
+        JSON.stringify(quote.content),
+        req.adminUser.id
+      ]
+    );
+
+    const created = result.rows[0];
+    const quoteCode = buildQuoteCode(created.id, created.created_at);
+    const finalResult = await pool.query(
+      `UPDATE quotes SET quote_code = $1 WHERE id = $2 RETURNING *`,
+      [quoteCode, created.id]
+    );
+
+    if (quote.sourceBriefId) {
+      await pool.query(
+        `UPDATE project_briefs SET status = CASE WHEN status = 'new' THEN 'processing' ELSE status END, updated_at = NOW() WHERE id = $1`,
+        [quote.sourceBriefId]
+      ).catch(() => {});
+    }
+
+    await adminAuth.logAudit(req, "quote.created", "quote", created.id, {
+      clientName: quote.clientName,
+      totalPrice
+    });
+
+    return res.status(201).json({ ok: true, quote: formatQuoteDetail(finalResult.rows[0], true) });
+  } catch (error) {
+    if (error?.code === "23505") {
+      return res.status(409).json({ ok: false, error: "Ez az ajánlat link már foglalt. Válassz másik URL azonosítót." });
+    }
+    console.error("Quote create error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült létrehozni az ajánlatot." });
+  }
+});
+
+app.patch("/api/admin/quotes/:id", adminAuth.requirePermission("quotes.write"), async (req, res) => {
+  try {
+    const existingResult = await pool.query(`SELECT * FROM quotes WHERE id = $1`, [req.params.id]);
+    const existing = existingResult.rows[0];
+    if (!existing) return res.status(404).json({ ok: false, error: "Az ajánlat nem található." });
+
+    if (existing.status === "accepted") {
+      return res.status(409).json({ ok: false, error: "Az elfogadott ajánlat már nem módosítható. Készíts másolatot vagy új ajánlatot." });
+    }
+
+    const quote = normalizeQuotePayload(req.body || {}, existing);
+    if (!quote.clientName || !quote.title) {
+      return res.status(400).json({ ok: false, error: "Az ügyfél neve és a projekt címe kötelező." });
+    }
+
+    let slug = normalizeSlug(quote.slug || existing.slug || quote.clientName);
+    if (slug !== existing.slug) slug = await uniqueQuoteSlug(slug, existing.id);
+    const totalPrice = quote.content.items.reduce((sum, item) => sum + Number(item.price || 0), 0);
+
+    const result = await pool.query(
+      `
+      UPDATE quotes
+      SET slug = $1,
+          source_brief_id = $2,
+          client_name = $3,
+          client_company = $4,
+          client_email = $5,
+          title = $6,
+          total_price = $7,
+          currency = $8,
+          validity_days = $9,
+          content = $10::jsonb,
+          updated_by = $11,
+          updated_at = NOW()
+      WHERE id = $12
+      RETURNING *
+      `,
+      [slug, quote.sourceBriefId, quote.clientName, quote.clientCompany, quote.clientEmail,
+       quote.title, totalPrice, quote.currency, quote.validityDays, JSON.stringify(quote.content),
+       req.adminUser.id, req.params.id]
+    );
+
+    await adminAuth.logAudit(req, "quote.updated", "quote", req.params.id, {
+      clientName: quote.clientName,
+      totalPrice
+    });
+
+    return res.status(200).json({ ok: true, quote: formatQuoteDetail(result.rows[0], true) });
+  } catch (error) {
+    if (error?.code === "23505") {
+      return res.status(409).json({ ok: false, error: "Ez az ajánlat link már foglalt." });
+    }
+    console.error("Quote update error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült menteni az ajánlatot." });
+  }
+});
+
+app.post("/api/admin/quotes/:id/publish", adminAuth.requirePermission("quotes.publish"), async (req, res) => {
+  try {
+    const result = await pool.query(
+      `
+      UPDATE quotes
+      SET status = 'published',
+          published_at = COALESCE(published_at, NOW()),
+          updated_by = $1,
+          updated_at = NOW()
+      WHERE id = $2 AND status <> 'accepted'
+      RETURNING *
+      `,
+      [req.adminUser.id, req.params.id]
+    );
+
+    if (!result.rows[0]) {
+      const exists = await pool.query(`SELECT status FROM quotes WHERE id = $1`, [req.params.id]);
+      if (!exists.rows[0]) return res.status(404).json({ ok: false, error: "Az ajánlat nem található." });
+      return res.status(409).json({ ok: false, error: "Az elfogadott ajánlat státusza már nem módosítható." });
+    }
+
+    if (result.rows[0].source_brief_id) {
+      await pool.query(`UPDATE project_briefs SET status = 'offer_sent', updated_at = NOW() WHERE id = $1`, [result.rows[0].source_brief_id]).catch(() => {});
+    }
+
+    await adminAuth.logAudit(req, "quote.published", "quote", req.params.id, {
+      slug: result.rows[0].slug
+    });
+
+    return res.status(200).json({ ok: true, quote: formatQuoteDetail(result.rows[0], true) });
+  } catch (error) {
+    console.error("Quote publish error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült publikálni az ajánlatot." });
+  }
+});
+
+app.post("/api/admin/quotes/:id/unpublish", adminAuth.requirePermission("quotes.publish"), async (req, res) => {
+  try {
+    const result = await pool.query(
+      `UPDATE quotes SET status = 'draft', updated_by = $1, updated_at = NOW() WHERE id = $2 AND status = 'published' RETURNING *`,
+      [req.adminUser.id, req.params.id]
+    );
+    if (!result.rows[0]) return res.status(409).json({ ok: false, error: "Csak publikált, még el nem fogadott ajánlat vonható vissza." });
+    await adminAuth.logAudit(req, "quote.unpublished", "quote", req.params.id);
+    return res.status(200).json({ ok: true, quote: formatQuoteDetail(result.rows[0], true) });
+  } catch (error) {
+    console.error("Quote unpublish error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült visszavonni az ajánlatot." });
+  }
+});
+
+app.post("/api/admin/quotes/:id/duplicate", adminAuth.requirePermission("quotes.write"), async (req, res) => {
+  try {
+    const existingResult = await pool.query(`SELECT * FROM quotes WHERE id = $1`, [req.params.id]);
+    const existing = existingResult.rows[0];
+    if (!existing) return res.status(404).json({ ok: false, error: "Az ajánlat nem található." });
+
+    const slug = await uniqueQuoteSlug(`${existing.slug}-masolat`);
+    const result = await pool.query(
+      `
+      INSERT INTO quotes
+        (slug, source_brief_id, client_name, client_company, client_email, title, total_price,
+         currency, status, validity_days, content, created_by, updated_by, created_at, updated_at)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'draft',$9,$10,$11,$11,NOW(),NOW())
+      RETURNING *
+      `,
+      [slug, existing.source_brief_id, existing.client_name, existing.client_company, existing.client_email,
+       existing.title, existing.total_price, existing.currency, existing.validity_days, existing.content, req.adminUser.id]
+    );
+    const created=result.rows[0];
+    const quoteCode=buildQuoteCode(created.id,created.created_at);
+    const updated=await pool.query(`UPDATE quotes SET quote_code=$1 WHERE id=$2 RETURNING *`,[quoteCode,created.id]);
+    await adminAuth.logAudit(req,"quote.duplicated","quote",created.id,{sourceQuoteId:existing.id});
+    return res.status(201).json({ok:true,quote:formatQuoteDetail(updated.rows[0],true)});
+  } catch (error) {
+    console.error("Quote duplicate error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült másolni az ajánlatot." });
+  }
+});
+
+app.delete("/api/admin/quotes/:id", adminAuth.requirePermission("quotes.delete"), async (req, res) => {
+  try {
+    const result = await pool.query(`DELETE FROM quotes WHERE id = $1 AND status <> 'accepted' RETURNING id`, [req.params.id]);
+    if (!result.rows[0]) {
+      const exists = await pool.query(`SELECT status FROM quotes WHERE id = $1`, [req.params.id]);
+      if (!exists.rows[0]) return res.status(404).json({ ok: false, error: "Az ajánlat nem található." });
+      return res.status(409).json({ ok: false, error: "Elfogadott ajánlat nem törölhető." });
+    }
+    await adminAuth.logAudit(req, "quote.deleted", "quote", req.params.id);
+    return res.status(200).json({ ok: true });
+  } catch (error) {
+    console.error("Quote delete error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült törölni az ajánlatot." });
+  }
+});
+
+app.get("/api/quote/:slug", async (req, res) => {
+  try {
+    const result = await pool.query(`SELECT * FROM quotes WHERE slug = $1 AND status IN ('published','accepted')`, [normalizeSlug(req.params.slug)]);
+    const row = result.rows[0];
+    if (!row) return res.status(404).json({ ok: false, error: "Az ajánlat nem található vagy még nincs publikálva." });
+
+    await pool.query(
+      `UPDATE quotes SET view_count = view_count + 1, first_viewed_at = COALESCE(first_viewed_at, NOW()), last_viewed_at = NOW() WHERE id = $1`,
+      [row.id]
+    ).catch(() => {});
+
+    return res.status(200).json({ ok: true, quote: formatQuoteDetail(row, false) });
+  } catch (error) {
+    console.error("Public quote error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült betölteni az ajánlatot." });
+  }
+});
+
+app.post("/api/quote/:slug/accept", async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const name = String(req.body?.name || "").trim().slice(0, 120);
+    const email = String(req.body?.email || "").trim().toLowerCase().slice(0, 180);
+    const acceptTerms = req.body?.acceptTerms === true;
+
+    if (!name || !isReasonableEmail(email) || !acceptTerms) {
+      return res.status(400).json({ ok: false, error: "Név, érvényes e-mail és a feltételek elfogadása szükséges." });
+    }
+
+    await client.query("BEGIN");
+    const quoteResult = await client.query(`SELECT * FROM quotes WHERE slug = $1 FOR UPDATE`, [normalizeSlug(req.params.slug)]);
+    const quote = quoteResult.rows[0];
+    if (!quote || !["published", "accepted"].includes(quote.status)) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ ok: false, error: "Az ajánlat nem található vagy nem fogadható el." });
+    }
+    if (quote.status === "accepted") {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ ok: false, error: "Ezt az ajánlatot már elfogadták." });
+    }
+    if (quoteIsExpired(quote)) {
+      await client.query("ROLLBACK");
+      return res.status(410).json({ ok: false, error: "Az ajánlat érvényességi ideje lejárt." });
+    }
+
+    const acceptedAt = new Date();
+    await client.query(
+      `
+      INSERT INTO quote_acceptances
+        (quote_id, name, email, accepted_at, ip_address, user_agent, quote_snapshot)
+      VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb)
+      `,
+      [quote.id, name, email, acceptedAt, clientIpAddress(req), cleanOptional(req.headers["user-agent"]), JSON.stringify(formatQuoteDetail(quote, false))]
+    );
+
+    const updatedResult = await client.query(
+      `
+      UPDATE quotes
+      SET status = 'accepted', accepted_at = $1, accepted_name = $2, accepted_email = $3, updated_at = NOW()
+      WHERE id = $4
+      RETURNING *
+      `,
+      [acceptedAt, name, email, quote.id]
+    );
+
+    if (quote.source_brief_id) {
+      await client.query(`UPDATE project_briefs SET status = 'accepted', updated_at = NOW() WHERE id = $1`, [quote.source_brief_id]);
+    }
+
+    await client.query("COMMIT");
+
+    const updated = updatedResult.rows[0];
+    sendQuoteAcceptedEmails(updated, { name, email }).catch(error => console.error("Quote acceptance email error:", error));
+
+    return res.status(200).json({ ok: true, quote: formatQuoteDetail(updated, false) });
+  } catch (error) {
+    await client.query("ROLLBACK").catch(() => {});
+    console.error("Quote accept error:", error);
+    return res.status(500).json({ ok: false, error: "Nem sikerült rögzíteni az ajánlat elfogadását." });
+  } finally {
+    client.release();
+  }
+});
 
 
 app.get("/api/admin/briefs", adminAuth.requirePermission("briefs.read"), async (req, res) => {
@@ -716,11 +1062,376 @@ async function initDatabase() {
       );
     }
 
+
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS quotes (
+        id SERIAL PRIMARY KEY,
+        quote_code TEXT UNIQUE,
+        slug TEXT NOT NULL UNIQUE,
+        source_brief_id INTEGER REFERENCES project_briefs(id) ON DELETE SET NULL,
+        client_name TEXT NOT NULL,
+        client_company TEXT,
+        client_email TEXT,
+        title TEXT NOT NULL,
+        total_price INTEGER NOT NULL DEFAULT 0,
+        currency TEXT NOT NULL DEFAULT 'Ft',
+        status TEXT NOT NULL DEFAULT 'draft',
+        validity_days INTEGER NOT NULL DEFAULT 14,
+        content JSONB NOT NULL DEFAULT '{}'::jsonb,
+        published_at TIMESTAMP,
+        accepted_at TIMESTAMP,
+        accepted_name TEXT,
+        accepted_email TEXT,
+        view_count INTEGER NOT NULL DEFAULT 0,
+        first_viewed_at TIMESTAMP,
+        last_viewed_at TIMESTAMP,
+        created_by INTEGER,
+        updated_by INTEGER,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+    `);
+
+    await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS quotes_slug_lower_unique ON quotes (LOWER(slug));`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS quotes_status_updated_idx ON quotes(status, updated_at DESC);`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS quotes_source_brief_idx ON quotes(source_brief_id);`);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS quote_acceptances (
+        id BIGSERIAL PRIMARY KEY,
+        quote_id INTEGER NOT NULL REFERENCES quotes(id) ON DELETE CASCADE,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        accepted_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        ip_address TEXT,
+        user_agent TEXT,
+        quote_snapshot JSONB NOT NULL DEFAULT '{}'::jsonb
+      );
+    `);
+    await pool.query(`CREATE INDEX IF NOT EXISTS quote_acceptances_quote_idx ON quote_acceptances(quote_id, accepted_at DESC);`);
+
+    const vibeQuoteCount = await pool.query(`SELECT COUNT(*)::int AS count FROM quotes WHERE slug = 'vibehouse'`);
+    if ((vibeQuoteCount.rows[0]?.count || 0) === 0) {
+      const vibeContent = defaultVibeHouseQuoteContent();
+      const vibeItems = vibeContent.items || [];
+      const vibeTotal = vibeItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
+      const inserted = await pool.query(
+        `
+        INSERT INTO quotes
+          (slug, client_name, client_company, title, total_price, currency, status,
+           validity_days, content, published_at, created_at, updated_at)
+        VALUES ('vibehouse','Vibe House','Vibe House','Vibe House weboldal',$1,'Ft','published',14,$2::jsonb,NOW(),NOW(),NOW())
+        RETURNING id, created_at
+        `,
+        [vibeTotal, JSON.stringify(vibeContent)]
+      );
+      const row = inserted.rows[0];
+      await pool.query(`UPDATE quotes SET quote_code = $1 WHERE id = $2`, [buildQuoteCode(row.id, row.created_at), row.id]);
+      console.log("Vibe House mintaajánlat létrehozva az Ajánlatok modulban.");
+    }
+
     console.log("Database ready.");
   } catch (error) {
     console.error("Database init error:", error);
   }
 }
+
+
+
+function normalizeQuotePayload(body, existing = null) {
+  const previous = existing?.content && typeof existing.content === "object" ? existing.content : {};
+  const sourceBriefId = body.sourceBriefId === null || body.sourceBriefId === "" ? null : Number(body.sourceBriefId || existing?.source_brief_id || 0) || null;
+  const clientName = cleanQuoteText(body.clientName ?? existing?.client_name, 160);
+  const clientCompany = cleanQuoteText(body.clientCompany ?? existing?.client_company, 180);
+  const clientEmail = cleanQuoteText(body.clientEmail ?? existing?.client_email, 180).toLowerCase();
+  const title = cleanQuoteText(body.title ?? existing?.title ?? clientName, 220);
+  const currency = cleanQuoteText(body.currency ?? existing?.currency ?? "Ft", 12) || "Ft";
+  const validityDays = clampInteger(body.validityDays ?? existing?.validity_days ?? 14, 1, 120, 14);
+
+  const rawContent = body.content && typeof body.content === "object" ? body.content : previous;
+  const content = {
+    eyebrow: cleanQuoteText(rawContent.eyebrow ?? previous.eyebrow ?? "Személyre szabott ajánlat", 120),
+    accent: safeHexColor(rawContent.accent ?? previous.accent ?? "#D94E87"),
+    clientLogo: safeQuoteLogo(rawContent.clientLogo ?? previous.clientLogo ?? ""),
+    projectTitle: cleanQuoteText(rawContent.projectTitle ?? previous.projectTitle ?? clientName, 180),
+    projectAccent: cleanQuoteText(rawContent.projectAccent ?? previous.projectAccent ?? "weboldal", 140),
+    description: cleanQuoteText(rawContent.description ?? previous.description ?? "", 1400),
+    overviewTitle: cleanQuoteText(rawContent.overviewTitle ?? previous.overviewTitle ?? "Projekt áttekintése,", 180),
+    overviewAccent: cleanQuoteText(rawContent.overviewAccent ?? previous.overviewAccent ?? "röviden.", 140),
+    overviewDescription: cleanQuoteText(rawContent.overviewDescription ?? previous.overviewDescription ?? "", 2200),
+    duration: cleanQuoteText(rawContent.duration ?? previous.duration ?? "2–3 hét", 80),
+    payment: cleanQuoteText(rawContent.payment ?? previous.payment ?? "100% a végleges átadáskor", 180),
+    features: normalizeQuoteCollection(rawContent.features, 12, normalizeQuoteFeature),
+    items: normalizeQuoteCollection(rawContent.items, 20, normalizeQuoteItem),
+    timeline: normalizeQuoteCollection(rawContent.timeline, 8, normalizeQuoteTimeline),
+    terms: normalizeQuoteCollection(rawContent.terms, 8, normalizeQuoteTerm),
+    acceptance: normalizeQuoteAcceptance(rawContent.acceptance ?? previous.acceptance)
+  };
+
+  if (!content.items.length && Array.isArray(previous.items)) {
+    content.items = normalizeQuoteCollection(previous.items, 20, normalizeQuoteItem);
+  }
+
+  return {
+    sourceBriefId,
+    clientName,
+    clientCompany,
+    clientEmail,
+    title,
+    currency,
+    validityDays,
+    slug: normalizeSlug(body.slug ?? existing?.slug ?? clientCompany ?? clientName),
+    content
+  };
+}
+
+function normalizeQuoteCollection(value, max, mapper) {
+  if (!Array.isArray(value)) return [];
+  return value.slice(0, max).map(mapper).filter(item => item && (item.title || item.label));
+}
+
+function normalizeQuoteFeature(item) {
+  if (!item || typeof item !== "object") return null;
+  return {
+    title: cleanQuoteText(item.title, 120),
+    description: cleanQuoteText(item.description, 700),
+    accent: item.accent === true
+  };
+}
+
+function normalizeQuoteItem(item) {
+  if (!item || typeof item !== "object") return null;
+  return {
+    title: cleanQuoteText(item.title, 180),
+    description: cleanQuoteText(item.description, 700),
+    price: clampInteger(item.price, 0, 100000000, 0),
+    accent: item.accent === true
+  };
+}
+
+function normalizeQuoteTimeline(item) {
+  if (!item || typeof item !== "object") return null;
+  return {
+    title: cleanQuoteText(item.title, 120),
+    description: cleanQuoteText(item.description, 700),
+    accent: item.accent === true
+  };
+}
+
+function normalizeQuoteTerm(item) {
+  if (!item || typeof item !== "object") return null;
+  return {
+    label: cleanQuoteText(item.label, 100),
+    title: cleanQuoteText(item.title, 180),
+    description: cleanQuoteText(item.description, 800)
+  };
+}
+
+function normalizeQuoteAcceptance(value) {
+  const item = value && typeof value === "object" ? value : {};
+  return {
+    enabled: item.enabled !== false,
+    title: cleanQuoteText(item.title || "Indulhat a", 120),
+    accent: cleanQuoteText(item.accent || "projekt.", 120),
+    description: cleanQuoteText(item.description || "Az ajánlat elfogadása után egyeztetjük a következő lépéseket.", 1000)
+  };
+}
+
+function cleanQuoteText(value, maxLength = 500) {
+  return String(value ?? "").trim().slice(0, maxLength);
+}
+
+function clampInteger(value, min, max, fallback = 0) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.max(min, Math.min(max, Math.round(number)));
+}
+
+function safeHexColor(value) {
+  const text = String(value || "").trim();
+  return /^#[0-9a-fA-F]{6}$/.test(text) ? text.toUpperCase() : "#D94E87";
+}
+
+function safeQuoteLogo(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  if (text.startsWith("/quote-assets/") || text.startsWith("https://") || text.startsWith("http://")) return text.slice(0, 5000);
+  if (/^data:image\/(png|jpe?g|webp);base64,/i.test(text) && text.length <= 3_500_000) return text;
+  return "";
+}
+
+function normalizeSlug(value) {
+  const source = String(value || "ajanlat").trim().toLowerCase();
+  return source
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80) || "ajanlat";
+}
+
+async function uniqueQuoteSlug(value, excludeId = null) {
+  const base = normalizeSlug(value);
+  let candidate = base;
+  for (let index = 1; index < 1000; index += 1) {
+    const params = excludeId ? [candidate, excludeId] : [candidate];
+    const sql = excludeId
+      ? `SELECT 1 FROM quotes WHERE LOWER(slug) = LOWER($1) AND id <> $2 LIMIT 1`
+      : `SELECT 1 FROM quotes WHERE LOWER(slug) = LOWER($1) LIMIT 1`;
+    const exists = await pool.query(sql, params);
+    if (!exists.rows.length) return candidate;
+    candidate = `${base}-${index + 1}`;
+  }
+  return `${base}-${crypto.randomBytes(3).toString("hex")}`;
+}
+
+function buildQuoteCode(id, dateValue) {
+  const year = new Date(dateValue || Date.now()).getFullYear();
+  return `AJ-${year}-${String(id).padStart(4, "0")}`;
+}
+
+function quoteIsExpired(row) {
+  if (!row?.published_at || row.status === "accepted") return false;
+  const days = clampInteger(row.validity_days, 1, 120, 14);
+  return Date.now() > new Date(row.published_at).getTime() + days * 86400000;
+}
+
+function formatQuoteSummary(row) {
+  return {
+    id: row.id,
+    quoteCode: row.quote_code,
+    slug: row.slug,
+    sourceBriefId: row.source_brief_id,
+    clientName: row.client_name,
+    clientCompany: row.client_company,
+    clientEmail: row.client_email,
+    title: row.title,
+    totalPrice: Number(row.total_price || 0),
+    currency: row.currency || "Ft",
+    status: row.status,
+    validityDays: Number(row.validity_days || 14),
+    publishedAt: row.published_at,
+    acceptedAt: row.accepted_at,
+    acceptedName: row.accepted_name,
+    acceptedEmail: row.accepted_email,
+    viewCount: Number(row.view_count || 0),
+    firstViewedAt: row.first_viewed_at,
+    lastViewedAt: row.last_viewed_at,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    isExpired: quoteIsExpired(row)
+  };
+}
+
+function formatQuoteDetail(row, isAdmin) {
+  const summary = formatQuoteSummary(row);
+  const detail = {
+    ...summary,
+    content: row.content && typeof row.content === "object" ? row.content : {},
+    publicUrl: `${BASE_URL}/ajanlat/${row.slug}`,
+    previewUrl: isAdmin ? `${BASE_URL}/ajanlat-preview/${row.id}` : undefined
+  };
+
+  if (!isAdmin) {
+    delete detail.clientEmail;
+    delete detail.acceptedName;
+    delete detail.acceptedEmail;
+  }
+
+  return detail;
+}
+
+function isReasonableEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || ""));
+}
+
+function clientIpAddress(req) {
+  const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  return (forwarded || req.ip || req.socket?.remoteAddress || "").slice(0, 120);
+}
+
+async function sendQuoteAcceptedEmails(quote, acceptedBy) {
+  if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === "missing-key" || !process.env.CONTACT_TO_EMAIL) return;
+  const publicUrl = `${BASE_URL}/ajanlat/${quote.slug}`;
+  const amount = new Intl.NumberFormat("hu-HU").format(Number(quote.total_price || 0));
+  const from = getFromEmail();
+
+  await resend.emails.send({
+    from,
+    to: process.env.CONTACT_TO_EMAIL,
+    subject: `Ajánlat elfogadva: ${quote.client_name} — ${amount} ${quote.currency || "Ft"}`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;padding:32px;background:#0b0e0f;color:#f4efe6">
+        <div style="color:#d7af55;font-size:12px;letter-spacing:2px">KRILIX TECH & LABS</div>
+        <h1 style="font-size:34px;margin:18px 0">Ajánlat elfogadva.</h1>
+        <p><strong>Ügyfél:</strong> ${escapeHtml(quote.client_name)}</p>
+        <p><strong>Elfogadta:</strong> ${escapeHtml(acceptedBy.name)} (${escapeHtml(acceptedBy.email)})</p>
+        <p><strong>Projekt díja:</strong> ${amount} ${escapeHtml(quote.currency || "Ft")}</p>
+        <p><a href="${publicUrl}" style="color:#d7af55">Ajánlat megnyitása →</a></p>
+      </div>`
+  });
+
+  await resend.emails.send({
+    from,
+    to: acceptedBy.email,
+    subject: `Ajánlat elfogadása rögzítve — ${quote.client_name}`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;padding:32px;background:#0b0e0f;color:#f4efe6">
+        <div style="color:#d7af55;font-size:12px;letter-spacing:2px">KRILIX TECH & LABS</div>
+        <h1 style="font-size:34px;margin:18px 0">Köszönjük az elfogadást.</h1>
+        <p>Rögzítettük a <strong>${amount} ${escapeHtml(quote.currency || "Ft")}</strong> összegű ajánlat elfogadását.</p>
+        <p>A következő lépésekkel hamarosan jelentkezünk.</p>
+        <p><a href="${publicUrl}" style="color:#d7af55">Ajánlat megnyitása →</a></p>
+      </div>`
+  });
+}
+
+function defaultVibeHouseQuoteContent() {
+  return {
+    eyebrow: "Személyre szabott ajánlat",
+    accent: "#D94E87",
+    clientLogo: "/quote-assets/vibehouse-logo.png",
+    projectTitle: "Vibe House",
+    projectAccent: "weboldal",
+    description: "Modern, mobilra optimalizált weboldal eseményekkel, galériával, kapcsolati felülettel és saját admin rendszerrel.",
+    overviewTitle: "Egy egyszerű oldal,",
+    overviewAccent: "ami él.",
+    overviewDescription: "A cél egy olyan karakteres Vibe House weboldal, ami nem csak bemutatkozó oldal: az események, hírek és galéria tartalma admin felületről frissíthető.",
+    duration: "2–3 hét",
+    payment: "100% a végleges átadáskor",
+    features: [
+      { title: "Főoldal", description: "Erős vizuális belépő, következő bulik, aktuális tartalmak és gyors navigáció." },
+      { title: "Események", description: "Közelgő bulik dátummal, helyszínnel, képpel és részletekkel." },
+      { title: "Blog / hírek", description: "Bejegyzések és közlemények, amelyeket saját adminból lehet publikálni." },
+      { title: "Galéria", description: "Mobilbarát képgaléria korábbi eseményekhez és hangulatképekhez." },
+      { title: "Kapcsolat", description: "Kapcsolati információk, közösségi linkek és egyszerű kapcsolatfelvétel." },
+      { title: "Admin", description: "Jelszóval védett felület új események és bejegyzések kezelésére.", accent: true }
+    ],
+    items: [
+      { title: "UI/UX + reszponzív design", description: "Oldalstruktúra, mobilos és asztali megjelenés", price: 25000 },
+      { title: "Főoldal + galéria + kapcsolat", description: "Oldalak felépítése és frontend fejlesztése", price: 30000 },
+      { title: "Események / hírek + admin", description: "Tartalomkezelés, új poszt és esemény létrehozás", price: 60000, accent: true },
+      { title: "SEO + tesztelés + élesítés", description: "Alap technikai SEO, tesztelés, publikálás", price: 25000 }
+    ],
+    timeline: [
+      { title: "Indítás", description: "Igények véglegesítése, tartalmak és hozzáférések átadása." },
+      { title: "Első verzió", description: "Design és működő oldalak bemutatása, első visszajelzési kör.", accent: true },
+      { title: "Élesítés", description: "Finomhangolás, admin átadás és publikálás." }
+    ],
+    terms: [
+      { label: "Utókövetés", title: "30 nap hibajavítás", description: "Az átadást követően, a projektár részeként." },
+      { label: "Külső költség", title: "Domain + tárhely / szerver", description: "A megrendelő saját költsége, nem része a projekt díjának." }
+    ],
+    acceptance: {
+      enabled: true,
+      title: "Indulhat a",
+      accent: "Vibe House.",
+      description: "Az ajánlat elfogadása után egyeztetjük a szükséges tartalmakat, hozzáféréseket és indulhat a kivitelezés."
+    }
+  };
+}
+
 
 function normalizeBriefPayload(body) {
   const pick = key => cleanOptional(body[key]) || "";

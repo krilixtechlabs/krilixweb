@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#07090a" />
+  <title>KRILIX — Árajánlat</title>
+  <meta name="description" content="KRILIX Tech & Labs — személyre szabott árajánlat" />
+  <link rel="stylesheet" href="/quote.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-mark">K</div>
+    <span>AJÁNLAT BETÖLTÉSE</span>
+  </div>
+
+  <div id="quoteApp" hidden>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="KRILIX">
+        <span class="brand-mark">K</span>
+        <span class="brand-copy"><strong>KRILIX</strong><small>TECH & LABS</small></span>
+      </a>
+      <nav class="nav">
+        <a href="#projekt">Projekt</a>
+        <a href="#arazas">Árazás</a>
+        <a href="#utemezes">Ütemezés</a>
+      </nav>
+      <a class="mini-cta" href="#elfogadas" id="topAcceptLink">Elfogadás <span>↘</span></a>
+    </header>
+
+    <main id="top">
+      <section class="hero section">
+        <div class="hero-grid">
+          <div class="hero-copy reveal">
+            <div class="eyebrow"><span class="eyebrow-line"></span><span id="quoteEyebrow"></span></div>
+            <h1><span id="heroTitle"></span><br><em id="heroAccent"></em></h1>
+            <p class="lead" id="heroDescription"></p>
+            <div class="hero-actions">
+              <a class="btn btn-gold" href="#arazas">Ajánlat megtekintése <span>↓</span></a>
+              <button class="btn btn-ghost" id="printButton" type="button">PDF / nyomtatás <span>↗</span></button>
+            </div>
+            <div class="hero-meta">
+              <div><span>PROJEKT</span><strong id="metaProject"></strong></div>
+              <div><span>ÁTFUTÁS</span><strong id="metaDuration"></strong></div>
+              <div><span>ÉRVÉNYESSÉG</span><strong id="metaValidity"></strong></div>
+            </div>
+          </div>
+
+          <div class="hero-visual reveal">
+            <div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit orbit-3"></div>
+            <div class="logo-stage">
+              <div class="logo-halo"></div>
+              <img id="clientLogo" alt="" class="client-logo" />
+              <div class="client-initials" id="clientInitials" hidden></div>
+            </div>
+            <div class="floating-stat stat-a"><span>PROJEKT DÍJA</span><strong id="heroPrice"></strong></div>
+            <div class="floating-stat stat-b"><span>FIZETÉS</span><strong id="heroPayment"></strong></div>
+            <div class="floating-tag" id="floatingTag"></div>
+          </div>
+        </div>
+        <div class="scroll-hint"><span>SCROLL</span><i></i></div>
+      </section>
+
+      <section class="section project" id="projekt">
+        <div class="section-head reveal">
+          <div class="section-no">01</div>
+          <div><span class="kicker">PROJEKTÁTTEKINTÉS</span><h2><span id="overviewTitle"></span><br><em id="overviewAccent"></em></h2></div>
+          <p id="overviewDescription"></p>
+        </div>
+        <div class="feature-grid" id="featureGrid"></div>
+      </section>
+
+      <section class="section pricing" id="arazas">
+        <div class="pricing-layout">
+          <div class="pricing-copy reveal">
+            <span class="kicker">02 / ÁRAZÁS</span>
+            <h2>Átlátható.<br><em>Fix projektár.</em></h2>
+            <p id="pricingDescription">A projektár az alább felsorolt fejlesztési tételeket tartalmazza.</p>
+            <div class="price-total"><span>PROJEKT DÍJA</span><strong><span id="totalPrice"></span> <small id="currency"></small></strong></div>
+            <div class="payment-note"><span>FIZETÉS</span><b id="payment"></b></div>
+          </div>
+          <div class="line-items reveal" id="lineItems"></div>
+        </div>
+      </section>
+
+      <section class="section timeline-section" id="utemezes">
+        <div class="timeline-head reveal"><span class="kicker">03 / ÜTEMEZÉS</span><h2>Gyorsan,<br><em>átláthatóan.</em></h2></div>
+        <div class="timeline reveal" id="timeline"><div class="timeline-line"></div></div>
+        <div class="terms reveal" id="terms"></div>
+      </section>
+
+      <section class="section accept" id="elfogadas">
+        <div class="accept-shell reveal">
+          <div>
+            <span class="kicker" id="acceptKicker">KÖVETKEZŐ LÉPÉS</span>
+            <h2><span id="acceptTitle"></span><br><em id="acceptAccent"></em></h2>
+            <p id="acceptDescription"></p>
+            <div class="accepted-meta" id="acceptedMeta" hidden></div>
+          </div>
+          <button class="accept-btn" type="button" id="acceptButton"><span>AJÁNLAT ELFOGADÁSA</span><b>→</b></button>
+        </div>
+      </section>
+    </main>
+
+    <footer><span>KRILIX TECH & LABS</span><span id="footerQuote"></span><span id="footerCode"></span></footer>
+  </div>
+
+  <div class="error-screen" id="errorScreen" hidden>
+    <div class="loading-mark">K</div><h1>404</h1><p id="errorMessage">Az ajánlat nem található.</p>
+  </div>
+
+  <div class="modal" id="acceptModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card">
+      <button class="modal-close" type="button" data-close-modal>×</button>
+      <span class="kicker">AJÁNLAT ELFOGADÁSA</span>
+      <h3 id="modalQuoteTitle">Elfogadás</h3>
+      <p class="modal-lead">Az elfogadás rögzítéséhez add meg a kapcsolattartó adatait.</p>
+      <form id="acceptForm">
+        <label>Név<input id="acceptName" type="text" maxlength="120" required></label>
+        <label>E-mail<input id="acceptEmail" type="email" maxlength="180" required></label>
+        <label class="check-row"><input id="acceptTerms" type="checkbox" required><span id="acceptTermsText"></span></label>
+        <p class="form-note" id="acceptFormNote"></p>
+        <button class="btn btn-gold full" type="submit">AJÁNLAT ELFOGADÁSA <span>→</span></button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/quote.js"></script>
+</body>
+</html>
