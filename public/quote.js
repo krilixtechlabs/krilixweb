@@ -119,7 +119,26 @@ function showAccepted(q){
 function setupInteractions(preview){
   const glow=$("cursor-glow");window.addEventListener("pointermove",e=>{if(glow){glow.style.left=e.clientX+"px";glow.style.top=e.clientY+"px"}});
   const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add("visible")}),{threshold:.12});document.querySelectorAll(".reveal,.timeline").forEach(el=>io.observe(el));
-  $("printButton").addEventListener("click",()=>window.print());
+  $("printButton").addEventListener("click",async()=>{
+    const btn=$("printButton");
+    const oldText=btn.innerHTML;
+    btn.disabled=true;
+    btn.innerHTML='PDF ELŐKÉSZÍTÉSE <span>…</span>';
+    try{
+      if(document.fonts?.ready) await document.fonts.ready;
+      const images=[...document.images].filter(img=>!img.hidden);
+      await Promise.all(images.map(async img=>{
+        if(!img.complete) await new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true})});
+        if(img.decode) await img.decode().catch(()=>{});
+      }));
+      document.querySelectorAll(".reveal,.timeline").forEach(el=>el.classList.add("visible"));
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      window.print();
+    }finally{
+      btn.disabled=false;
+      btn.innerHTML=oldText;
+    }
+  });
   const logo=$("clientLogo");logo?.addEventListener("mouseenter",()=>logo.style.animationDuration="5s");logo?.addEventListener("mouseleave",()=>logo.style.animationDuration="22s");
   if(preview)return;
   const modal=$("acceptModal");const setModal=open=>{modal.classList.toggle("open",open);modal.setAttribute("aria-hidden",String(!open));document.body.style.overflow=open?"hidden":""};
