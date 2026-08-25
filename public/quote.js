@@ -2,6 +2,30 @@ const $ = (id) => document.getElementById(id);
 const fmt = new Intl.NumberFormat("hu-HU");
 let quoteData = null;
 
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+function revealQuoteApp(){
+  const app=$("quoteApp");
+  const loader=$("loadingScreen");
+  if(app){
+    app.hidden=false;
+    app.removeAttribute("hidden");
+  }
+  if(loader){
+    loader.classList.add("done");
+    loader.setAttribute("aria-hidden","true");
+    setTimeout(()=>loader.remove(),320);
+  }
+}
+
+function hideLoaderImmediately(){
+  const loader=$("loadingScreen");
+  if(loader){
+    loader.style.display="none";
+    loader.hidden=true;
+  }
+}
+
 function esc(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
 function money(value,currency="Ft"){return `${fmt.format(Number(value)||0)} ${currency}`}
 function initials(value){return String(value||"K").split(/\s+/).filter(Boolean).slice(0,2).map(v=>v[0]).join("").toUpperCase()||"K"}
@@ -22,12 +46,20 @@ async function init(){
     if(!res.ok||!data.ok)throw new Error(data.error||"Az ajánlat nem található.");
     quoteData=data.quote;
     render(quoteData,request.preview);
-    $("loadingScreen").hidden=true;$("quoteApp").hidden=false;
+    revealQuoteApp();
     setupInteractions(request.preview);
+    requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:"auto"}));
   }catch(err){showError(err.message)}
 }
 
-function showError(message){$("loadingScreen").hidden=true;$("errorScreen").hidden=false;$("errorMessage").textContent=message||"Az ajánlat nem található."}
+function showError(message){
+  hideLoaderImmediately();
+  const app=$("quoteApp");
+  if(app) app.hidden=true;
+  const error=$("errorScreen");
+  if(error){error.hidden=false;error.removeAttribute("hidden")}
+  $("errorMessage").textContent=message||"Az ajánlat nem található.";
+}
 
 function render(q,preview){
   const c=q.content||{};
