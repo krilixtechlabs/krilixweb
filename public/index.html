@@ -1,2962 +1,1332 @@
 <!doctype html>
 <html lang="hu">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Krilix Tech & Labs</title>
-    <meta
-      name="description"
-      content="Prémium weboldalak, automatizációk és egyedi digitális rendszerek vállalkozásoknak."
-    />
-    <meta property="og:title" content="Krilix Tech & Labs" />
-    <meta
-      property="og:description"
-      content="Weboldal, ami dolgozik helyetted. Prémium digitális megoldások valódi eredményekkel."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="/krilix-logo.png" />
-    <link rel="icon" href="/krilix-logo.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=DM+Serif+Display&family=Syncopate:wght@700&display=swap"
-      rel="stylesheet"
-    />
-
-    <style>
-      :root {
-        --bg: #050607;
-        --bg-2: #090b0d;
-        --panel: #0d1012;
-        --panel-2: #111519;
-        --gold: #c7973c;
-        --gold-light: #f0cd78;
-        --gold-dark: #7f5a20;
-        --cream: #f4eee4;
-        --text: #f5f1e9;
-        --muted: rgba(245, 241, 233, 0.68);
-        --muted-2: rgba(245, 241, 233, 0.42);
-        --line: rgba(255, 255, 255, 0.08);
-        --gold-line: rgba(240, 205, 120, 0.22);
-        --success: #76d498;
-        --error: #ff9690;
-        --shadow: 0 30px 100px rgba(0, 0, 0, 0.48);
-        --ease: cubic-bezier(0.16, 1, 0.3, 1);
-        --container: min(1500px, calc(100% - 56px));
-        --gold-gradient: linear-gradient(
-          135deg,
-          #f4df9c 0%,
-          #c7973c 45%,
-          #f2d47f 100%
-        );
-      }
-
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        margin: 0;
-        font-family: "Manrope", sans-serif;
-        color: var(--text);
-        background:
-          radial-gradient(
-            circle at 82% 12%,
-            rgba(199, 151, 60, 0.14),
-            transparent 26%
-          ),
-          radial-gradient(
-            circle at 18% 30%,
-            rgba(199, 151, 60, 0.08),
-            transparent 22%
-          ),
-          linear-gradient(180deg, #040506 0%, #080a0c 45%, #050607 100%);
-        overflow-x: hidden;
-        -webkit-font-smoothing: antialiased;
-      }
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: -3;
-        opacity: 0.04;
-        background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E');
-      }
-      body::after {
-        content: "";
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: -4;
-        background-image:
-          linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-          linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0.018) 1px,
-            transparent 1px
-          );
-        background-size: 64px 64px;
-        mask-image: linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0.9),
-          transparent 70%
-        );
-      }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      button,
-      input,
-      textarea {
-        font: inherit;
-      }
-      img {
-        display: block;
-        max-width: 100%;
-      }
-
-      /* ================================================================
-       DINAMIKUS HÁTTÉR
-       - mozgó aurora fények
-       - lebegő technológiai rács
-       - pásztázó fénysávok
-       ================================================================ */
-      .dynamic-background {
-        position: fixed;
-        inset: 0;
-        z-index: -5;
-        overflow: hidden;
-        pointer-events: none;
-        background: #050607;
-        isolation: isolate;
-      }
-
-      .dynamic-grid {
-        position: absolute;
-        inset: -25%;
-        opacity: 0.3;
-        background-image:
-          linear-gradient(rgba(240, 205, 120, 0.045) 1px, transparent 1px),
-          linear-gradient(
-            90deg,
-            rgba(240, 205, 120, 0.045) 1px,
-            transparent 1px
-          );
-        background-size: 74px 74px;
-        transform: perspective(900px) rotateX(64deg) translate3d(0, 8%, 0);
-        transform-origin: center 65%;
-        mask-image: radial-gradient(
-          ellipse at 50% 46%,
-          #000 8%,
-          rgba(0, 0, 0, 0.78) 42%,
-          transparent 76%
-        );
-        animation: grid-drift 26s linear infinite;
-      }
-
-      .aurora {
-        position: absolute;
-        width: min(74vw, 1100px);
-        aspect-ratio: 1;
-        border-radius: 50%;
-        filter: blur(105px);
-        mix-blend-mode: screen;
-        opacity: 0.24;
-        will-change: transform;
-      }
-
-      .aurora-one {
-        top: -34%;
-        right: -16%;
-        background: radial-gradient(
-          circle,
-          rgba(240, 205, 120, 0.68),
-          rgba(199, 151, 60, 0.13) 42%,
-          transparent 68%
-        );
-        animation: aurora-one-move 18s ease-in-out infinite alternate;
-      }
-
-      .aurora-two {
-        left: -24%;
-        top: 28%;
-        background: radial-gradient(
-          circle,
-          rgba(160, 110, 34, 0.48),
-          rgba(199, 151, 60, 0.1) 44%,
-          transparent 70%
-        );
-        animation: aurora-two-move 22s ease-in-out infinite alternate;
-      }
-
-      .aurora-three {
-        right: 14%;
-        bottom: -46%;
-        width: min(64vw, 920px);
-        background: radial-gradient(
-          circle,
-          rgba(240, 205, 120, 0.36),
-          rgba(106, 72, 21, 0.08) 48%,
-          transparent 72%
-        );
-        animation: aurora-three-move 25s ease-in-out infinite alternate;
-      }
-
-      .light-ribbon {
-        position: absolute;
-        width: 72vw;
-        height: 2px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(240, 205, 120, 0.72),
-          transparent
-        );
-        filter: blur(0.3px) drop-shadow(0 0 12px rgba(240, 205, 120, 0.4));
-        opacity: 0.22;
-        transform-origin: center;
-        will-change: transform, opacity;
-      }
-
-      .light-ribbon-one {
-        top: 28%;
-        left: -26%;
-        transform: rotate(-16deg);
-        animation: ribbon-sweep-one 14s ease-in-out infinite;
-      }
-
-      .light-ribbon-two {
-        right: -30%;
-        bottom: 22%;
-        transform: rotate(14deg);
-        animation: ribbon-sweep-two 17s ease-in-out infinite;
-      }
-
-      .scroll-glow {
-        position: absolute;
-        left: -10%;
-        right: -10%;
-        top: calc(12% + var(--scroll-shift, 0px));
-        height: 180px;
-        background: linear-gradient(
-          180deg,
-          transparent,
-          rgba(199, 151, 60, 0.055),
-          transparent
-        );
-        filter: blur(30px);
-        transform: rotate(-4deg);
-        transition: top 0.15s linear;
-      }
-
-      @keyframes grid-drift {
-        from {
-          background-position:
-            0 0,
-            0 0;
-        }
-        to {
-          background-position:
-            74px 74px,
-            74px 74px;
-        }
-      }
-
-      @keyframes aurora-one-move {
-        0% {
-          transform: translate3d(0, 0, 0) scale(1);
-        }
-        55% {
-          transform: translate3d(-11%, 15%, 0) scale(1.14);
-        }
-        100% {
-          transform: translate3d(-4%, 26%, 0) scale(0.96);
-        }
-      }
-
-      @keyframes aurora-two-move {
-        0% {
-          transform: translate3d(0, 0, 0) scale(0.94);
-        }
-        50% {
-          transform: translate3d(17%, -9%, 0) scale(1.08);
-        }
-        100% {
-          transform: translate3d(28%, 10%, 0) scale(1.16);
-        }
-      }
-
-      @keyframes aurora-three-move {
-        0% {
-          transform: translate3d(0, 0, 0) scale(1);
-        }
-        45% {
-          transform: translate3d(-12%, -17%, 0) scale(1.12);
-        }
-        100% {
-          transform: translate3d(9%, -23%, 0) scale(0.92);
-        }
-      }
-
-      @keyframes ribbon-sweep-one {
-        0%,
-        100% {
-          transform: translate3d(-12%, 0, 0) rotate(-16deg);
-          opacity: 0.08;
-        }
-        48% {
-          transform: translate3d(64%, 12vh, 0) rotate(-16deg);
-          opacity: 0.36;
-        }
-        62% {
-          opacity: 0.14;
-        }
-      }
-
-      @keyframes ribbon-sweep-two {
-        0%,
-        100% {
-          transform: translate3d(15%, 0, 0) rotate(14deg);
-          opacity: 0.06;
-        }
-        52% {
-          transform: translate3d(-62%, -10vh, 0) rotate(14deg);
-          opacity: 0.28;
-        }
-      }
-
-      .visual-glow {
-        animation: visual-glow-pulse 5.8s ease-in-out infinite;
-      }
-
-      @keyframes visual-glow-pulse {
-        0%,
-        100% {
-          transform: scale(0.92);
-          opacity: 0.58;
-        }
-        50% {
-          transform: scale(1.12);
-          opacity: 0.92;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .dynamic-grid,
-        .aurora,
-        .light-ribbon,
-        .visual-glow,
-        .browser {
-          animation: none !important;
-        }
-
-        .hero-visual {
-          transform: none !important;
-          transition: none !important;
-        }
-      }
-
-      #particle-canvas {
-        position: fixed;
-        inset: 0;
-        width: 100vw;
-        height: 100vh;
-        pointer-events: none;
-        z-index: -2;
-        opacity: 0.4;
-      }
-
-      .container {
-        width: var(--container);
-        margin: 0 auto;
-      }
-      .section {
-        padding: 48px 0;
-      }
-      .panel {
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.028),
-          rgba(255, 255, 255, 0.012)
-        );
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(12px);
-      }
-      .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 11px;
-        color: var(--gold-light);
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-        font-size: 12px;
-        font-weight: 800;
-      }
-      .eyebrow::before {
-        content: "";
-        width: 40px;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--gold-light));
-      }
-      .display {
-        font-family: "DM Serif Display", serif;
-        font-weight: 400;
-        line-height: 0.95;
-        letter-spacing: -0.035em;
-      }
-      .gold-text {
-        background: var(--gold-gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .btn {
-        min-height: 54px;
-        padding: 0 24px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.02);
-        color: var(--text);
-        text-transform: uppercase;
-        font-size: 12px;
-        letter-spacing: 0.08em;
-        font-weight: 800;
-        cursor: pointer;
-        transition: 0.25s var(--ease);
-      }
-      .btn:hover {
-        transform: translateY(-2px);
-        border-color: var(--gold-line);
-        color: var(--gold-light);
-      }
-      .btn.gold {
-        background: var(--gold-gradient);
-        color: #120d07;
-        border-color: transparent;
-        box-shadow: 0 14px 38px rgba(199, 151, 60, 0.22);
-      }
-      .btn.gold:hover {
-        color: #120d07;
-        filter: brightness(1.04);
-      }
-      .btn.full {
-        width: 100%;
-      }
-
-      /* ================================================================
-       NAVIGÁCIÓ
-       ================================================================ */
-      .nav-wrap {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        padding: 14px 0;
-        transition: 0.3s ease;
-      }
-      .nav-wrap.scrolled {
-        background: rgba(5, 6, 7, 0.78);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
-      .navbar {
-        width: var(--container);
-        margin: 0 auto;
-        min-height: 78px;
-        padding: 0 20px;
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: 24px;
-        align-items: center;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        background: rgba(9, 11, 13, 0.72);
-        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
-        backdrop-filter: blur(16px);
-      }
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 14px;
-      }
-      .brand img {
-        width: 48px;
-        height: 48px;
-        object-fit: contain;
-        border-radius: 10px;
-        background: #ece5d9;
-        border: 1px solid rgba(240, 205, 120, 0.28);
-      }
-      .brand strong {
-        display: block;
-        font-family: "Syncopate", sans-serif;
-        font-size: 18px;
-        letter-spacing: 0.2em;
-      }
-      .brand span {
-        display: block;
-        margin-top: 5px;
-        color: var(--gold-light);
-        font-size: 9px;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        white-space: nowrap;
-      }
-      .nav-links {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 34px;
-      }
-      .nav-links a {
-        color: var(--muted);
-        text-transform: uppercase;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        padding: 8px 0;
-        position: relative;
-      }
-      .nav-links a::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 1px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          var(--gold-light),
-          transparent
-        );
-        transform: scaleX(0.2);
-        opacity: 0;
-        transition: 0.2s ease;
-      }
-      .nav-links a:hover {
-        color: var(--gold-light);
-      }
-      .nav-links a:hover::after {
-        opacity: 1;
-        transform: scaleX(1);
-      }
-      .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-      .menu-toggle {
-        display: none;
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.025);
-        position: relative;
-        cursor: pointer;
-      }
-      .menu-toggle span {
-        position: absolute;
-        left: 13px;
-        right: 13px;
-        height: 1px;
-        background: var(--text);
-        transition: 0.25s ease;
-      }
-      .menu-toggle span:nth-child(1) {
-        top: 17px;
-      }
-      .menu-toggle span:nth-child(2) {
-        top: 24px;
-      }
-      .menu-toggle span:nth-child(3) {
-        top: 31px;
-      }
-      .menu-toggle.active span:nth-child(1) {
-        top: 24px;
-        transform: rotate(45deg);
-      }
-      .menu-toggle.active span:nth-child(2) {
-        opacity: 0;
-      }
-      .menu-toggle.active span:nth-child(3) {
-        top: 24px;
-        transform: rotate(-45deg);
-      }
-
-      /* ================================================================
-       HERO + ADMIN DASHBOARD MOCKUP
-       ================================================================ */
-      .hero {
-        padding: 26px 0 34px;
-      }
-      .hero-shell {
-        position: relative;
-        min-height: 760px;
-        padding: 44px;
-        overflow: hidden;
-      }
-      .hero-shell::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(
-            circle at 72% 40%,
-            rgba(199, 151, 60, 0.14),
-            transparent 30%
-          ),
-          linear-gradient(180deg, rgba(199, 151, 60, 0.05), transparent 28%);
-        pointer-events: none;
-      }
-      .hero-grid {
-        position: relative;
-        display: grid;
-        grid-template-columns: 0.92fr 1.08fr;
-        gap: 40px;
-        min-height: 670px;
-        align-items: center;
-      }
-      .hero-copy {
-        max-width: 720px;
-        z-index: 2;
-      }
-      .hero-copy h1 {
-        font-size: clamp(64px, 7.4vw, 112px);
-        max-width: 10ch;
-        margin: 18px 0 20px;
-      }
-      .hero-copy p {
-        max-width: 46ch;
-        color: var(--muted);
-        line-height: 1.8;
-        font-size: 18px;
-      }
-      .hero-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 28px;
-      }
-      .hero-trust {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 14px;
-        margin-top: 30px;
-      }
-      .trust {
-        padding-top: 16px;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        color: var(--muted-2);
-        font-size: 12px;
-        line-height: 1.5;
-      }
-      .trust strong {
-        display: block;
-        color: var(--gold-light);
-        font-size: 19px;
-        margin-bottom: 5px;
-      }
-
-      .hero-visual {
-        position: relative;
-        min-height: 650px;
-        display: grid;
-        place-items: center;
-        perspective: 1400px;
-      }
-      .visual-glow {
-        position: absolute;
-        width: 70%;
-        height: 70%;
-        border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(199, 151, 60, 0.22),
-          transparent 66%
-        );
-        filter: blur(10px);
-        opacity: 0.8;
-      }
-      .browser {
-        position: relative;
-        width: min(100%, 760px);
-        border-radius: 24px;
-        border: 1px solid rgba(240, 205, 120, 0.2);
-        background: linear-gradient(180deg, #101419, #090c0f);
-        box-shadow:
-          0 50px 120px rgba(0, 0, 0, 0.58),
-          0 0 70px rgba(199, 151, 60, 0.12);
-        overflow: hidden;
-        transform: rotateY(-8deg) rotateX(3deg);
-        transform-origin: center;
-        animation: float 6s ease-in-out infinite;
-      }
-      @keyframes float {
-        0%,
-        100% {
-          transform: rotateY(-8deg) rotateX(3deg) translateY(0);
-        }
-        50% {
-          transform: rotateY(-7deg) rotateX(2deg) translateY(-10px);
-        }
-      }
-      .browser-top {
-        height: 56px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 18px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        background: rgba(255, 255, 255, 0.02);
-      }
-      .browser-dots {
-        display: flex;
-        gap: 8px;
-      }
-      .browser-dots i {
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.16);
-      }
-      .browser-dots i:first-child {
-        background: #9b6c2b;
-      }
-      .browser-address {
-        min-width: 210px;
-        padding: 9px 14px;
-        border-radius: 9px;
-        background: rgba(255, 255, 255, 0.035);
-        color: var(--muted-2);
-        font-size: 11px;
-        text-align: center;
-      }
-      .browser-body {
-        display: grid;
-        grid-template-columns: 150px 1fr;
-        min-height: 480px;
-      }
-      .dash-side {
-        padding: 20px 14px;
-        border-right: 1px solid rgba(255, 255, 255, 0.06);
-        background: linear-gradient(
-          180deg,
-          rgba(199, 151, 60, 0.08),
-          rgba(255, 255, 255, 0.01)
-        );
-      }
-      .dash-logo {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        color: var(--gold-light);
-        font-family: "Syncopate", sans-serif;
-        font-size: 10px;
-        margin-bottom: 24px;
-      }
-      .dash-logo b {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        display: grid;
-        place-items: center;
-        border: 1px solid var(--gold-line);
-      }
-      .dash-menu {
-        display: grid;
-        gap: 8px;
-      }
-      .dash-menu span {
-        padding: 10px 11px;
-        border-radius: 8px;
-        color: var(--muted-2);
-        font-size: 11px;
-      }
-      .dash-menu span.active {
-        background: rgba(199, 151, 60, 0.12);
-        color: var(--gold-light);
-        border: 1px solid rgba(240, 205, 120, 0.12);
-      }
-      .dash-main {
-        padding: 22px;
-      }
-      .dash-head {
-        display: flex;
-        justify-content: space-between;
-        gap: 14px;
-        align-items: center;
-        margin-bottom: 18px;
-      }
-      .dash-head h3 {
-        font-size: 20px;
-        font-weight: 600;
-      }
-      .dash-search {
-        width: 180px;
-        height: 36px;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.035);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-      }
-      .dash-stats {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-        margin-bottom: 12px;
-      }
-      .dash-stat {
-        padding: 14px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        background: rgba(255, 255, 255, 0.025);
-      }
-      .dash-stat small {
-        display: block;
-        color: var(--muted-2);
-        font-size: 9px;
-        margin-bottom: 9px;
-      }
-      .dash-stat strong {
-        color: var(--gold-light);
-        font-size: 24px;
-      }
-      .dash-grid {
-        display: grid;
-        grid-template-columns: 1.3fr 0.7fr;
-        gap: 10px;
-      }
-      .chart-card,
-      .list-card {
-        min-height: 240px;
-        padding: 14px;
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        background: rgba(255, 255, 255, 0.02);
-        overflow: hidden;
-      }
-      .chart-title {
-        color: var(--gold-light);
-        font-size: 11px;
-        margin-bottom: 18px;
-      }
-      .chart-area {
-        position: relative;
-        height: 150px;
-        display: flex;
-        align-items: end;
-        gap: 8px;
-        padding-top: 14px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      }
-      .chart-area i {
-        flex: 1;
-        min-width: 8px;
-        border-radius: 8px 8px 0 0;
-        background: linear-gradient(
-          180deg,
-          var(--gold-light),
-          var(--gold-dark)
-        );
-        opacity: 0.85;
-      }
-      .chart-area::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 72px;
-        height: 1px;
-        background: rgba(255, 255, 255, 0.05);
-        box-shadow:
-          0 -45px 0 rgba(255, 255, 255, 0.03),
-          0 45px 0 rgba(255, 255, 255, 0.03);
-      }
-      .list-card {
-        display: grid;
-        gap: 9px;
-        align-content: start;
-      }
-      .list-row {
-        display: grid;
-        grid-template-columns: 26px 1fr auto;
-        gap: 9px;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
-      .list-row b {
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: rgba(199, 151, 60, 0.14);
-        color: var(--gold-light);
-        display: grid;
-        place-items: center;
-        font-size: 9px;
-      }
-      .list-row span {
-        color: var(--muted);
-        font-size: 10px;
-      }
-      .list-row em {
-        color: var(--gold-light);
-        font-style: normal;
-        font-size: 9px;
-      }
-
-      .float-badge {
-        position: absolute;
-        z-index: 4;
-        min-width: 170px;
-        padding: 15px 17px;
-        border-radius: 16px;
-        border: 1px solid rgba(240, 205, 120, 0.18);
-        background: rgba(10, 13, 15, 0.9);
-        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.42);
-        backdrop-filter: blur(14px);
-      }
-      .float-badge small {
-        display: block;
-        color: var(--gold-light);
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        font-size: 9px;
-        font-weight: 800;
-        margin-bottom: 7px;
-      }
-      .float-badge strong {
-        display: block;
-        font-size: 28px;
-        margin-bottom: 4px;
-      }
-      .float-badge span {
-        color: var(--muted-2);
-        font-size: 11px;
-        line-height: 1.4;
-      }
-      .float-badge.one {
-        top: 18px;
-        right: 0;
-      }
-      .float-badge.two {
-        left: 0;
-        bottom: 60px;
-      }
-
-      /* ================================================================
-       SZOLGÁLTATÁSOK
-       ================================================================ */
-      .section-head {
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        gap: 24px;
-        margin-bottom: 24px;
-      }
-      .section-head h2 {
-        font-size: clamp(42px, 5vw, 72px);
-        max-width: 12ch;
-      }
-      .section-head p {
-        max-width: 46ch;
-        color: var(--muted);
-        line-height: 1.75;
-      }
-      .services-grid {
-        display: grid;
-        grid-template-columns: 1.15fr repeat(4, 1fr);
-        gap: 16px;
-      }
-      .service-card {
-        position: relative;
-        min-height: 280px;
-        padding: 26px;
-        overflow: hidden;
-        transition: 0.25s var(--ease);
-      }
-      .service-card:hover {
-        transform: translateY(-6px);
-        border-color: var(--gold-line);
-      }
-      .service-card::after {
-        content: "";
-        position: absolute;
-        width: 180px;
-        height: 180px;
-        right: -80px;
-        top: -80px;
-        border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(199, 151, 60, 0.16),
-          transparent 70%
-        );
-      }
-      .service-icon {
-        width: 58px;
-        height: 58px;
-        border-radius: 16px;
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(240, 205, 120, 0.2);
-        background: rgba(199, 151, 60, 0.06);
-        color: var(--gold-light);
-        font-size: 24px;
-        margin-bottom: 20px;
-      }
-      .service-card h3 {
-        font-size: 22px;
-        margin-bottom: 10px;
-      }
-      .service-card p {
-        color: var(--muted);
-        line-height: 1.7;
-        font-size: 14px;
-      }
-      .service-card a {
-        display: inline-flex;
-        margin-top: 18px;
-        color: var(--gold-light);
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-weight: 800;
-      }
-      .service-intro h3 {
-        font-family: "DM Serif Display", serif;
-        font-size: 36px;
-        line-height: 1;
-        margin-bottom: 14px;
-      }
-
-      /* ================================================================
-       FOLYAMAT
-       ================================================================ */
-      .process {
-        padding: 30px;
-      }
-      .process-grid {
-        display: grid;
-        grid-template-columns: 0.8fr 1.2fr;
-        gap: 30px;
-      }
-      .process-copy h2 {
-        font-size: clamp(38px, 4vw, 62px);
-        margin: 14px 0;
-      }
-      .process-copy p {
-        color: var(--muted);
-        line-height: 1.75;
-      }
-      .steps {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-      .step-card {
-        padding: 20px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        background: rgba(255, 255, 255, 0.02);
-      }
-      .step-num {
-        width: 46px;
-        height: 46px;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(240, 205, 120, 0.22);
-        color: var(--gold-light);
-        font-family: "Syncopate", sans-serif;
-        font-size: 10px;
-        margin-bottom: 14px;
-      }
-      .step-card h3 {
-        font-size: 17px;
-        margin-bottom: 8px;
-      }
-      .step-card p {
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.65;
-      }
-
-      /* ================================================================
-       KIEMELT PROJEKT / SHOWCASE
-       ================================================================ */
-      .showcase {
-        display: grid;
-        grid-template-columns: 1.05fr 0.95fr;
-        gap: 30px;
-        padding: 30px;
-        align-items: center;
-      }
-      .showcase-visual {
-        min-height: 390px;
-        border-radius: 20px;
-        border: 1px solid rgba(240, 205, 120, 0.15);
-        background:
-          radial-gradient(
-            circle at 25% 30%,
-            rgba(199, 151, 60, 0.18),
-            transparent 32%
-          ),
-          linear-gradient(145deg, #0b0e11, #151a1e);
-        position: relative;
-        overflow: hidden;
-      }
-      .laptop {
-        position: absolute;
-        left: 7%;
-        right: 17%;
-        top: 15%;
-        bottom: 18%;
-        border-radius: 18px;
-        border: 1px solid rgba(255, 255, 255, 0.11);
-        background: linear-gradient(180deg, #11161a, #0b0e11);
-        padding: 16px;
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
-        transform: rotate(-3deg);
-      }
-      .laptop::after {
-        content: "";
-        position: absolute;
-        left: -6%;
-        right: -6%;
-        bottom: -16px;
-        height: 16px;
-        border-radius: 0 0 20px 20px;
-        background: linear-gradient(180deg, #2a2d30, #111315);
-      }
-      .mini-hero {
-        height: 38%;
-        border-radius: 12px;
-        background: linear-gradient(
-          135deg,
-          rgba(199, 151, 60, 0.26),
-          rgba(255, 255, 255, 0.03)
-        );
-        margin-bottom: 12px;
-      }
-      .mini-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-      }
-      .mini-grid i {
-        height: 74px;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.045);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-      }
-      .phone {
-        position: absolute;
-        right: 8%;
-        bottom: 12%;
-        width: 118px;
-        aspect-ratio: 0.58/1;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.13);
-        background: linear-gradient(180deg, #11161a, #0b0e11);
-        padding: 13px;
-        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.46);
-      }
-      .phone::before {
-        content: "";
-        display: block;
-        width: 42px;
-        height: 5px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.12);
-        margin: 0 auto 12px;
-      }
-      .phone i {
-        display: block;
-        height: 28px;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.05);
-        margin-bottom: 8px;
-      }
-      .showcase-copy h2 {
-        font-size: clamp(40px, 4.8vw, 72px);
-        margin: 14px 0;
-      }
-      .showcase-copy p {
-        color: var(--muted);
-        line-height: 1.8;
-      }
-      .metrics {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin: 24px 0;
-      }
-      .metric {
-        padding: 16px;
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        background: rgba(255, 255, 255, 0.02);
-      }
-      .metric strong {
-        display: block;
-        color: var(--gold-light);
-        font-size: 26px;
-        margin-bottom: 6px;
-      }
-      .metric span {
-        color: var(--muted);
-        font-size: 12px;
-        line-height: 1.45;
-      }
-
-
-      /* ================================================================
-       KIEMELT MUNKA – BALATON ESSENCE
-       - valódi projektbemutató
-       - asztali és mobil előnézet
-       - funkciók és élő projekt link
-       ================================================================ */
-      .balaton-showcase {
-        background:
-          radial-gradient(
-            circle at 16% 20%,
-            rgba(92, 122, 77, 0.2),
-            transparent 34%
-          ),
-          radial-gradient(
-            circle at 86% 82%,
-            rgba(200, 164, 107, 0.16),
-            transparent 32%
-          ),
-          linear-gradient(145deg, #0a0e0b, #141914);
-      }
-
-      .balaton-browser {
-        position: absolute;
-        inset: 7% 13% 14% 5%;
-        border-radius: 18px;
-        overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        background: #fcfbf9;
-        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.48);
-        transform: rotate(-2.4deg);
-      }
-
-      .balaton-browser-bar {
-        height: 38px;
-        padding: 0 13px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        background: #172318;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      }
-
-      .balaton-browser-dots {
-        display: flex;
-        gap: 5px;
-      }
-
-      .balaton-browser-dots i {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.28);
-      }
-
-      .balaton-browser-address {
-        flex: 1;
-        height: 21px;
-        border-radius: 999px;
-        display: grid;
-        place-items: center;
-        background: rgba(255, 255, 255, 0.08);
-        color: rgba(255, 255, 255, 0.55);
-        font-size: 8px;
-        letter-spacing: 0.04em;
-      }
-
-      .balaton-site-preview {
-        min-height: 315px;
-        color: #fff;
-        position: relative;
-        overflow: hidden;
-        background:
-          linear-gradient(
-            90deg,
-            rgba(13, 24, 15, 0.88),
-            rgba(13, 24, 15, 0.42) 58%,
-            rgba(13, 24, 15, 0.18)
-          ),
-          linear-gradient(
-            180deg,
-            rgba(13, 24, 15, 0.14),
-            rgba(13, 24, 15, 0.62)
-          ),
-          url("https://balatonessence.com/img/hatter.jpg") center/cover
-            no-repeat;
-      }
-
-      .balaton-site-nav {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 14px 18px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-      }
-
-      .balaton-site-brand {
-        font-family: "DM Serif Display", serif;
-        font-size: 16px;
-        letter-spacing: 0.04em;
-      }
-
-      .balaton-site-brand em {
-        color: #d6b676;
-        font-style: italic;
-        font-weight: 400;
-      }
-
-      .balaton-site-menu {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: rgba(255, 255, 255, 0.7);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 6px;
-        font-weight: 700;
-      }
-
-      .balaton-site-copy {
-        position: relative;
-        z-index: 2;
-        width: min(78%, 410px);
-        padding: 42px 22px 30px;
-      }
-
-      .balaton-site-copy small {
-        display: block;
-        margin-bottom: 10px;
-        color: #d6b676;
-        text-transform: uppercase;
-        letter-spacing: 0.16em;
-        font-size: 7px;
-        font-weight: 800;
-      }
-
-      .balaton-site-copy h3 {
-        font-family: "DM Serif Display", serif;
-        font-size: clamp(27px, 3vw, 48px);
-        line-height: 0.96;
-        font-weight: 400;
-        margin-bottom: 13px;
-      }
-
-      .balaton-site-copy p {
-        max-width: 36ch;
-        color: rgba(255, 255, 255, 0.76);
-        font-size: 9px;
-        line-height: 1.65;
-      }
-
-      .balaton-site-button {
-        display: inline-flex;
-        align-items: center;
-        min-height: 29px;
-        margin-top: 15px;
-        padding: 0 13px;
-        border-radius: 999px;
-        background: #f4f2ec;
-        color: #2c3325;
-        text-transform: uppercase;
-        letter-spacing: 0.09em;
-        font-size: 6px;
-        font-weight: 800;
-      }
-
-      .balaton-services-preview {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 1px;
-        background: #dedbd2;
-      }
-
-      .balaton-services-preview span {
-        min-height: 58px;
-        padding: 10px 8px;
-        display: grid;
-        place-items: center;
-        text-align: center;
-        background: #fcfbf9;
-        color: #5c7a4d;
-        font-family: "DM Serif Display", serif;
-        font-size: 9px;
-        line-height: 1.2;
-      }
-
-      .balaton-phone {
-        position: absolute;
-        right: 5%;
-        bottom: 7%;
-        width: 122px;
-        aspect-ratio: 0.56 / 1;
-        padding: 7px;
-        border-radius: 21px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: linear-gradient(180deg, #202622, #080b09);
-        box-shadow: 0 28px 65px rgba(0, 0, 0, 0.58);
-        transform: rotate(4deg);
-      }
-
-      .balaton-phone-screen {
-        height: 100%;
-        border-radius: 15px;
-        overflow: hidden;
-        position: relative;
-        background:
-          linear-gradient(
-            180deg,
-            rgba(13, 24, 15, 0.24),
-            rgba(13, 24, 15, 0.82)
-          ),
-          url("https://balatonessence.com/img/hatter.jpg") center/cover
-            no-repeat;
-      }
-
-      .balaton-phone-screen::before {
-        content: "";
-        position: absolute;
-        top: 7px;
-        left: 50%;
-        width: 36px;
-        height: 4px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.5);
-        transform: translateX(-50%);
-      }
-
-      .balaton-phone-content {
-        position: absolute;
-        left: 10px;
-        right: 10px;
-        bottom: 13px;
-      }
-
-      .balaton-phone-content small {
-        display: block;
-        color: #d6b676;
-        font-size: 5px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        margin-bottom: 5px;
-      }
-
-      .balaton-phone-content strong {
-        display: block;
-        font-family: "DM Serif Display", serif;
-        font-size: 16px;
-        line-height: 0.98;
-        font-weight: 400;
-      }
-
-      .project-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin: 20px 0 4px;
-      }
-
-      .project-tag {
-        display: inline-flex;
-        align-items: center;
-        min-height: 31px;
-        padding: 0 11px;
-        border-radius: 999px;
-        border: 1px solid rgba(240, 205, 120, 0.2);
-        background: rgba(199, 151, 60, 0.06);
-        color: var(--gold-light);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 9px;
-        font-weight: 800;
-      }
-
-      .project-link {
-        margin-top: 3px;
-      }
-
-      @media (max-width: 860px) {
-        .balaton-browser {
-          inset: 6% 10% 16% 3%;
-          transform: rotate(-1.5deg);
-        }
-
-        .balaton-phone {
-          width: 108px;
-          right: 3%;
-        }
-
-        .balaton-site-menu {
-          display: none;
-        }
-      }
-
-      @media (max-width: 620px) {
-        .balaton-browser {
-          inset: 6% 15% 18% 2%;
-        }
-
-        .balaton-site-copy {
-          width: 92%;
-          padding-top: 32px;
-        }
-
-        .balaton-site-copy h3 {
-          font-size: 30px;
-        }
-
-        .balaton-services-preview {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .balaton-phone {
-          width: 84px;
-          right: 2%;
-          bottom: 5%;
-        }
-      }
-
-      /* ================================================================
-       AJÁNLATKÉRÉSI CTA + KAPCSOLAT ŰRLAP + FOOTER
-       ================================================================ */
-      .project-cta {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 24px;
-        align-items: center;
-        padding: 28px 30px;
-      }
-      .project-cta h3 {
-        font-size: clamp(30px, 3.2vw, 48px);
-        margin: 10px 0;
-      }
-      .project-cta p {
-        color: var(--muted);
-        line-height: 1.7;
-      }
-      .contact {
-        padding: 30px;
-      }
-      .contact-grid {
-        display: grid;
-        grid-template-columns: 0.85fr 1.15fr;
-        gap: 30px;
-      }
-      .contact-copy h2 {
-        font-size: clamp(42px, 5vw, 72px);
-        margin: 14px 0;
-      }
-      .contact-copy p {
-        color: var(--muted);
-        line-height: 1.8;
-        max-width: 44ch;
-      }
-      .contact-list {
-        display: grid;
-        gap: 12px;
-        margin-top: 20px;
-      }
-      .contact-item {
-        padding: 15px 16px;
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        background: rgba(255, 255, 255, 0.02);
-      }
-      .contact-item strong {
-        display: block;
-        color: var(--gold-light);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-size: 10px;
-        margin-bottom: 5px;
-      }
-      .contact-item span {
-        color: var(--muted);
-        font-size: 13px;
-      }
-      .form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-      .field {
-        display: grid;
-        gap: 7px;
-      }
-      .field.full {
-        grid-column: 1/-1;
-      }
-      .field label {
-        color: var(--gold-light);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-size: 10px;
-        font-weight: 800;
-      }
-      .field input,
-      .field textarea {
-        width: 100%;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.025);
-        color: var(--text);
-        padding: 0 15px;
-        min-height: 54px;
-        outline: none;
-        transition: 0.2s ease;
-      }
-      .field textarea {
-        min-height: 150px;
-        padding: 15px;
-        resize: vertical;
-      }
-      .field input:focus,
-      .field textarea:focus {
-        border-color: rgba(240, 205, 120, 0.4);
-        box-shadow: 0 0 0 3px rgba(199, 151, 60, 0.08);
-      }
-      .field input::placeholder,
-      .field textarea::placeholder {
-        color: rgba(245, 241, 233, 0.28);
-      }
-      .form-note {
-        min-height: 22px;
-        margin-top: 12px;
-        color: var(--muted-2);
-        font-size: 13px;
-      }
-      .form-note.success {
-        color: var(--success);
-      }
-      .form-note.error {
-        color: var(--error);
-      }
-
-      footer {
-        padding: 24px 0 36px;
-      }
-      .footer {
-        display: grid;
-        grid-template-columns: 1.2fr repeat(4, 0.8fr);
-        gap: 22px;
-        padding: 26px 28px;
-      }
-      .footer p {
-        color: var(--muted);
-        line-height: 1.7;
-        margin-top: 14px;
-        max-width: 30ch;
-      }
-      .footer-col strong {
-        display: block;
-        color: var(--gold-light);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-size: 10px;
-        margin-bottom: 12px;
-      }
-      .footer-col a,
-      .footer-col span {
-        display: block;
-        color: var(--muted);
-        margin-bottom: 9px;
-        font-size: 13px;
-      }
-      .footer-bottom {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        margin-top: 14px;
-        color: var(--muted-2);
-        font-size: 12px;
-      }
-
-      .reveal {
-        opacity: 0;
-        transform: translateY(34px);
-        transition:
-          opacity 0.85s var(--ease),
-          transform 0.85s var(--ease);
-      }
-      .reveal.active {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .popup {
-        position: fixed;
-        inset: 0;
-        z-index: 1000;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-        background: rgba(0, 0, 0, 0.76);
-        backdrop-filter: blur(12px);
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        transition: 0.25s ease;
-      }
-      .popup.show {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-      }
-      .popup-box {
-        width: min(100%, 520px);
-        padding: 34px;
-        border-radius: 22px;
-        border: 1px solid var(--gold-line);
-        background: linear-gradient(180deg, #0d1012, #090b0d);
-        box-shadow: var(--shadow);
-        text-align: center;
-        position: relative;
-      }
-      .popup-close {
-        position: absolute;
-        top: 14px;
-        right: 14px;
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.03);
-        color: var(--text);
-        cursor: pointer;
-        font-size: 22px;
-      }
-      .popup-icon {
-        width: 78px;
-        height: 78px;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        margin: 0 auto 18px;
-        border: 1px solid var(--gold-line);
-        color: var(--gold-light);
-        font-size: 30px;
-        background: radial-gradient(
-          circle,
-          rgba(199, 151, 60, 0.16),
-          rgba(199, 151, 60, 0.04)
-        );
-      }
-      .popup-box h2 {
-        font-size: 42px;
-        margin-bottom: 10px;
-      }
-      .popup-box p {
-        color: var(--muted);
-        line-height: 1.7;
-        margin-bottom: 20px;
-      }
-
-      @media (max-width: 1220px) {
-        .navbar {
-          grid-template-columns: auto auto;
-          grid-template-areas: "brand actions" "nav nav";
-          padding: 16px 20px;
-        }
-        .brand {
-          grid-area: brand;
-        }
-        .nav-actions {
-          grid-area: actions;
-          justify-content: flex-end;
-        }
-        .nav-links {
-          grid-area: nav;
-          justify-content: flex-start;
-          padding-top: 4px;
-        }
-        .hero-grid,
-        .process-grid,
-        .showcase,
-        .contact-grid,
-        .project-cta,
-        .footer {
-          grid-template-columns: 1fr;
-        }
-        .services-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-        .service-intro {
-          grid-column: 1/-1;
-        }
-        .hero-visual {
-          min-height: 560px;
-        }
-        .footer-bottom {
-          flex-direction: column;
-        }
-      }
-
-      @media (max-width: 860px) {
-        :root {
-          --container: min(100% - 24px, 1500px);
-        }
-        .nav-wrap {
-          padding: 10px 0;
-        }
-        .navbar {
-          grid-template-columns: 1fr auto auto;
-          grid-template-areas: "brand toggle actions";
-          min-height: 72px;
-          padding: 0 14px;
-          position: relative;
-        }
-        .menu-toggle {
-          display: block;
-          grid-area: toggle;
-        }
-        .nav-actions {
-          grid-area: actions;
-        }
-        .nav-actions .btn {
-          display: none;
-        }
-        .nav-links {
-          position: absolute;
-          top: calc(100% + 10px);
-          left: 10px;
-          right: 10px;
-          display: grid;
-          gap: 2px;
-          padding: 12px;
-          border-radius: 14px;
-          border: 1px solid var(--line);
-          background: rgba(8, 10, 12, 0.98);
-          backdrop-filter: blur(18px);
-          opacity: 0;
-          visibility: hidden;
-          pointer-events: none;
-          transform: translateY(-10px);
-          transition: 0.22s ease;
-        }
-        .nav-links.open {
-          opacity: 1;
-          visibility: visible;
-          pointer-events: auto;
-          transform: translateY(0);
-        }
-        .nav-links a {
-          padding: 12px 6px;
-        }
-        .hero-shell {
-          min-height: 0;
-          padding: 24px;
-        }
-        .hero-grid {
-          min-height: 0;
-          grid-template-columns: 1fr;
-        }
-        .hero-copy h1 {
-          font-size: clamp(54px, 13vw, 86px);
-          max-width: 100%;
-        }
-        .hero-trust,
-        .steps,
-        .metrics,
-        .form-grid {
-          grid-template-columns: 1fr 1fr;
-        }
-        .browser {
-          transform: none;
-        }
-        .float-badge.one {
-          right: 0;
-          top: -10px;
-        }
-        .float-badge.two {
-          left: 0;
-          bottom: 20px;
-        }
-        .dash-grid {
-          grid-template-columns: 1fr;
-        }
-        .list-card {
-          display: none;
-        }
-        .footer {
-          padding: 22px;
-        }
-      }
-
-      @media (max-width: 620px) {
-        .section {
-          padding: 26px 0;
-        }
-        .brand img {
-          width: 40px;
-          height: 40px;
-        }
-        .brand strong {
-          font-size: 14px;
-        }
-        .brand span {
-          font-size: 8px;
-          letter-spacing: 0.18em;
-        }
-        .hero-copy p {
-          font-size: 15px;
-        }
-        .hero-actions {
-          flex-direction: column;
-          align-items: stretch;
-        }
-        .hero-actions .btn {
-          width: 100%;
-        }
-        .hero-trust,
-        .services-grid,
-        .steps,
-        .metrics,
-        .form-grid {
-          grid-template-columns: 1fr;
-        }
-        .hero-visual {
-          min-height: 430px;
-        }
-        .browser-body {
-          grid-template-columns: 90px 1fr;
-          min-height: 340px;
-        }
-        .dash-side {
-          padding: 14px 8px;
-        }
-        .dash-menu span {
-          font-size: 0;
-          height: 32px;
-        }
-        .dash-logo span {
-          display: none;
-        }
-        .dash-main {
-          padding: 12px;
-        }
-        .dash-stats {
-          grid-template-columns: 1fr;
-        }
-        .dash-stats .dash-stat:nth-child(n + 2) {
-          display: none;
-        }
-        .chart-card {
-          min-height: 180px;
-        }
-        .chart-area {
-          height: 110px;
-        }
-        .browser-address {
-          min-width: 120px;
-        }
-        .float-badge {
-          position: static;
-          min-width: 0;
-          margin-top: 10px;
-        }
-        .section-head {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        .service-card,
-        .process,
-        .showcase,
-        .contact,
-        .project-cta {
-          padding: 20px;
-        }
-        .showcase-visual {
-          min-height: 280px;
-        }
-        .laptop {
-          inset: 12% 16% 22% 5%;
-        }
-        .phone {
-          width: 90px;
-          right: 5%;
-        }
-      }
-
-      /* ================================================================
-       TELJES KÉPERNYŐSZÉLESSÉGŰ ELRENDEZÉS
-       ================================================================ */
-      :root {
-        --page-pad: clamp(22px, 4.5vw, 88px);
-        --container: 100%;
-      }
-
-      .container {
-        width: 100%;
-        max-width: none;
-        margin: 0;
-      }
-
-      .nav-wrap {
-        padding: 0;
-      }
-
-      .navbar {
-        width: 100%;
-        max-width: none;
-        margin: 0;
-        padding-left: var(--page-pad);
-        padding-right: var(--page-pad);
-        border-left: 0;
-        border-right: 0;
-        border-radius: 0;
-      }
-
-      .hero,
-      .section,
-      footer {
-        padding-left: 0;
-        padding-right: 0;
-      }
-
-      .hero {
-        padding-top: 0;
-        padding-bottom: 0;
-      }
-
-      .section {
-        padding-top: 0;
-        padding-bottom: 0;
-      }
-
-      .panel {
-        border-left: 0;
-        border-right: 0;
-        border-radius: 0;
-      }
-
-      .hero-shell {
-        min-height: calc(100svh - 78px);
-        padding: clamp(38px, 5vw, 88px) var(--page-pad);
-      }
-
-      .hero-grid {
-        min-height: calc(100svh - 170px);
-        width: 100%;
-      }
-
-      #szolgaltatasok {
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.018),
-          rgba(255, 255, 255, 0.008)
-        );
-        border-top: 1px solid var(--line);
-        border-bottom: 1px solid var(--line);
-      }
-
-      #szolgaltatasok > .container {
-        padding: clamp(58px, 6vw, 108px) var(--page-pad);
-      }
-
-      .process,
-      .showcase,
-      .contact {
-        padding: clamp(58px, 6vw, 108px) var(--page-pad);
-      }
-
-      .project-cta {
-        padding: clamp(38px, 4vw, 68px) var(--page-pad);
-      }
-
-      .footer {
-        padding: clamp(42px, 5vw, 76px) var(--page-pad);
-      }
-
-      .footer-bottom {
-        padding: 18px var(--page-pad) 30px;
-        margin-top: 0;
-      }
-
-      #folyamat,
-      #projektek,
-      #kapcsolat,
-      main > .section:not(#szolgaltatasok) {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.055);
-      }
-
-      @media (max-width: 860px) {
-        :root {
-          --page-pad: 18px;
-          --container: 100%;
-        }
-
-        .navbar {
-          width: 100%;
-          padding-left: var(--page-pad);
-          padding-right: var(--page-pad);
-        }
-
-        .hero-shell {
-          min-height: 0;
-          padding: 34px var(--page-pad) 46px;
-        }
-
-        .hero-grid {
-          min-height: 0;
-        }
-
-        #szolgaltatasok > .container,
-        .process,
-        .showcase,
-        .contact,
-        .project-cta,
-        .footer {
-          padding-left: var(--page-pad);
-          padding-right: var(--page-pad);
-        }
-      }
-
-      @media (max-width: 620px) {
-        :root {
-          --page-pad: 14px;
-        }
-
-        .hero-shell {
-          padding-top: 28px;
-          padding-bottom: 34px;
-        }
-
-        #szolgaltatasok > .container,
-        .process,
-        .showcase,
-        .contact {
-          padding-top: 42px;
-          padding-bottom: 42px;
-        }
-
-        .project-cta,
-        .footer {
-          padding-top: 32px;
-          padding-bottom: 32px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- ================================================================
-       DINAMIKUS HÁTTÉR
-       Ezek csak vizuális rétegek, a tartalom működését nem befolyásolják.
-       ================================================================ -->
-    <div class="dynamic-background" aria-hidden="true">
-      <div class="dynamic-grid"></div>
-      <div class="aurora aurora-one"></div>
-      <div class="aurora aurora-two"></div>
-      <div class="aurora aurora-three"></div>
-      <div class="light-ribbon light-ribbon-one"></div>
-      <div class="light-ribbon light-ribbon-two"></div>
-      <div class="scroll-glow"></div>
+<head>
+
+<script>
+(function () {
+  function softwareRenderingLikely() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl =
+        canvas.getContext('webgl', { powerPreference: 'high-performance' }) ||
+        canvas.getContext('experimental-webgl');
+
+      if (!gl) return true;
+
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      if (!ext) return false;
+
+      const renderer = String(
+        gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || ''
+      ).toLowerCase();
+
+      return /swiftshader|llvmpipe|software|basic render|microsoft basic/i.test(renderer);
+    } catch (_) {
+      return true;
+    }
+  }
+
+  if (softwareRenderingLikely()) {
+    document.documentElement.classList.add('software-render');
+  }
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Krilix Tech & Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  /* ========================================================
+     SÖTÉT MÓD VÁLTOZÓK (ÉRINTETLEN — #800020 ÉS #60241E)
+     ======================================================== */
+  :root {
+    --bg-gradient: radial-gradient(circle at 50% 50%, #15181e 0%, #0b0c0f 55%, #040507 100%);
+    --bg-color: #040507;
+    --text-primary: #FFFFFF;
+    --text-secondary: #FFFFFF;
+    --text-muted: #94a3b8;
+    --line: rgba(255, 255, 255, 0.12);
+    --stroke-color: #60241E;
+    --hero-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+    --hero-sub-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    --btn-bg: rgba(18, 20, 26, 0.85);
+    --btn-border: #60241E;
+    --btn-text: #FFFFFF;
+    --btn-hover-bg: #60241E;
+    --btn-hover-text: #FFFFFF;
+    --btn-hover-shadow: 0 0 25px rgba(96, 36, 30, 0.35);
+    --overlay-bg: rgba(8, 10, 14, 0.92);
+    --overlay-border: rgba(96, 36, 30, 0.25);
+    --brand-span: #800020;
+
+    /* Háttér chip és áramkör sötétben */
+    --trace-deep: rgba(128, 0, 32, 0.28);
+    --trace-main: rgba(128, 0, 32, 0.7);
+    --trace-highlight: #800020;
+    --smd-chip-fill: #140306;
+    --smd-chip-stroke: #800020;
+    --socket-outer: #0e0204;
+    --socket-outer-stroke: #800020;
+    --socket-mid: #150306;
+    --socket-inner: #0a0103;
+    --solder-bright: #d94b68;
+    --solder-glow: #800020;
+    --dot-color: #800020;
+    --circuit-opacity: 1;
+
+    --nav-strong: #FFFFFF;
+    --nav-border: #60241E;
+    --ctrl-bg: rgba(13, 15, 20, 0.85);
+    --ctrl-border: #374151;
+    --ctrl-btn-color: #60241E;
+    --ctrl-btn-active-bg: #60241E;
+    --ctrl-btn-active-text: #FFFFFF;
+  }
+
+  /* ========================================================
+     VILÁGOS MÓD VÁLTOZÓK — INDEX(3).HTML PALETTA
+     ======================================================== */
+  body.light-theme {
+    --bg-color: #f1f5f9;
+    --bg-gradient: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%);
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --line: rgba(15, 23, 42, 0.12);
+    --stroke-color: transparent;
+    --hero-shadow: none;
+    --hero-sub-shadow: none;
+    --btn-bg: #ffffff;
+    --btn-border: #0f172a;
+    --btn-text: #0f172a;
+    --btn-hover-bg: #0f172a;
+    --btn-hover-text: #ffffff;
+    --btn-hover-shadow: 0 4px 20px rgba(15, 23, 42, 0.18);
+    --overlay-bg: rgba(255, 255, 255, 0.94);
+    --overlay-border: rgba(15, 23, 42, 0.12);
+    --brand-span: #64748b;
+
+    /* Áramkör, CPU és chipek világos technikai stílusban */
+    --trace-deep: #cbd5e1;
+    --trace-main: #94a3b8;
+    --trace-highlight: #64748b;
+    --smd-chip-fill: #e2e8f0;
+    --smd-chip-stroke: #94a3b8;
+    --socket-outer: #e2e8f0;
+    --socket-outer-stroke: #94a3b8;
+    --socket-mid: #f8fafc;
+    --socket-inner: #ffffff;
+    --solder-bright: #475569;
+    --solder-glow: #94a3b8;
+    --dot-color: #94a3b8;
+    --circuit-opacity: 0.45;
+
+    /* Navigáció és vezérlők */
+    --nav-strong: #0f172a;
+    --nav-border: rgba(15, 23, 42, 0.12);
+    --ctrl-bg: rgba(255, 255, 255, 0.9);
+    --ctrl-border: #cbd5e1;
+    --ctrl-btn-color: #64748b;
+    --ctrl-btn-active-bg: #0f172a;
+    --ctrl-btn-active-text: #ffffff;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  body {
+    background: var(--bg-gradient) !important;
+    background-attachment: fixed !important;
+    overflow-x: hidden;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    color: var(--text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* Teljes képernyős processzor és áramköri háttér */
+  .circuit-background {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    transition: filter 0.4s ease, opacity 0.4s ease;
+  }
+
+  body.menu-open .circuit-background {
+    filter: blur(4px);
+    opacity: 0.35;
+  }
+
+  .circuit-dot {
+    fill: var(--dot-color);
+    opacity: 0.35;
+    transition: fill 0.3s ease;
+  }
+
+  .trace-deep { fill: none; stroke: var(--trace-deep); stroke-width: 3.6; stroke-linecap: square; stroke-linejoin: round; transition: stroke 0.3s ease; }
+  .trace-main { fill: none; stroke: var(--trace-main); stroke-width: 4.2; stroke-linecap: square; stroke-linejoin: round; transition: stroke 0.3s ease; }
+  .trace-highlight { fill: none; stroke: var(--trace-highlight); stroke-width: 4.6; stroke-linecap: square; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.18)); transition: stroke 0.3s ease; }
+  .smd-chip { fill: var(--smd-chip-fill); stroke: var(--smd-chip-stroke); stroke-width: 1; transition: fill 0.3s ease, stroke 0.3s ease; }
+  .solder-bright { fill: var(--solder-bright); transition: fill 0.3s ease; }
+  .solder-glow { fill: var(--solder-glow); opacity: 0.4; transition: fill 0.3s ease; }
+
+  .serif,
+  .gold.serif,
+  .home-brand-script {
+    font-family: Georgia, serif !important;
+    font-style: italic;
+  }
+
+  /* Középre rendezett főoldali blokk */
+  main {
+    width: 100%;
+    min-height: 100vh;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+  }
+
+  body.menu-open main {
+    transform: scale(0.97);
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  /* Feliratok és gomb pozíciója */
+  .home-only {
+    width: 100%;
+    max-width: 1200px;
+    background: transparent !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+    transform: translateY(-10px);
+  }
+
+  .home-brand {
+    text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+    width: 100%;
+  }
+
+  /* KRILIX felirat: sötétben fehér, világosban #0B0909, #60241E kontúrral */
+  .home-brand-word {
+    font-family: 'Black Ops One', cursive, sans-serif;
+    font-weight: 400;
+    margin: 0 auto !important;
+    line-height: 0.95;
+    letter-spacing: 0.04em;
+    font-size: clamp(72px, 14vw, 190px) !important;
+    color: var(--text-primary) !important;
+    -webkit-text-stroke: clamp(2px, 0.35vw, 4px) var(--stroke-color);
+    paint-order: stroke fill;
+    text-shadow: var(--hero-shadow);
+    text-align: center;
+    transition: color 0.3s ease, -webkit-text-stroke 0.3s ease;
+  }
+
+  /* Tech & Labs alcím */
+  .home-brand-script {
+    position: static !important;
+    margin: 0.15rem auto 0 auto !important;
+    font-size: clamp(18px, 2.8vw, 38px) !important;
+    font-weight: 600 !important;
+    line-height: 1.1;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary) !important;
+    -webkit-text-stroke: 1.2px var(--stroke-color);
+    paint-order: stroke fill;
+    text-shadow: var(--hero-sub-shadow);
+    text-align: center;
+    opacity: 1;
+    transition: color 0.3s ease, -webkit-text-stroke 0.3s ease;
+  }
+
+  /* FELFEDEZÉS GOMB */
+  .home-only-menu {
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 16px auto 0 auto !important;
+    padding: 0.7rem 2.4rem !important;
+    font-family: 'Black Ops One', cursive, sans-serif !important;
+    background: var(--btn-bg) !important;
+    border: 2px solid var(--btn-border) !important;
+    color: var(--btn-text) !important;
+    -webkit-text-stroke: 0.8px var(--stroke-color);
+    paint-order: stroke fill;
+    font-size: clamp(0.75rem, 0.95vw, 0.9rem) !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    border-radius: 9999px !important;
+    cursor: pointer !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    z-index: 5 !important;
+  }
+
+  .home-only-menu:hover {
+    background: var(--btn-hover-bg) !important;
+    color: var(--btn-hover-text) !important;
+    -webkit-text-stroke: 0 transparent;
+    border-color: var(--btn-hover-bg) !important;
+    box-shadow: var(--btn-hover-shadow) !important;
+    transform: translateY(-2px);
+  }
+
+  /* Overlay Menü */
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 60px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+
+  .menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+
+  .menu-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .menu-top .brand {
+    font-family: 'Black Ops One', cursive, sans-serif;
+    font-size: 1.35rem;
+    letter-spacing: 0.08em;
+    color: var(--text-primary) !important;
+    -webkit-text-stroke: 1px var(--stroke-color);
+    paint-order: stroke fill;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  /* A menü fejlécében a Tech & Labs a háttér piros színét kapja (#800020), kontúr nélkül */
+  .menu-top .brand span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--brand-span) !important;
+    -webkit-text-stroke: 0 !important;
+  }
+
+  .close-menu {
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1.5px solid var(--btn-border);
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .close-menu::before,
+  .close-menu::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: var(--btn-border);
+    transition: transform 0.25s ease, background-color 0.25s ease;
+  }
+
+  .close-menu::before { transform: rotate(45deg); }
+  .close-menu::after { transform: rotate(-45deg); }
+
+  .close-menu:hover {
+    background: var(--btn-border);
+    transform: rotate(90deg);
+  }
+
+  .close-menu:hover::before,
+  .close-menu:hover::after {
+    background-color: #FFFFFF;
+  }
+
+  /* ALOLDAL VÁLASZTÓ LISTA */
+  .overlay-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 0;
+  }
+
+  .overlay-nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    transition: all 0.25s ease;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .menu-overlay.active .overlay-nav a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .menu-overlay.active .overlay-nav a:nth-child(1) { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s; }
+  .menu-overlay.active .overlay-nav a:nth-child(2) { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.14s; }
+  .menu-overlay.active .overlay-nav a:nth-child(3) { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.20s; }
+  .menu-overlay.active .overlay-nav a:nth-child(4) { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.26s; }
+
+  .overlay-nav .nav-index {
+    width: 44px;
+    flex: 0 0 44px;
+    font-family: 'Black Ops One', monospace;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+    letter-spacing: 0.12em;
+  }
+
+  .overlay-nav strong {
+    font-size: clamp(2.6rem, 6.5vw, 5.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--nav-strong) !important;
+    -webkit-text-stroke: 1.8px var(--stroke-color);
+    paint-order: stroke fill;
+    border-left: 6px solid var(--nav-border);
+    padding-left: 28px;
+    line-height: 1.05;
+    display: inline-block;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .overlay-nav a:hover strong {
+    padding-left: 42px;
+    text-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+  }
+
+  body.light-theme .overlay-nav strong {
+    color: var(--text-secondary) !important;
+    border-left-color: var(--line);
+  }
+
+  body.light-theme .overlay-nav a:hover strong {
+    color: var(--text-primary) !important;
+    border-left-color: var(--text-primary);
+  }
+
+  body.light-theme .overlay-nav a:hover .nav-index {
+    color: var(--text-primary);
+  }
+
+  .menu-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--overlay-border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  .menu-bottom a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .menu-bottom a:hover {
+    color: var(--text-primary);
+  }
+
+  /* VEZÉRLŐSÁV: NYELVVÁLASZTÓ ÉS TÉMAVÁLTÓ */
+  .bottom-controls {
+    position: fixed !important;
+    bottom: 28px !important;
+    right: 32px !important;
+    z-index: 150 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .ctrl-box {
+    display: inline-flex !important;
+    align-items: center !important;
+    border: 1.5px solid var(--ctrl-border) !important;
+    border-radius: 9999px !important;
+    background: var(--ctrl-bg) !important;
+    backdrop-filter: blur(8px);
+    padding: 3px !important;
+    gap: 2px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .ctrl-box button {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.05em !important;
+    color: var(--ctrl-btn-color) !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 5px 9px !important;
+    border-radius: 9999px !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
+    transition: background-color 0.15s ease, color 0.15s ease !important;
+  }
+
+  .ctrl-box button:hover {
+    color: var(--text-primary) !important;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .ctrl-box button.active {
+    background: var(--ctrl-btn-active-bg) !important;
+    color: var(--ctrl-btn-active-text) !important;
+  }
+
+  .theme-toggle-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 5px 12px !important;
+  }
+
+  @media (max-width: 768px) {
+    .menu-overlay { padding: 24px 20px; }
+    .overlay-nav { gap: 14px; }
+    .overlay-nav strong { font-size: clamp(2rem, 9vw, 2.75rem); padding-left: 16px; border-left-width: 4px; }
+    .overlay-nav a { gap: 14px; }
+    .overlay-nav .nav-index { width: 34px; flex-basis: 34px; font-size: 1rem; }
+    .overlay-nav a:hover strong { padding-left: 24px; }
+    .menu-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .home-only { transform: translateY(0); }
+    .home-only-menu { margin-top: 10px !important; padding: 0.55rem 1.7rem !important; font-size: 0.8rem !important; }
+    .bottom-controls { bottom: 16px !important; right: 16px !important; }
+  }
+
+
+  /* ========================================================
+     V9 — FŐOLDAL TELJES RESZPONZÍV RENDSZER
+     ======================================================== */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .home-brand-word,
+  .home-brand-script,
+  .overlay-nav strong,
+  .menu-bottom,
+  .menu-top {
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 980px) {
+    main {
+      min-height: 100svh !important;
+      padding: 18px !important;
+    }
+
+    .home-only {
+      width: min(100%, 900px) !important;
+      transform: none !important;
+    }
+
+    .home-brand-word {
+      font-size: clamp(68px, 18vw, 145px) !important;
+      line-height: .96 !important;
+    }
+
+    .home-brand-script {
+      font-size: clamp(18px, 5vw, 34px) !important;
+    }
+
+    .home-only-menu {
+      margin-top: 14px !important;
+    }
+
+    .menu-overlay {
+      height: 100dvh;
+      min-height: 100svh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        28px
+        max(22px, env(safe-area-inset-bottom)) !important;
+    }
+
+    .overlay-nav {
+      gap: 14px !important;
+      padding: 28px 0 !important;
+    }
+
+    .overlay-nav strong {
+      font-size: clamp(2.2rem, 8vw, 4rem) !important;
+    }
+
+    .menu-bottom {
+      gap: 18px !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .home-brand-word {
+      font-size: clamp(58px, 19vw, 112px) !important;
+      letter-spacing: .025em !important;
+    }
+
+    .home-brand-script {
+      font-size: clamp(17px, 5.2vw, 29px) !important;
+    }
+
+    .home-only-menu {
+      min-height: 40px;
+      padding: .6rem 1.45rem !important;
+      font-size: .72rem !important;
+    }
+
+    .menu-overlay {
+      padding-inline: 18px !important;
+    }
+
+    .menu-top .brand {
+      font-size: 1.05rem !important;
+    }
+
+    .menu-top .brand span {
+      font-size: .85rem !important;
+    }
+
+    .close-menu {
+      width: 40px !important;
+      height: 40px !important;
+      flex: 0 0 40px;
+    }
+
+    .overlay-nav a {
+      gap: 12px !important;
+    }
+
+    .overlay-nav .nav-index {
+      width: 32px !important;
+      flex: 0 0 32px !important;
+      font-size: .9rem !important;
+    }
+
+    .overlay-nav strong {
+      font-size: clamp(1.9rem, 9vw, 3rem) !important;
+      padding-left: 14px !important;
+      border-left-width: 4px !important;
+    }
+
+    .overlay-nav a:hover strong {
+      padding-left: 20px !important;
+    }
+
+    .menu-bottom {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 7px !important;
+      padding-top: 16px !important;
+      font-size: .75rem !important;
+    }
+
+    .bottom-controls {
+      left: 50% !important;
+      right: auto !important;
+      bottom: max(14px, env(safe-area-inset-bottom)) !important;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: calc(100vw - 24px);
+      justify-content: center;
+      gap: 7px !important;
+    }
+
+    .ctrl-box button {
+      min-height: 28px;
+      font-size: 10px !important;
+      padding: 5px 8px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    main {
+      padding: 14px !important;
+    }
+
+    .home-brand-word {
+      font-size: clamp(52px, 19vw, 88px) !important;
+    }
+
+    .home-brand-script {
+      font-size: clamp(16px, 5.4vw, 24px) !important;
+    }
+
+    .menu-overlay {
+      padding-inline: 14px !important;
+    }
+
+    .overlay-nav {
+      gap: 10px !important;
+    }
+
+    .overlay-nav .nav-index {
+      width: 28px !important;
+      flex-basis: 28px !important;
+      font-size: .8rem !important;
+    }
+
+    .overlay-nav strong {
+      font-size: clamp(1.55rem, 8.6vw, 2.35rem) !important;
+      padding-left: 11px !important;
+    }
+
+    .bottom-controls {
+      transform: translateX(-50%) scale(.94);
+      transform-origin: bottom center;
+    }
+  }
+
+  @media (max-width: 370px) {
+    .bottom-controls {
+      gap: 4px !important;
+      transform: translateX(-50%) scale(.88);
+    }
+
+    .home-brand-word {
+      font-size: clamp(46px, 18vw, 72px) !important;
+    }
+  }
+
+  @media (max-height: 650px) and (max-width: 980px) {
+    .home-brand-word {
+      font-size: clamp(50px, 17vh, 105px) !important;
+    }
+
+    .menu-overlay {
+      justify-content: flex-start !important;
+    }
+
+    .overlay-nav {
+      padding: 16px 0 !important;
+      gap: 7px !important;
+    }
+
+    .overlay-nav strong {
+      font-size: clamp(1.55rem, 7.2vh, 2.5rem) !important;
+    }
+
+    .menu-bottom {
+      margin-top: auto !important;
+    }
+  }
+
+
+
+  /* ========================================================
+     CUSTOM SCROLLBAR — FŐOLDAL
+     ======================================================== */
+
+  html,
+  body.home-page {
+    scrollbar-width: thin !important;
+    scrollbar-color: #800020 #08090c !important;
+  }
+
+  body.home-page.light-theme {
+    scrollbar-color: #64748b #e2e8f0 !important;
+  }
+
+  html::-webkit-scrollbar,
+  body.home-page::-webkit-scrollbar {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  html::-webkit-scrollbar-track,
+  body.home-page::-webkit-scrollbar-track {
+    background: #08090c !important;
+  }
+
+  html::-webkit-scrollbar-thumb,
+  body.home-page::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      #60241E 0%,
+      #800020 52%,
+      #a32a48 100%
+    ) !important;
+    border: 2px solid #08090c !important;
+    border-radius: 999px !important;
+    min-height: 42px;
+  }
+
+  html::-webkit-scrollbar-thumb:hover,
+  body.home-page::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      #7a2b24 0%,
+      #a0002c 52%,
+      #d94b68 100%
+    ) !important;
+  }
+
+  html::-webkit-scrollbar-corner,
+  body.home-page::-webkit-scrollbar-corner {
+    background: #08090c !important;
+  }
+
+  body.home-page.light-theme::-webkit-scrollbar-track {
+    background: #e2e8f0 !important;
+  }
+
+  body.home-page.light-theme::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      #94a3b8 0%,
+      #64748b 55%,
+      #475569 100%
+    ) !important;
+    border-color: #e2e8f0 !important;
+  }
+
+  body.home-page.light-theme::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      #64748b 0%,
+      #475569 55%,
+      #334155 100%
+    ) !important;
+  }
+
+  body.home-page.light-theme::-webkit-scrollbar-corner {
+    background: #e2e8f0 !important;
+  }
+
+
+
+  /* ========================================================
+     V12 — FŐOLDAL SOFTWARE RENDER / GPU NÉLKÜLI MÓD
+     ======================================================== */
+
+  html.software-render body.home-page {
+    background-attachment: scroll !important;
+  }
+
+  html.software-render body.home-page *,
+  html.software-render body.home-page *::before,
+  html.software-render body.home-page *::after {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  html.software-render body.home-page .circuit-background {
+    position: absolute !important;
+    filter: none !important;
+    transition: none !important;
+    contain: paint;
+    shape-rendering: optimizeSpeed;
+  }
+
+  html.software-render body.home-page .circuit-background *,
+  html.software-render body.home-page .trace-highlight,
+  html.software-render body.home-page .solder-glow {
+    filter: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  html.software-render body.home-page.menu-open .circuit-background {
+    filter: none !important;
+    opacity: .22 !important;
+  }
+
+  html.software-render body.home-page.menu-open main {
+    transform: none !important;
+    opacity: .12 !important;
+  }
+
+  html.software-render body.home-page .menu-overlay {
+    background: rgba(8, 10, 14, .985) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  html.software-render body.home-page.light-theme .menu-overlay {
+    background: rgba(248, 250, 252, .985) !important;
+  }
+
+  html.software-render body.home-page .ctrl-box {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08) !important;
+  }
+
+  html.software-render body.home-page .home-brand-word,
+  html.software-render body.home-page .home-brand-script {
+    text-shadow: none !important;
+  }
+
+
+
+  /* ========================================================
+     V13 — FŐOLDAL ERŐSEBB GPU NÉLKÜLI OPTIMALIZÁLÁS
+     ======================================================== */
+
+  html.software-render body.home-page {
+    background-color: #08090c !important;
+    background-image: none !important;
+    background-attachment: scroll !important;
+  }
+
+  html.software-render body.home-page.light-theme {
+    background-color: #f1f5f9 !important;
+    background-image: none !important;
+  }
+
+  html.software-render body.home-page .circuit-background > rect,
+  html.software-render body.home-page .trace-deep,
+  html.software-render body.home-page .solder-glow {
+    display: none !important;
+  }
+
+  html.software-render body.home-page .trace-main {
+    opacity: .25 !important;
+  }
+
+  html.software-render body.home-page .trace-highlight {
+    opacity: .64 !important;
+  }
+
+  html.software-render body.home-page .solder-bright {
+    opacity: .68 !important;
+  }
+
+  html.software-render body.home-page *,
+  html.software-render body.home-page *::before,
+  html.software-render body.home-page *::after {
+    transition-duration: .001ms !important;
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  html.software-render body.home-page .home-only-menu,
+  html.software-render body.home-page .ctrl-box {
+    box-shadow: none !important;
+  }
+
+  html.software-render body.home-page .home-only-menu:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+</style>
+<link rel="stylesheet" href="assets/css/responsive.css?v=17">
+</head>
+<body class="home-page">
+
+<svg class="circuit-background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="dotGrid" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle class="circuit-dot" cx="8" cy="8" r="1" />
+    </pattern>
+  </defs>
+
+  <rect x="80" y="100" width="220" height="160" fill="url(#dotGrid)" />
+  <rect x="1620" y="120" width="200" height="180" fill="url(#dotGrid)" />
+  <rect x="120" y="780" width="260" height="160" fill="url(#dotGrid)" />
+  <rect x="1560" y="760" width="240" height="200" fill="url(#dotGrid)" />
+
+  <g class="trace-deep">
+    <path d="M 820 480 H 680 L 520 320 H 140" />
+    <path d="M 820 500 H 660 L 500 340 H 100" />
+    <path d="M 820 520 H 640 L 480 360 H 60" />
+    <path d="M 820 560 H 640 L 480 720 H 80" />
+    <path d="M 820 580 H 660 L 500 740 H 120" />
+    <path d="M 820 600 H 680 L 520 760 H 160" />
+    <path d="M 1100 480 H 1240 L 1400 320 H 1780" />
+    <path d="M 1100 500 H 1260 L 1420 340 H 1820" />
+    <path d="M 1100 520 H 1280 L 1440 360 H 1860" />
+    <path d="M 1100 560 H 1280 L 1440 720 H 1840" />
+    <path d="M 1100 580 H 1260 L 1420 740 H 1800" />
+    <path d="M 1100 600 H 1240 L 1400 760 H 1760" />
+    <path d="M 900 400 V 260 L 800 160 V 0" />
+    <path d="M 920 400 V 240 L 820 140 V 0" />
+    <path d="M 1000 400 V 240 L 1100 140 V 0" />
+    <path d="M 1020 400 V 260 L 1120 160 V 0" />
+    <path d="M 900 680 V 820 L 800 920 V 1080" />
+    <path d="M 920 680 V 840 L 820 940 V 1080" />
+    <path d="M 1000 680 V 840 L 1100 940 V 1080" />
+    <path d="M 1020 680 V 820 L 1120 920 V 1080" />
+  </g>
+
+  <g class="trace-main">
+    <path d="M 850 420 L 730 300 V 140 H 480 L 400 60 H 220" />
+    <path d="M 870 420 L 760 310 V 180 H 540 L 470 110 H 320" />
+    <path d="M 830 450 L 700 320 H 520 L 420 220 H 260" />
+    <path d="M 830 470 L 670 310 H 420 L 340 230 V 120" />
+    <path d="M 1070 420 L 1190 300 V 140 H 1440 L 1520 60 H 1700" />
+    <path d="M 1050 420 L 1160 310 V 180 H 1380 L 1450 110 H 1600" />
+    <path d="M 1090 450 L 1220 320 H 1400 L 1500 220 H 1660" />
+    <path d="M 1090 470 L 1250 310 H 1500 L 1580 230 V 120" />
+    <path d="M 850 660 L 730 780 V 940 H 480 L 400 1020 H 220" />
+    <path d="M 870 660 L 760 770 V 900 H 540 L 470 970 H 320" />
+    <path d="M 830 630 L 700 760 H 520 L 420 860 H 260" />
+    <path d="M 830 610 L 670 770 H 420 L 340 850 V 960" />
+    <path d="M 1070 660 L 1190 780 V 940 H 1440 L 1520 1020 H 1700" />
+    <path d="M 1050 660 L 1160 770 V 900 H 1380 L 1450 970 H 1600" />
+    <path d="M 1090 630 L 1220 760 H 1400 L 1500 860 H 1660" />
+    <path d="M 1090 610 L 1250 770 H 1500 L 1580 850 V 960" />
+  </g>
+
+  <g class="trace-highlight">
+    <path d="M 810 540 H 600 L 460 400 H 300 L 220 320 H 40" />
+    <path d="M 1110 540 H 1320 L 1460 400 H 1620 L 1700 320 H 1880" />
+    <path d="M 810 550 H 580 L 440 690 H 280 L 200 770 H 20" />
+    <path d="M 1110 550 H 1340 L 1480 690 H 1640 L 1720 770 H 1900" />
+    <path d="M 960 380 V 180 L 880 100 H 740 L 680 40 V 0" />
+    <path d="M 960 700 V 900 L 880 980 H 740 L 680 1040 V 1080" />
+    <path d="M 960 380 V 180 L 1040 100 H 1180 L 1240 40 V 0" />
+    <path d="M 960 700 V 900 L 1040 980 H 1180 L 1240 1040 V 1080" />
+  </g>
+
+  <!-- Kisebb SMD chipek -->
+  <g>
+    <rect class="smd-chip" x="650" y="470" width="18" height="40" rx="2" />
+    <rect class="smd-chip" x="610" y="535" width="24" height="14" rx="2" />
+    <rect class="smd-chip" x="650" y="570" width="18" height="40" rx="2" />
+    <rect class="smd-chip" x="1252" y="470" width="18" height="40" rx="2" />
+    <rect class="smd-chip" x="1286" y="535" width="24" height="14" rx="2" />
+    <rect class="smd-chip" x="1252" y="570" width="18" height="40" rx="2" />
+    <rect class="smd-chip" x="900" y="270" width="40" height="18" rx="2" />
+    <rect class="smd-chip" x="980" y="270" width="40" height="18" rx="2" />
+    <rect class="smd-chip" x="900" y="792" width="40" height="18" rx="2" />
+    <rect class="smd-chip" x="980" y="792" width="40" height="18" rx="2" />
+  </g>
+
+  <!-- KÖZPONTI PROCESSZOR CHIP ÉS PIN-KIVEZETÉSEK -->
+  <g>
+    <rect x="800" y="380" width="320" height="320" rx="8" fill="var(--socket-outer)" stroke="var(--socket-outer-stroke)" stroke-width="2.5" />
+    <rect x="830" y="410" width="260" height="260" rx="6" fill="var(--socket-mid)" stroke="var(--socket-outer-stroke)" stroke-width="2" />
+    <rect x="850" y="430" width="220" height="220" rx="4" fill="var(--socket-inner)" stroke="var(--socket-outer-stroke)" stroke-width="1.5" />
+
+    <!-- Északi pinek -->
+    <path d="
+      M 830 380 V 360 M 850 380 V 360 M 870 380 V 360 M 890 380 V 360 
+      M 910 380 V 360 M 930 380 V 360 M 950 380 V 360 M 970 380 V 360 
+      M 990 380 V 360 M 1010 380 V 360 M 1030 380 V 360 M 1050 380 V 360 
+      M 1070 380 V 360 M 1090 380 V 360" 
+      stroke="var(--socket-outer-stroke)" stroke-width="2.5" stroke-linecap="round" />
+
+    <!-- Déli pinek -->
+    <path d="
+      M 830 700 V 720 M 850 700 V 720 M 870 700 V 720 M 890 700 V 720 
+      M 910 700 V 720 M 930 700 V 720 M 950 700 V 720 M 970 700 V 720 
+      M 990 700 V 720 M 1010 700 V 720 M 1030 700 V 720 M 1050 700 V 720 
+      M 1070 700 V 720 M 1090 700 V 720" 
+      stroke="var(--socket-outer-stroke)" stroke-width="2.5" stroke-linecap="round" />
+
+    <!-- Nyugati pinek -->
+    <path d="
+      M 800 410 H 780 M 800 430 H 780 M 800 450 H 780 M 800 470 H 780 
+      M 800 490 H 780 M 800 510 H 780 M 800 530 H 780 M 800 550 H 780 
+      M 800 570 H 780 M 800 590 H 780 M 800 610 H 780 M 800 630 H 780 
+      M 800 650 H 780 M 800 670 H 780" 
+      stroke="var(--socket-outer-stroke)" stroke-width="2.5" stroke-linecap="round" />
+
+    <!-- Keleti pinek -->
+    <path d="
+      M 1120 410 H 1140 M 1120 430 H 1140 M 1120 450 H 1140 M 1120 470 H 1140 
+      M 1120 490 H 1140 M 1120 510 H 1140 M 1120 530 H 1140 M 1120 550 H 1140 
+      M 1120 570 H 1140 M 1120 590 H 1140 M 1120 610 H 1140 M 1120 630 H 1140 
+      M 1120 650 H 1140 M 1120 670 H 1140" 
+      stroke="var(--socket-outer-stroke)" stroke-width="2.5" stroke-linecap="round" />
+  </g>
+
+  <!-- Forrasztási pontok -->
+  <circle class="solder-glow" cx="730" cy="300" r="10" />
+  <circle class="solder-bright" cx="730" cy="300" r="4.5" />
+  <circle class="solder-glow" cx="700" cy="320" r="9" />
+  <circle class="solder-bright" cx="700" cy="320" r="4" />
+  <circle class="solder-glow" cx="600" cy="400" r="8" />
+  <circle class="solder-bright" cx="600" cy="400" r="3.5" />
+  <circle class="solder-glow" cx="730" cy="780" r="10" />
+  <circle class="solder-bright" cx="730" cy="780" r="4.5" />
+  <circle class="solder-glow" cx="700" cy="760" r="9" />
+  <circle class="solder-bright" cx="700" cy="760" r="4" />
+  <circle class="solder-glow" cx="600" cy="680" r="8" />
+  <circle class="solder-bright" cx="600" cy="680" r="3.5" />
+  <circle class="solder-glow" cx="1190" cy="300" r="10" />
+  <circle class="solder-bright" cx="1190" cy="300" r="4.5" />
+  <circle class="solder-glow" cx="1220" cy="320" r="9" />
+  <circle class="solder-bright" cx="1220" cy="320" r="4" />
+  <circle class="solder-glow" cx="1320" cy="400" r="8" />
+  <circle class="solder-bright" cx="1320" cy="400" r="3.5" />
+  <circle class="solder-glow" cx="1190" cy="780" r="10" />
+  <circle class="solder-bright" cx="1190" cy="780" r="4.5" />
+  <circle class="solder-glow" cx="1220" cy="760" r="9" />
+  <circle class="solder-bright" cx="1220" cy="760" r="4" />
+  <circle class="solder-glow" cx="1320" cy="680" r="8" />
+  <circle class="solder-bright" cx="1320" cy="680" r="3.5" />
+  <circle class="solder-glow" cx="880" cy="100" r="8" />
+  <circle class="solder-bright" cx="880" cy="100" r="3.5" />
+  <circle class="solder-glow" cx="1040" cy="100" r="8" />
+  <circle class="solder-bright" cx="1040" cy="100" r="3.5" />
+  <circle class="solder-glow" cx="880" cy="980" r="8" />
+  <circle class="solder-bright" cx="880" cy="980" r="3.5" />
+  <circle class="solder-glow" cx="1040" cy="980" r="8" />
+  <circle class="solder-bright" cx="1040" cy="980" r="3.5" />
+</svg>
+
+<!-- Felfedezés Overlay -->
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <div class="menu-top">
+    <div class="brand">KRILIX <span class="gold serif">Tech & Labs</span></div>
+    <button class="close-menu" id="closeMenuBtn" aria-label="Bezárás"></button>
+  </div>
+
+  <nav class="overlay-nav">
+    <a href="munkaink/index.html">
+      <span class="nav-index">01</span>
+      <strong data-i18n="nav.work">Munkáink</strong>
+    </a>
+    <a href="szolgaltatasok/index.html">
+      <span class="nav-index">02</span>
+      <strong data-i18n="nav.services">Szolgáltatások</strong>
+    </a>
+    <a href="rolunk/index.html">
+      <span class="nav-index">03</span>
+      <strong data-i18n="nav.about">Rólunk</strong>
+    </a>
+    <a href="kapcsolat/index.html">
+      <span class="nav-index">04</span>
+      <strong data-i18n="nav.contact">Kapcsolat</strong>
+    </a>
+  </nav>
+
+  <div class="menu-bottom">
+    <a href="mailto:hello@krilixtechlabs.com">hello@krilixtechlabs.com</a>
+    <span data-i18n="footer.studio">Independent digital studio · Hungary</span>
+  </div>
+</div>
+
+<main>
+  <section class="home-only">
+    <div class="home-brand">
+      <h1 class="home-brand-word">KRILIX</h1>
+      <div class="home-brand-script">Tech & Labs</div>
     </div>
+    
+    <button class="home-only-menu menu-trigger" id="openMenuBtn" aria-label="Felfedezés megnyitása">FELFEDEZÉS</button>
+  </section>
+</main>
 
-    <!-- Arany részecskék és összekötő vonalak. -->
-    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+<!-- VEZÉRLŐK: VILÁGOS/SÖTÉT MÓD ÉS NYELVVÁLASZTÓ -->
+<div class="bottom-controls">
+  <div class="ctrl-box">
+    <button class="theme-toggle-btn" id="themeToggleBtn" title="Téma váltása">
+      <span id="themeIcon">☀️</span>
+      <span id="themeLabel" style="font-size:10px;">VILÁGOS</span>
+    </button>
+  </div>
 
-    <!-- ================================================================
-       NAVIGÁCIÓ
-       ================================================================ -->
-    <div class="nav-wrap" id="navWrap">
-      <nav class="navbar">
-        <a href="#top" class="brand" aria-label="Krilix főoldal">
-          <img src="krilix-logo.png" alt="Krilix logó" />
-          <div><strong>KRILIX</strong><span>Tech &amp; Labs</span></div>
-        </a>
+  <div class="ctrl-box">
+    <button data-lang="hu" class="active">HU</button>
+    <button data-lang="en">EN</button>
+    <button data-lang="de">DE</button>
+  </div>
+</div>
 
-        <button
-          class="menu-toggle"
-          id="menuToggle"
-          type="button"
-          aria-label="Menü"
-          aria-expanded="false"
-        >
-          <span></span><span></span><span></span>
-        </button>
+<script>
+  // ================= TÉMAVÁLTÓ LOGIKA =================
+  const themeToggleBtn = document.getElementById("themeToggleBtn");
+  const themeIcon = document.getElementById("themeIcon");
+  const themeLabel = document.getElementById("themeLabel");
 
-        <div class="nav-links" id="navLinks">
-          <a href="#szolgaltatasok">Szolgáltatások</a>
-          <a href="#folyamat">Folyamat</a>
-          <a href="#kapcsolat">Kapcsolat</a>
-        </div>
+  function applyTheme(theme) {
+    if (theme === "light") {
+      document.body.classList.add("light-theme");
+      themeIcon.textContent = "🌙";
+      themeLabel.textContent = "SÖTÉT";
+    } else {
+      document.body.classList.remove("light-theme");
+      themeIcon.textContent = "☀️";
+      themeLabel.textContent = "VILÁGOS";
+    }
+    localStorage.setItem("krilix-theme", theme);
+  }
 
-        <div class="nav-actions">
-          <a href="#kapcsolat" class="btn gold">Ajánlatkérés →</a>
-        </div>
-      </nav>
-    </div>
+  function toggleTheme() {
+    const isLight = document.body.classList.contains("light-theme");
+    applyTheme(isLight ? "dark" : "light");
+  }
 
-    <main id="top">
-      <!-- ================================================================
-         HERO / FŐ ÜZENET + DASHBOARD LÁTVÁNY
-         ================================================================ -->
-      <section class="hero">
-        <div class="container panel hero-shell reveal">
-          <div class="hero-grid">
-            <div class="hero-copy">
-              <span class="eyebrow"
-                >Digitális megoldások. Valódi eredmények.</span
-              >
-              <h1 class="display">
-                Weboldal, ami <span class="gold-text">dolgozik helyetted.</span>
-              </h1>
-              <p>
-                Prémium weboldalakat, automatizációkat és egyedi digitális
-                rendszereket készítünk olyan vállalkozásoknak, akik nem csak
-                jelen lenni akarnak online, hanem növekedni is.
-              </p>
-              <div class="hero-trust">
-                <div class="trust">
-                  <strong>Prémium</strong> egyedi megjelenés és átgondolt
-                  ügyfélút
-                </div>
-                <div class="trust">
-                  <strong>Gyors</strong> modern technológia és mobilbarát
-                  működés
-                </div>
-                <div class="trust">
-                  <strong>Stabil</strong> megbízható rendszer és könnyű kezelés
-                </div>
-                <div class="trust">
-                  <strong>Támogatás</strong> az élesítés után is
-                </div>
-              </div>
-            </div>
+  const savedTheme = localStorage.getItem("krilix-theme") || "dark";
+  applyTheme(savedTheme);
+  themeToggleBtn.addEventListener("click", toggleTheme);
 
-            <div class="hero-visual">
-              <div class="visual-glow"></div>
-              <div class="browser">
-                <div class="browser-top">
-                  <div class="browser-dots"><i></i><i></i><i></i></div>
-                  <div class="browser-address">krilix.app / dashboard</div>
-                  <span style="color: var(--gold-light); font-size: 11px"
-                    >LIVE</span
-                  >
-                </div>
-                <div class="browser-body">
-                  <aside class="dash-side">
-                    <div class="dash-logo"><b>K</b><span>KRILIX</span></div>
-                    <div class="dash-menu">
-                      <span class="active">Irányítópult</span>
-                      <span>Érdeklődők</span>
-                      <span>Projektek</span>
-                      <span>Ügyfelek</span>
-                      <span>Beállítások</span>
-                    </div>
-                  </aside>
-                  <div class="dash-main">
-                    <div class="dash-head">
-                      <h3>Üdvözlünk újra,</h3>
-                      <div class="dash-search"></div>
-                    </div>
-                    <div class="dash-stats">
-                      <div class="dash-stat">
-                        <small>Új érdeklődők</small><strong>12</strong>
-                      </div>
-                      <div class="dash-stat">
-                        <small>Aktív projektek</small><strong>18</strong>
-                      </div>
-                      <div class="dash-stat">
-                        <small>Konverzió</small><strong>32%</strong>
-                      </div>
-                    </div>
-                    <div class="dash-grid">
-                      <div class="chart-card">
-                        <div class="chart-title">Projekt aktivitás</div>
-                        <div class="chart-area">
-                          <i style="height: 34%"></i><i style="height: 48%"></i
-                          ><i style="height: 44%"></i><i style="height: 67%"></i
-                          ><i style="height: 58%"></i><i style="height: 79%"></i
-                          ><i style="height: 92%"></i><i style="height: 72%"></i
-                          ><i style="height: 88%"></i>
-                        </div>
-                      </div>
-                      <div class="list-card">
-                        <div class="chart-title">Legutóbbi aktivitás</div>
-                        <div class="list-row">
-                          <b>KB</b><span>Új megkeresés</span><em>09:15</em>
-                        </div>
-                        <div class="list-row">
-                          <b>TP</b><span>Ajánlat elküldve</span><em>10:34</em>
-                        </div>
-                        <div class="list-row">
-                          <b>ML</b><span>Projekt frissítve</span><em>11:08</em>
-                        </div>
-                        <div class="list-row">
-                          <b>EZ</b><span>Új ügyfél</span><em>Ma</em>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="float-badge one">
-                <small>Hatékonyság</small><strong>+120%</strong
-                ><span>gyorsabb és rendezettebb digitális folyamatok</span>
-              </div>
-              <div class="float-badge two">
-                <small>Automatizáció</small><strong>24/7</strong
-                ><span>dolgozó rendszer, kevesebb manuális feladat</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+  // ================= MENÜ ÉS NYELV LOGIKA =================
+  const translations = {
+    hu: {
+      explore: "FELFEDEZÉS",
+      work: "Munkáink",
+      services: "Szolgáltatások",
+      about: "Rólunk",
+      contact: "Kapcsolat",
+      studio: "Független digitális stúdió · Magyarország"
+    },
+    en: {
+      explore: "EXPLORE",
+      work: "Our Work",
+      services: "Services",
+      about: "About Us",
+      contact: "Contact",
+      studio: "Independent digital studio · Hungary"
+    },
+    de: {
+      explore: "ENTDECKEN",
+      work: "Projekte",
+      services: "Leistungen",
+      about: "Über uns",
+      contact: "Kontakt",
+      studio: "Unabhängiges digitales Studio · Ungarn"
+    }
+  };
 
-      <!-- ================================================================
-         SZOLGÁLTATÁSOK
-         ================================================================ -->
-      <section class="section" id="szolgaltatasok">
-        <div class="container">
-          <div class="section-head reveal">
-            <div>
-              <span class="eyebrow">Szolgáltatások</span>
-              <h2 class="display">
-                Megoldásaink <span class="gold-text">segítik</span> a
-                vállalkozásod.
-              </h2>
-            </div>
-            <p>
-              A stratégiától a megvalósításig olyan digitális rendszereket
-              építünk, amelyek vizuálisan erősek, technikailag stabilak és
-              üzletileg is működnek.
-            </p>
-          </div>
+  const menuOverlay = document.getElementById('menuOverlay');
+  const openMenuBtn = document.getElementById('openMenuBtn');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
 
-          <div class="services-grid reveal">
-            <article class="panel service-card service-intro">
-              <div class="service-icon">◎</div>
-              <h3>Nem sablont adunk.</h3>
-              <p>
-                Minden projektet a célodhoz és a működésedhez igazítunk. Nem
-                csak szép felületet készítünk, hanem olyan rendszert, amit
-                valóban tudsz használni.
-              </p>
-              <a href="#kapcsolat">Beszéljük át →</a>
-            </article>
-            <article class="panel service-card">
-              <div class="service-icon">⌘</div>
-              <h3>Weboldal készítés</h3>
-              <p>
-                Prémium, gyors és egyedi weboldalak, amelyek bizalmat építenek
-                és érdeklődőket hoznak.
-              </p>
-              <a href="#kapcsolat">Érdekel →</a>
-            </article>
-            <article class="panel service-card">
-              <div class="service-icon">▣</div>
-              <h3>Webshop fejlesztés</h3>
-              <p>
-                Átgondolt vásárlói útvonal, rendezett struktúra és skálázható
-                működés.
-              </p>
-              <a href="#kapcsolat">Érdekel →</a>
-            </article>
-            <article class="panel service-card">
-              <div class="service-icon">⚙</div>
-              <h3>Automatizáció</h3>
-              <p>
-                Űrlapok, admin rendszerek, ajánlatkérés és belső folyamatok
-                automatizálása.
-              </p>
-              <a href="#kapcsolat">Érdekel →</a>
-            </article>
-            <article class="panel service-card">
-              <div class="service-icon">◫</div>
-              <h3>Egyedi rendszerek</h3>
-              <p>
-                Speciális ügyféloldali és admin megoldások pontosan a te
-                működésedhez.
-              </p>
-              <a href="#kapcsolat">Érdekel →</a>
-            </article>
-          </div>
-        </div>
-      </section>
+  function openMenu() {
+    menuOverlay.classList.add('active');
+    document.body.classList.add('menu-open');
+    menuOverlay.setAttribute('aria-hidden', 'false');
+  }
 
-      <!-- ================================================================
-         MUNKAFOLYAMAT
-         ================================================================ -->
-      <section class="section" id="folyamat">
-        <div class="container panel process reveal">
-          <div class="process-grid">
-            <div class="process-copy">
-              <span class="eyebrow">Folyamat</span>
-              <h2 class="display">
-                Átlátható munka.
-                <span class="gold-text">Kiszámítható</span> eredmény.
-              </h2>
-              <p>
-                Nem kell technikai részletekben elveszned. Egy jól követhető
-                folyamatban visszük végig a projektet az ötlettől az élesítésig.
-              </p>
+  function closeMenu() {
+    menuOverlay.classList.remove('active');
+    document.body.classList.remove('menu-open');
+    menuOverlay.setAttribute('aria-hidden', 'true');
+  }
 
-            </div>
-            <div class="steps">
-              <article class="step-card">
-                <div class="step-num">01</div>
-                <h3>Feltérképezés</h3>
-                <p>
-                  Megértjük az üzleti célokat, a célcsoportot és a projekt
-                  prioritásait.
-                </p>
-              </article>
-              <article class="step-card">
-                <div class="step-num">02</div>
-                <h3>Tervezés</h3>
-                <p>
-                  Felépítjük az oldal szerkezetét, a funkciókat és az
-                  ügyfélutat.
-                </p>
-              </article>
-              <article class="step-card">
-                <div class="step-num">03</div>
-                <h3>Fejlesztés</h3>
-                <p>
-                  Modern, gyors és mobilbarát rendszert készítünk működő
-                  funkciókkal.
-                </p>
-              </article>
-              <article class="step-card">
-                <div class="step-num">04</div>
-                <h3>Élesítés</h3>
-                <p>
-                  Tesztelés, finomhangolás, átadás és támogatás egy rendezett
-                  folyamatban.
-                </p>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
+  openMenuBtn.addEventListener('click', openMenu);
+  closeMenuBtn.addEventListener('click', closeMenu);
 
-      <!-- ================================================================
-         KIEMELT PROJEKT / EREDMÉNYEK
-         ================================================================ -->
-      <section class="section" id="projektek">
-        <div class="container panel showcase reveal">
-          <!-- BAL OLDAL: a Balaton Essence asztali és mobil előnézete. -->
-          <div class="showcase-visual balaton-showcase">
-            <div class="balaton-browser">
-              <div class="balaton-browser-bar">
-                <div class="balaton-browser-dots"><i></i><i></i><i></i></div>
-                <div class="balaton-browser-address">balatonessence.com</div>
-              </div>
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuOverlay && menuOverlay.classList.contains('active')) {
+      closeMenu();
+    }
+  });
 
-              <div class="balaton-site-preview">
-                <div class="balaton-site-nav">
-                  <div class="balaton-site-brand">
-                    BALATON <em>Essence</em>
-                  </div>
-                  <div class="balaton-site-menu">
-                    <span>Szállások</span>
-                    <span>Élmények</span>
-                    <span>Rólunk</span>
-                    <span>Foglalás</span>
-                  </div>
-                </div>
+  function setLanguage(lang) {
+    localStorage.setItem("krilix-v5-lang", lang);
+    document.documentElement.lang = lang;
+    const data = translations[lang] || translations.hu;
 
-                <div class="balaton-site-copy">
-                  <small>Prémium balatoni élmények</small>
-                  <h3>Ahol az élmények emlékké válnak.</h3>
-                  <p>
-                    Prémium szállások, különleges pillanatok és felejthetetlen
-                    balatoni élmények egy helyen.
-                  </p>
-                  <span class="balaton-site-button">Felfedezem</span>
-                </div>
-              </div>
+    openMenuBtn.textContent = data.explore;
+    document.querySelector('[data-i18n="nav.work"]').textContent = data.work;
+    document.querySelector('[data-i18n="nav.services"]').textContent = data.services;
+    document.querySelector('[data-i18n="nav.about"]').textContent = data.about;
+    document.querySelector('[data-i18n="nav.contact"]').textContent = data.contact;
+    document.querySelector('[data-i18n="footer.studio"]').textContent = data.studio;
 
-              <div class="balaton-services-preview">
-                <span>Prémium<br />szállások</span>
-                <span>SUP és<br />vízi élmények</span>
-                <span>Reggeli és<br />pillanatok</span>
-                <span>Személyes<br />vendégélmény</span>
-              </div>
-            </div>
+    document.querySelectorAll("[data-lang]").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.lang === lang);
+    });
+  }
 
-            <div class="balaton-phone">
-              <div class="balaton-phone-screen">
-                <div class="balaton-phone-content">
-                  <small>Balaton Essence</small>
-                  <strong>A Balaton esszenciája.</strong>
-                </div>
-              </div>
-            </div>
-          </div>
+  const initialLang = localStorage.getItem("krilix-v5-lang") || "hu";
+  setLanguage(initialLang);
 
-          <!-- JOBB OLDAL: a projekt valódi tartalma és funkciói. -->
-          <div class="showcase-copy">
-            <span class="eyebrow">Kiemelt munka</span>
-            <h2 class="display">
-              Balaton <span class="gold-text">Essence.</span>
-            </h2>
+  document.querySelectorAll("[data-lang]").forEach(button => {
+    button.addEventListener("click", () => {
+      setLanguage(button.dataset.lang);
+    });
+  });
+</script>
 
-            <p>
-              Egy teljes, többnyelvű balatoni szállás- és élményplatform,
-              amely az első benyomástól a foglaláson és fizetésen át az
-              érkezés utáni vendégkommunikációig végigkíséri az ügyfelet.
-            </p>
-
-            <div class="project-tags">
-              <span class="project-tag">Weboldal</span>
-              <span class="project-tag">Foglalási rendszer</span>
-              <span class="project-tag">Automatizáció</span>
-              <span class="project-tag">Admin felület</span>
-            </div>
-
-            <div class="metrics">
-              <div class="metric">
-                <strong>3 nyelv</strong>
-                <span>magyar, angol és német vendégélmény</span>
-              </div>
-              <div class="metric">
-                <strong>Online</strong>
-                <span>apartmanfoglalás és bankkártyás előlegfizetés</span>
-              </div>
-              <div class="metric">
-                <strong>Automata</strong>
-                <span>vendégemailek, iCal szinkron és kiegészítő rendelések</span>
-              </div>
-            </div>
-
-            <a
-              class="btn gold project-link"
-              href="https://balatonessence.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Élő projekt megnyitása →
-            </a>
-          </div>
-        </div>
-      </section>
-
-
-      <!-- ================================================================
-         KAPCSOLAT + AUTOMATA EMAIL ŰRLAP
-         ================================================================ -->
-      <section class="section" id="kapcsolat">
-        <div class="container panel contact reveal">
-          <div class="contact-grid">
-            <div class="contact-copy">
-              <span class="eyebrow">Kapcsolat</span>
-              <h2 class="display">
-                Indítsuk el 
-                <span class="gold-text">együtt</span>
-              </h2>
-              <div class="contact-list">
-                <div class="contact-item">
-                  <strong>Email</strong><span>hello@krilixtechlabs.com</span>
-                </div>
-                <div class="contact-item">
-                  <strong>Telefon</strong><span>+36 70 569 5022</span>
-                </div>
-
-              </div>
-            </div>
-            <div>
-              <form id="contactForm">
-                <div class="form-grid">
-                  <div class="field">
-                    <label for="name">Név *</label
-                    ><input
-                      id="name"
-                      type="text"
-                      placeholder="Neved"
-                      required
-                    />
-                  </div>
-                  <div class="field">
-                    <label for="email">Email *</label
-                    ><input
-                      id="email"
-                      type="email"
-                      placeholder="email@pelda.hu"
-                      required
-                    />
-                  </div>
-                  <div class="field full">
-                    <label for="message">Üzenet *</label
-                    ><textarea
-                      id="message"
-                      placeholder="Írd le röviden, mire lenne szükséged."
-                      required
-                    ></textarea>
-                  </div>
-                  <div class="field full">
-                    <button class="btn gold full" type="submit">
-                      Ajánlatkérés elküldése →
-                    </button>
-                  </div>
-                </div>
-                <p class="form-note" id="formNote">
-                  A beküldés után visszaigazoló emailt küldünk.
-                </p>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- ================================================================
-       FOOTER
-       ================================================================ -->
-    <footer>
-      <div class="container panel footer reveal">
-        <div>
-          <a href="#top" class="brand"
-            ><img src="krilix-logo.png" alt="Krilix logó" />
-            <div><strong>KRILIX</strong><span>Tech &amp; Labs</span></div></a
-          >
-          <p>
-            Prémium weboldalak, automatizációk és digitális rendszerek valódi
-            üzleti célokra.
-          </p>
-        </div>
-        <div class="footer-col">
-          <strong>Oldalak</strong><a href="#szolgaltatasok">Szolgáltatások</a
-          ><a href="#folyamat">Folyamat</a><a href="#kapcsolat">Kapcsolat</a>
-        </div>
-        <div class="footer-col">
-          <strong>Szolgáltatások</strong><span>Weboldal készítés</span
-          ><span>Webshop fejlesztés</span><span>Automatizáció</span
-          ><span>Egyedi rendszerek</span>
-        </div>
-        <div class="footer-col">
-          <strong>Jogi</strong
-          ><a href="/adatkezeles">Adatkezelési tájékoztató</a>
-        </div>
-        <div class="footer-col">
-          <strong>Kapcsolat</strong><span>hello@krilixtechlabs.com</span
-          ><span>+36 70 569 5022</span><span>Magyarország</span>
-        </div>
-      </div>
-      <div class="container footer-bottom">
-        <span>© 2026 Krilix Tech &amp; Labs. Minden jog fenntartva.</span
-        ><span>Prémium főoldal redesign</span>
-      </div>
-    </footer>
-
-    <!-- ================================================================
-       SIKERES ŰRLAPKÜLDÉS POPUP
-       ================================================================ -->
-    <div class="popup" id="formPopup" aria-hidden="true">
-      <div class="popup-box">
-        <button class="popup-close" id="popupClose" type="button">×</button>
-        <div class="popup-icon">✓</div>
-        <h2 class="display">Köszönjük.</h2>
-        <p>Az üzeneted megérkezett. Hamarosan visszajelzünk.</p>
-        <button class="btn gold" id="popupOk" type="button">Rendben</button>
-      </div>
-    </div>
-
-    <!-- ================================================================
-       JAVASCRIPT
-       1. navigáció
-       2. scroll animációk
-       3. dinamikus háttér
-       4. kapcsolat űrlap /api/contact bekötése
-       ================================================================ -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const navWrap = document.getElementById("navWrap");
-        const menuToggle = document.getElementById("menuToggle");
-        const navLinks = document.getElementById("navLinks");
-        const form = document.getElementById("contactForm");
-        const formNote = document.getElementById("formNote");
-        const popup = document.getElementById("formPopup");
-        const popupClose = document.getElementById("popupClose");
-        const popupOk = document.getElementById("popupOk");
-
-        /* NAVIGÁCIÓ: görgetéskor háttér és mobil menü. */
-        function onScroll() {
-          navWrap.classList.toggle("scrolled", window.scrollY > 18);
-        }
-        onScroll();
-        window.addEventListener("scroll", onScroll, { passive: true });
-
-        menuToggle.addEventListener("click", () => {
-          const open = navLinks.classList.toggle("open");
-          menuToggle.classList.toggle("active", open);
-          menuToggle.setAttribute("aria-expanded", String(open));
-        });
-        navLinks.querySelectorAll("a").forEach((a) =>
-          a.addEventListener("click", () => {
-            navLinks.classList.remove("open");
-            menuToggle.classList.remove("active");
-            menuToggle.setAttribute("aria-expanded", "false");
-          }),
-        );
-
-        /* SCROLL REVEAL: a blokkok csak akkor úsznak be, amikor láthatók. */
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("active");
-                observer.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.12 },
-        );
-        document
-          .querySelectorAll(".reveal")
-          .forEach((el) => observer.observe(el));
-
-        /* --------------------------------------------------------------
-         DINAMIKUS HÁTTÉR + KÖNNYÍTETT RÉSZECSKERENDSZER
-         -------------------------------------------------------------- */
-        const canvas = document.getElementById("particle-canvas");
-        const context = canvas.getContext("2d");
-        const reduceMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
-
-        let particles = [];
-        let animationFrameId = null;
-        let canvasWidth = window.innerWidth;
-        let canvasHeight = window.innerHeight;
-        let deviceScale = Math.min(window.devicePixelRatio || 1, 2);
-        let pageVisible = true;
-
-        class Particle {
-          constructor() {
-            this.reset(true);
-          }
-
-          reset(randomPosition = false) {
-            this.x = randomPosition ? Math.random() * canvasWidth : -20;
-            this.y = Math.random() * canvasHeight;
-            this.velocityX = Math.random() * 0.5 + 0.08;
-            this.velocityY = Math.random() * 0.34 - 0.17;
-            this.radius = Math.random() * 1.45 + 0.45;
-            this.depth = Math.random() * 0.7 + 0.3;
-            this.twinkleOffset = Math.random() * Math.PI * 2;
-          }
-
-          update(time) {
-            this.x += this.velocityX * this.depth;
-            this.y += this.velocityY * this.depth;
-
-            if (
-              this.x > canvasWidth + 24 ||
-              this.y < -24 ||
-              this.y > canvasHeight + 24
-            ) {
-              this.reset(false);
-            }
-
-            this.opacity =
-              0.22 + Math.sin(time * 0.0018 + this.twinkleOffset) * 0.1;
-          }
-
-          draw() {
-            context.beginPath();
-            context.arc(
-              this.x,
-              this.y,
-              this.radius * this.depth,
-              0,
-              Math.PI * 2,
-            );
-            context.fillStyle = `rgba(240, 205, 120, ${Math.max(0.08, this.opacity)})`;
-            context.fill();
-          }
-        }
-
-        function resizeParticleCanvas() {
-          canvasWidth = window.innerWidth;
-          canvasHeight = window.innerHeight;
-          deviceScale = Math.min(window.devicePixelRatio || 1, 2);
-
-          canvas.width = Math.floor(canvasWidth * deviceScale);
-          canvas.height = Math.floor(canvasHeight * deviceScale);
-          canvas.style.width = `${canvasWidth}px`;
-          canvas.style.height = `${canvasHeight}px`;
-          context.setTransform(deviceScale, 0, 0, deviceScale, 0, 0);
-
-          const particleCount = reduceMotion
-            ? 24
-            : Math.min(
-                125,
-                Math.max(54, Math.floor((canvasWidth * canvasHeight) / 15500)),
-              );
-
-          particles = Array.from(
-            { length: particleCount },
-            () => new Particle(),
-          );
-        }
-
-        function drawParticleConnections() {
-          const connectionDistance = canvasWidth < 700 ? 92 : 138;
-          const maxDistanceSquared = connectionDistance * connectionDistance;
-
-          for (let first = 0; first < particles.length; first += 1) {
-            for (
-              let second = first + 1;
-              second < particles.length;
-              second += 1
-            ) {
-              const dx = particles[first].x - particles[second].x;
-              const dy = particles[first].y - particles[second].y;
-              const distanceSquared = dx * dx + dy * dy;
-
-              if (distanceSquared < maxDistanceSquared) {
-                const opacity =
-                  (1 - distanceSquared / maxDistanceSquared) * 0.13;
-                context.beginPath();
-                context.strokeStyle = `rgba(199, 151, 60, ${opacity})`;
-                context.lineWidth = 0.7;
-                context.moveTo(particles[first].x, particles[first].y);
-                context.lineTo(particles[second].x, particles[second].y);
-                context.stroke();
-              }
-            }
-          }
-        }
-
-        function updateDynamicBackground() {
-          const scrollShift = Math.min(
-            window.scrollY * 0.12,
-            canvasHeight * 0.32,
-          );
-          document.documentElement.style.setProperty(
-            "--scroll-shift",
-            `${scrollShift}px`,
-          );
-        }
-
-        function animateParticleBackground(time = 0) {
-          if (!pageVisible) return;
-
-          context.clearRect(0, 0, canvasWidth, canvasHeight);
-          updateDynamicBackground();
-
-          particles.forEach((particle) => {
-            particle.update(time);
-            particle.draw();
-          });
-
-          drawParticleConnections();
-          animationFrameId = window.requestAnimationFrame(
-            animateParticleBackground,
-          );
-        }
-
-        function restartParticleBackground() {
-          if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
-          resizeParticleCanvas();
-          animateParticleBackground();
-        }
-
-        window.addEventListener("resize", restartParticleBackground);
-
-        document.addEventListener("visibilitychange", () => {
-          pageVisible = !document.hidden;
-
-          if (pageVisible) {
-            restartParticleBackground();
-          } else if (animationFrameId) {
-            window.cancelAnimationFrame(animationFrameId);
-          }
-        });
-
-        restartParticleBackground();
-
-        /* KAPCSOLAT ŰRLAP: visszajelzés, popup és /api/contact kérés. */
-        function setNote(text, type = "") {
-          formNote.textContent = text;
-          formNote.className = "form-note";
-          if (type) formNote.classList.add(type);
-        }
-        function openPopup() {
-          popup.classList.add("show");
-          popup.setAttribute("aria-hidden", "false");
-        }
-        function closePopup() {
-          popup.classList.remove("show");
-          popup.setAttribute("aria-hidden", "true");
-        }
-        popupClose.addEventListener("click", closePopup);
-        popupOk.addEventListener("click", closePopup);
-        popup.addEventListener("click", (e) => {
-          if (e.target === popup) closePopup();
-        });
-
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const button = form.querySelector('button[type="submit"]');
-          const payload = {
-            name: document.getElementById("name").value.trim(),
-            email: document.getElementById("email").value.trim(),
-            message: document.getElementById("message").value.trim(),
-          };
-          if (!payload.name || !payload.email || !payload.message) {
-            setNote("Tölts ki minden kötelező mezőt.", "error");
-            return;
-          }
-          button.disabled = true;
-          button.textContent = "Küldés folyamatban...";
-          setNote("Az üzenet küldése folyamatban van.");
-          try {
-            const response = await fetch("/api/contact", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
-            });
-            let result = {};
-            try {
-              result = await response.json();
-            } catch (_) {}
-            if (!response.ok || result.ok === false)
-              throw new Error(result.error || "Sikertelen küldés.");
-            form.reset();
-            setNote("Köszönjük, az üzeneted megérkezett.", "success");
-            openPopup();
-          } catch (error) {
-            setNote(
-              "Nem sikerült elküldeni az üzenetet. Próbáld újra.",
-              "error",
-            );
-          } finally {
-            button.disabled = false;
-            button.textContent = "Ajánlatkérés elküldése →";
-          }
-        });
-      });
-    </script>
-  </body>
+<script>
+(function(){
+  const labels={
+    hu:{toLight:'VILÁGOS',toDark:'SÖTÉT'},
+    en:{toLight:'LIGHT',toDark:'DARK'},
+    de:{toLight:'HELL',toDark:'DUNKEL'}
+  };
+  function syncThemeLanguage(){
+    const lang=localStorage.getItem('krilix-v5-lang')||document.documentElement.lang||'hu';
+    const set=labels[lang]||labels.hu;
+    document.documentElement.lang=lang;
+    const label=document.getElementById('themeLabel');
+    if(label) label.textContent=document.body.classList.contains('light-theme')?set.toDark:set.toLight;
+  }
+  document.querySelectorAll('[data-lang]').forEach(btn=>btn.addEventListener('click',()=>setTimeout(syncThemeLanguage,0)));
+  new MutationObserver(syncThemeLanguage).observe(document.body,{attributes:true,attributeFilter:['class']});
+  syncThemeLanguage();
+})();
+</script>
+</body>
 </html>

@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="hu">
+<head>
+
+<script>
+(function () {
+  function softwareRenderingLikely() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl =
+        canvas.getContext('webgl', { powerPreference: 'high-performance' }) ||
+        canvas.getContext('experimental-webgl');
+
+      if (!gl) return true;
+
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      if (!ext) return false;
+
+      const renderer = String(
+        gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || ''
+      ).toLowerCase();
+
+      return /swiftshader|llvmpipe|software|basic render|microsoft basic/i.test(renderer);
+    } catch (_) {
+      return true;
+    }
+  }
+
+  if (softwareRenderingLikely()) {
+    document.documentElement.classList.add('software-render');
+  }
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07080a">
+<title>Rólunk — Krilix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Black Ops One a felső léchez, Orbitron a vastag tartalmi elemekhez -->
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/base.css">
+
+<link rel="stylesheet" href="../assets/css/pages/rolunk.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/responsive.css?v=17">
+</head>
+<body class="inner-page page-rolunk">
+
+<!-- Háttéri SVG technikai réteg (munkaink.html alapján) -->
+<svg class="circuit-background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="dotGrid" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="8" cy="8" r="1" fill="#1b202a" />
+    </pattern>
+  </defs>
+
+  <rect x="60" y="80" width="220" height="160" fill="url(#dotGrid)" opacity="0.65" />
+  <rect x="1640" y="80" width="220" height="160" fill="url(#dotGrid)" opacity="0.65" />
+  <rect x="60" y="840" width="220" height="160" fill="url(#dotGrid)" opacity="0.65" />
+  <rect x="1640" y="840" width="220" height="160" fill="url(#dotGrid)" opacity="0.65" />
+
+  <g class="trace-deep">
+    <path d="M 480 340 H 340 L 220 220 H 20" />
+    <path d="M 480 370 H 320 L 200 250 H 20" />
+    <path d="M 1440 340 H 1580 L 1700 220 H 1900" />
+    <path d="M 1440 370 H 1600 L 1720 250 H 1900" />
+    <path d="M 680 220 V 120 L 600 40 V 0" />
+    <path d="M 1240 220 V 120 L 1320 40 V 0" />
+  </g>
+
+  <g class="trace-main">
+    <path d="M 500 240 L 380 120 H 180" />
+    <path d="M 1420 240 L 1540 120 H 1740" />
+    <path d="M 500 700 L 380 820 H 180" />
+    <path d="M 1420 700 L 1540 820 H 1740" />
+  </g>
+
+  <g class="trace-highlight">
+    <path d="M 480 470 H 260 L 160 370 H 40" />
+    <path d="M 1440 470 H 1660 L 1760 370 H 1880" />
+    <path d="M 960 220 V 80 L 900 20 H 780" />
+    <path d="M 960 220 V 80 L 1020 20 H 1140" />
+  </g>
+
+  <circle class="solder-glow" cx="380" cy="120" r="10" />
+  <circle class="solder-bright" cx="380" cy="120" r="4.5" />
+  <circle class="solder-glow" cx="1540" cy="120" r="10" />
+  <circle class="solder-bright" cx="1540" cy="120" r="4.5" />
+  <circle class="solder-glow" cx="260" cy="470" r="9" />
+  <circle class="solder-bright" cx="260" cy="470" r="4" />
+  <circle class="solder-glow" cx="1660" cy="470" r="9" />
+  <circle class="solder-bright" cx="1660" cy="470" r="4" />
+</svg>
+
+<!-- Felfedezés Overlay Menü (munkaink.html alapján) -->
+<!-- Felfedezés Overlay — Kapcsolat oldal stílusa -->
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <div class="menu-top">
+    <div class="brand">KRILIX <span class="gold serif">Tech & Labs</span></div>
+    <button class="close-menu" id="closeMenuBtn" aria-label="Bezárás"></button>
+  </div>
+  <nav class="overlay-nav">
+    <a href="../munkaink/index.html"><span class="nav-index">01</span><strong data-i18n="nav.work">Munkáink</strong></a>
+    <a href="../szolgaltatasok/index.html"><span class="nav-index">02</span><strong data-i18n="nav.services">Szolgáltatások</strong></a>
+    <a href="../rolunk/index.html" aria-current="page"><span class="nav-index">03</span><strong data-i18n="nav.about">Rólunk</strong></a>
+    <a href="../kapcsolat/index.html"><span class="nav-index">04</span><strong data-i18n="nav.contact">Kapcsolat</strong></a>
+  </nav>
+  <div class="menu-bottom">
+    <span>hello@krilixtechlabs.com</span>
+    <span data-i18n="footer.studio">Független digitális stúdió · Magyarország</span>
+  </div>
+</div>
+
+<main>
+<section class="inner-hero">
+    <div class="inner-top">
+    <a class="inner-brand" href="../index.html">KRILIX <em>Tech & Labs</em></a>
+    <div class="inner-actions">
+      <div class="ctrl-pill">
+        <button class="theme-btn" id="themeToggleBtn" type="button" title="Téma váltása">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel" style="font-size:10px;">VILÁGOS</span>
+        </button>
+      </div>
+      <div class="ctrl-pill lang">
+        <button data-lang="hu" class="active">HU</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="de">DE</button>
+      </div>
+      <button class="inner-menu-btn menu-trigger" id="openMenuBtn" type="button" aria-label="Menü megnyitása" data-i18n="btn.explore">FELFEDEZÉS</button>
+    </div>
+  </div>
+  
+  <div class="inner-title-wrap">
+    <h1><span data-i18n="about.title">RÓLUNK</span></h1>
+  </div>
+
+  <div class="inner-lead-box wrap">
+    <p data-i18n="about.lead">Egyedi digitális rendszereket és modern weboldalakat építünk, amelyek gyorsak, stabilak és valódi eredményeket hoznak vállalkozásának.</p>
+  </div>
+</section>
+
+<section class="about-section">
+  <div class="wrap">
+    
+    <div class="statement-row">
+      <h3 data-i18n="about.focus.title">Irányelvünk</h3>
+      <p data-i18n="about.focus.desc">A minőség a részletekben rejlik. Minden funkciót és felületet pontosan vállalkozása igényeire tervezünk.</p>
+    </div>
+
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <h4 data-i18n="about.p1.title">Nulla sablon</h4>
+        <p data-i18n="about.p1.desc">Egyedi dizájn és saját fejlesztés. Digitális felülete nem úgy fog kinézni, mint tíz másik versenytársáé.</p>
+      </div>
+      <div class="pillar-card">
+        <h4 data-i18n="about.p2.title">Stabil fejlesztés</h4>
+        <p data-i18n="about.p2.desc">Tiszta, modern technológiai alapok felesleges kiegészítők és lassulások nélkül.</p>
+      </div>
+      <div class="pillar-card">
+        <h4 data-i18n="about.p3.title">Valódi eredmények</h4>
+        <p data-i18n="about.p3.desc">Egyszerű kezelhetőség, átlátható folyamatok és zökkenőmentes ügyfélélmény.</p>
+      </div>
+    </div>
+
+    <div class="statement-row">
+      <h3 data-i18n="about.flow.title">Közvetlen kapcsolat</h3>
+      <p data-i18n="about.flow.desc">Nincsenek fölösleges közvetítők és időhúzó körök. Közvetlenül azokkal egyeztet, akik ténylegesen megtervezik és lefejlesztik a rendszert.</p>
+    </div>
+
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <p class="footer-brand">KRILIX<br><em>Tech & Labs</em></p>
+      </div>
+      <div>
+        <h4>
+          <button type="button" class="footer-heading-btn" data-i18n="footer.explore" aria-label="Menü megnyitása">FELFEDEZÉS</button>
+        </h4>
+        <div class="footer-links">
+          <a href="../munkaink/index.html" data-i18n="footer.work">Munkáink</a>
+          <a href="../szolgaltatasok/index.html" data-i18n="footer.services">Szolgáltatások</a>
+          <a href="../rolunk/index.html" aria-current="page" data-i18n="footer.about">Rólunk</a>
+          <a href="../adatvedelem/index.html" data-i18n="footer.privacy">Adatvédelem</a>
+        </div>
+      </div>
+      <div>
+        <h4>
+          <a href="../kapcsolat/index.html" class="footer-heading-link" data-i18n="footer.contactHeading">KAPCSOLAT</a>
+        </h4>
+        <div class="footer-links">
+          <a href="mailto:hello@krilixtechlabs.com">hello@krilixtechlabs.com</a>
+          <a href="tel:+36705695022">+36 70 569 5022</a>
+          <span data-i18n="footer.location">Magyarország</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> KRILIX TECH & LABS</span>
+      <span data-i18n="footer.bottom">TERVEZÉS × FEJLESZTÉS × RENDSZEREK</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/app.js"></script>
+
+<script>
+  (function () {
+    // ================= MENÜ MEGNYITÁS / ZÁRÁS (MUNKAINK.HTML-LEL KOMPATIBILIS) =================
+    const overlay = document.querySelector('.menu-overlay');
+    const menuTrigger = document.querySelector('.inner-menu-btn.menu-trigger');
+    const closeBtn = document.querySelector('.close-menu');
+    const footerExploreBtn = document.querySelector('.footer-heading-btn');
+
+    function openMenu() {
+      if (overlay) {
+        overlay.classList.add('open', 'active');
+        document.body.classList.add('menu-open');
+      }
+    }
+
+    function closeMenu() {
+      if (overlay) {
+        overlay.classList.remove('open', 'active');
+        document.body.classList.remove('menu-open');
+      }
+    }
+
+    if (menuTrigger) menuTrigger.addEventListener('click', openMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+    if (footerExploreBtn) {
+      footerExploreBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (menuTrigger) {
+          menuTrigger.click();
+        } else {
+          openMenu();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    // ================= NYELVI FORDÍTÁSOK =================
+    const translations = {
+      hu: {
+        'nav.work': 'Munkáink',
+        'nav.services': 'Szolgáltatások',
+        'nav.about': 'Rólunk',
+        'nav.contact': 'Kapcsolat',
+        'btn.explore': 'FELFEDEZÉS',
+        'footer.studio': 'Független digitális stúdió · Magyarország',
+        'about.title': 'RÓLUNK',
+        'about.lead': 'Egyedi digitális rendszereket és modern weboldalakat építünk, amelyek gyorsak, stabilak és valódi eredményeket hoznak vállalkozásának.',
+        'about.focus.title': 'Irányelvünk',
+        'about.focus.desc': 'A minőség a részletekben rejlik. Minden funkciót és felületet pontosan vállalkozása igényeire tervezünk.',
+        'about.p1.title': 'Nulla sablon',
+        'about.p1.desc': 'Egyedi dizájn és saját fejlesztés. Digitális felülete nem úgy fog kinézni, mint tíz másik versenytársáé.',
+        'about.p2.title': 'Stabil fejlesztés',
+        'about.p2.desc': 'Tiszta, modern technológiai alapok felesleges kiegészítők és lassulások nélkül.',
+        'about.p3.title': 'Valódi eredmények',
+        'about.p3.desc': 'Egyszerű kezelhetőség, átlátható folyamatok és zökkenőmentes ügyfélélmény.',
+        'about.flow.title': 'Közvetlen kapcsolat',
+        'about.flow.desc': 'Nincsenek fölösleges közvetítők és időhúzó körök. Közvetlenül azokkal egyeztet, akik ténylegesen megtervezik és lefejlesztik a rendszert.',
+        'footer.explore': 'FELFEDEZÉS',
+        'footer.work': 'Munkáink',
+        'footer.services': 'Szolgáltatások',
+        'footer.about': 'Rólunk',
+        'footer.privacy': 'Adatvédelem',
+        'footer.contactHeading': 'KAPCSOLAT',
+        'footer.location': 'Magyarország',
+        'footer.bottom': 'TERVEZÉS × FEJLESZTÉS × RENDSZEREK'
+      },
+      de: {
+        'nav.work': 'Projekte',
+        'nav.services': 'Leistungen',
+        'nav.about': 'Über uns',
+        'nav.contact': 'Kontakt',
+        'btn.explore': 'ENTDECKEN',
+        'footer.studio': 'Unabhängiges Digitalstudio · Ungarn',
+        'about.title': 'ÜBER UNS',
+        'about.lead': 'Wir entwickeln maßgeschneiderte digitale Systeme und moderne Websites, die schnell und stabil sind und echte Ergebnisse für Ihr Unternehmen liefern.',
+        'about.focus.title': 'Unser Anspruch',
+        'about.focus.desc': 'Qualität liegt im Detail. Wir stimmen jede Funktion und Oberfläche präzise auf die Anforderungen Ihres Unternehmens ab.',
+        'about.p1.title': 'Keine Vorlagen',
+        'about.p1.desc': 'Individuelles Design und maßgeschneiderte Entwicklung. Ihr digitaler Auftritt hebt sich klar von Ihren Wettbewerbern ab.',
+        'about.p2.title': 'Stabile Entwicklung',
+        'about.p2.desc': 'Saubere, moderne Technologie ohne unnötige Erweiterungen oder Performance-Bremsen.',
+        'about.p3.title': 'Echte Ergebnisse',
+        'about.p3.desc': 'Einfache Bedienung, klare Abläufe und ein reibungsloses Nutzererlebnis.',
+        'about.flow.title': 'Direkter Kontakt',
+        'about.flow.desc': 'Keine unnötigen Zwischenstationen oder zeitraubenden Abstimmungsschleifen. Sie sprechen direkt mit den Menschen, die Ihr System planen und entwickeln.',
+        'footer.explore': 'ENTDECKEN',
+        'footer.work': 'Projekte',
+        'footer.services': 'Leistungen',
+        'footer.about': 'Über uns',
+        'footer.privacy': 'Datenschutz',
+        'footer.contactHeading': 'KONTAKT',
+        'footer.location': 'Ungarn',
+        'footer.bottom': 'DESIGN × ENTWICKLUNG × SYSTEME'
+      },
+      en: {
+        'nav.work': 'Work',
+        'nav.services': 'Services',
+        'nav.about': 'About',
+        'nav.contact': 'Contact',
+        'btn.explore': 'EXPLORE',
+        'footer.studio': 'Independent digital studio · Hungary',
+        'about.title': 'ABOUT',
+        'about.lead': 'We build custom digital systems and modern websites that are fast, dependable, and drive measurable results for your business.',
+        'about.focus.title': 'Philosophy',
+        'about.focus.desc': 'Quality lives in the details. Every feature and interface is designed around the specific needs of your business.',
+        'about.p1.title': 'Zero templates',
+        'about.p1.desc': 'Custom design and bespoke development. Your digital presence will stand apart from the crowd.',
+        'about.p2.title': 'Solid engineering',
+        'about.p2.desc': 'Clean, modern tech foundations built without bloated add-ons or performance bottlenecks.',
+        'about.p3.title': 'Tangible results',
+        'about.p3.desc': 'Effortless usability, clear processes, and a seamless customer experience.',
+        'about.flow.title': 'Direct contact',
+        'about.flow.desc': 'No middlemen, no unnecessary meeting marathons. You collaborate directly with the people building your product.',
+        'footer.explore': 'EXPLORE',
+        'footer.work': 'Work',
+        'footer.services': 'Services',
+        'footer.about': 'About',
+        'footer.privacy': 'Privacy',
+        'footer.contactHeading': 'CONTACT',
+        'footer.location': 'Hungary',
+        'footer.bottom': 'DESIGN × DEVELOPMENT × SYSTEMS'
+      }
+    };
+
+    function updateTexts(lang) {
+      localStorage.setItem("krilix-v5-lang", lang);
+      const current = translations[lang] || translations.hu;
+      document.documentElement.lang = lang;
+      Object.keys(current).forEach(key => {
+        document.querySelectorAll(`[data-i18n="${key}"]`).forEach(el => {
+          el.textContent = current[key];
+        });
+      });
+      document.querySelectorAll('.lang button[data-lang]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+    }
+
+    document.querySelectorAll('.lang button[data-lang]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        updateTexts(btn.getAttribute('data-lang'));
+      });
+    });
+
+    const initialLang = localStorage.getItem("krilix-v5-lang") || "hu";
+    updateTexts(initialLang);
+
+    const yearEl = document.querySelector('[data-year]');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+  })();
+</script>
+
+<script>
+  // ================= TÉMAVÁLTÓ KEZELŐ (MUNKAINK.HTML SZERINT) =================
+  (function () {
+    const btn = document.getElementById('themeToggleBtn');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    function applyTheme(theme) {
+      const light = theme === 'light';
+      document.body.classList.toggle('light-theme', light);
+      if (icon) icon.textContent = light ? '🌙' : '☀️';
+      if (label) label.textContent = light ? 'SÖTÉT' : 'VILÁGOS';
+      localStorage.setItem('krilix-theme', theme);
+    }
+
+    applyTheme(localStorage.getItem('krilix-theme') || 'dark');
+    if (btn) btn.addEventListener('click', () => applyTheme(document.body.classList.contains('light-theme') ? 'dark' : 'light'));
+  })();
+</script>
+
+<script>
+(function(){
+  const labels={
+    hu:{toLight:'VILÁGOS',toDark:'SÖTÉT'},
+    en:{toLight:'LIGHT',toDark:'DARK'},
+    de:{toLight:'HELL',toDark:'DUNKEL'}
+  };
+  function syncThemeLanguage(){
+    const lang=localStorage.getItem('krilix-v5-lang')||document.documentElement.lang||'hu';
+    const set=labels[lang]||labels.hu;
+    document.documentElement.lang=lang;
+    const label=document.getElementById('themeLabel');
+    if(label) label.textContent=document.body.classList.contains('light-theme')?set.toDark:set.toLight;
+  }
+  document.querySelectorAll('[data-lang]').forEach(btn=>btn.addEventListener('click',()=>setTimeout(syncThemeLanguage,0)));
+  new MutationObserver(syncThemeLanguage).observe(document.body,{attributes:true,attributeFilter:['class']});
+  syncThemeLanguage();
+})();
+</script>
+</body>
+</html>

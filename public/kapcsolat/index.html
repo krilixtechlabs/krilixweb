@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="hu">
+<head>
+
+<script>
+(function () {
+  function softwareRenderingLikely() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl =
+        canvas.getContext('webgl', { powerPreference: 'high-performance' }) ||
+        canvas.getContext('experimental-webgl');
+
+      if (!gl) return true;
+
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      if (!ext) return false;
+
+      const renderer = String(
+        gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || ''
+      ).toLowerCase();
+
+      return /swiftshader|llvmpipe|software|basic render|microsoft basic/i.test(renderer);
+    } catch (_) {
+      return true;
+    }
+  }
+
+  if (softwareRenderingLikely()) {
+    document.documentElement.classList.add('software-render');
+  }
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kapcsolat — Krilix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Orbitron:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/base.css">
+
+<link rel="stylesheet" href="../assets/css/pages/kapcsolat.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/responsive.css?v=17">
+</head>
+<body class="inner-page page-kapcsolat">
+
+<!-- Háttéri SVG technikai réteg -->
+<svg class="circuit-background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="dotGrid" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="8" cy="8" r="1" fill="currentColor" opacity="0.18" />
+    </pattern>
+  </defs>
+
+  <rect x="60" y="80" width="220" height="160" fill="url(#dotGrid)" />
+  <rect x="1640" y="80" width="220" height="160" fill="url(#dotGrid)" />
+  <rect x="60" y="840" width="220" height="160" fill="url(#dotGrid)" />
+  <rect x="1640" y="840" width="220" height="160" fill="url(#dotGrid)" />
+
+  <g class="trace-deep">
+    <path d="M 480 340 H 340 L 220 220 H 20" />
+    <path d="M 480 370 H 320 L 200 250 H 20" />
+    <path d="M 1440 340 H 1580 L 1700 220 H 1900" />
+    <path d="M 1440 370 H 1600 L 1720 250 H 1900" />
+    <path d="M 680 220 V 120 L 600 40 V 0" />
+    <path d="M 1240 220 V 120 L 1320 40 V 0" />
+  </g>
+
+  <g class="trace-main">
+    <path d="M 500 240 L 380 120 H 180" />
+    <path d="M 1420 240 L 1540 120 H 1740" />
+    <path d="M 500 700 L 380 820 H 180" />
+    <path d="M 1420 700 L 1540 820 H 1740" />
+  </g>
+
+  <g class="trace-highlight">
+    <path d="M 480 470 H 260 L 160 370 H 40" />
+    <path d="M 1440 470 H 1660 L 1760 370 H 1880" />
+    <path d="M 960 220 V 80 L 900 20 H 780" />
+    <path d="M 960 220 V 80 L 1020 20 H 1140" />
+  </g>
+
+  <circle class="solder-glow" cx="380" cy="120" r="10" />
+  <circle class="solder-bright" cx="380" cy="120" r="4.5" />
+  <circle class="solder-glow" cx="1540" cy="120" r="10" />
+  <circle class="solder-bright" cx="1540" cy="120" r="4.5" />
+  <circle class="solder-glow" cx="260" cy="470" r="9" />
+  <circle class="solder-bright" cx="260" cy="470" r="4" />
+  <circle class="solder-glow" cx="1660" cy="470" r="9" />
+  <circle class="solder-bright" cx="1660" cy="470" r="4" />
+</svg>
+
+<!-- Felfedezés Overlay (Adatvédelem nélkül) -->
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <div class="menu-top">
+    <div class="brand">KRILIX <span class="gold serif">Tech & Labs</span></div>
+    <button class="close-menu" id="closeMenuBtn" aria-label="Bezárás"></button>
+  </div>
+  <nav class="overlay-nav">
+    <a href="../munkaink/index.html"><span class="nav-index">01</span><strong data-i18n="nav.work">Munkáink</strong></a>
+    <a href="../szolgaltatasok/index.html"><span class="nav-index">02</span><strong data-i18n="nav.services">Szolgáltatások</strong></a>
+    <a href="../rolunk/index.html"><span class="nav-index">03</span><strong data-i18n="nav.about">Rólunk</strong></a>
+    <a href="../kapcsolat/index.html" aria-current="page"><span class="nav-index">04</span><strong data-i18n="nav.contact">Kapcsolat</strong></a>
+  </nav>
+  <div class="menu-bottom">
+    <span>hello@krilixtechlabs.com</span>
+    <span data-i18n="footer.studio">Független digitális stúdió · Magyarország</span>
+  </div>
+</div>
+
+<main>
+<section class="inner-hero">
+  <div class="inner-top">
+    <a class="inner-brand" href="../index.html">KRILIX <em>Tech & Labs</em></a>
+    <div class="inner-actions">
+      <!-- Téma választó gomb -->
+      <div class="ctrl-pill">
+        <button class="theme-btn" id="themeToggleBtn" title="Téma váltása">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel" style="font-size:10px;">VILÁGOS</span>
+        </button>
+      </div>
+
+      <!-- Nyelvválasztó -->
+      <div class="ctrl-pill lang">
+        <button data-lang="hu" class="active">HU</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="de">DE</button>
+      </div>
+
+      <button class="inner-menu-btn menu-trigger" id="openMenuBtn" aria-label="Menü megnyitása" data-i18n="btn.explore">FELFEDEZÉS</button>
+    </div>
+  </div>
+  
+  <div class="inner-title-wrap">
+    <h1><span data-i18n="contact.title">KAPCSOLAT</span></h1>
+  </div>
+
+  <div class="inner-lead-box wrap">
+    <p data-i18n="contact.lead">Van egy projekt a fejében? Küldje el a főbb részleteket, és rövid időn belül felvesszük Önnel a kapcsolatot.</p>
+  </div>
+</section>
+
+<section class="contact-section">
+  <div class="wrap contact-layout">
+    
+    <!-- Bal oldal: elérhetőségek -->
+    <div class="contact-heading-side">
+      <h2 data-i18n="contact.side.title">Kezdjük el a közös munkát</h2>
+      <p data-i18n="contact.side.desc">Írjon nekünk közvetlenül az űrlapon keresztül, vagy keresse csapatunkat e-mailben, illetve telefonon.</p>
+      
+      <div class="contact-entries">
+        <div class="contact-entry">
+          <span data-i18n="contact.label.email">E-mail</span>
+          <a href="mailto:hello@krilixtechlabs.com">hello@krilixtechlabs.com</a>
+        </div>
+        <div class="contact-entry">
+          <span data-i18n="contact.label.phone">Telefon</span>
+          <a href="tel:+36705695022">+36 70 569 5022</a>
+        </div>
+        <div class="contact-entry">
+          <span data-i18n="contact.label.loc">Helyszín</span>
+          <strong data-i18n="contact.val.loc">Magyarország</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jobb oldal: Közvetlen üzenetküldő űrlap -->
+    <div class="contact-form-box">
+      <h3 data-i18n="form.title">Írjon nekünk üzenetet</h3>
+      <p data-i18n="form.desc">Töltse ki az alábbi mezőket, és 24 órán belül érdemben válaszolunk megkeresésére.</p>
+      
+      <form class="direct-form" id="contactForm" novalidate>
+        <div class="form-row-dual">
+          <div class="form-group">
+            <label for="name" data-i18n="form.label.name">Név</label>
+            <input type="text" id="name" name="name" required data-i18n-placeholder="form.placeholder.name" placeholder="Az Ön neve">
+          </div>
+          <div class="form-group">
+            <label for="email" data-i18n="form.label.email">E-mail cím</label>
+            <input type="email" id="email" name="email" required data-i18n-placeholder="form.placeholder.email" placeholder="pelda@ceg.hu">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="message" data-i18n="form.label.message">Üzenet vagy projekt leírása</label>
+          <textarea id="message" name="message" required data-i18n-placeholder="form.placeholder.message" placeholder="Írja le röviden elképzeléseit, céljait vagy kérdéseit..."></textarea>
+        </div>
+
+        <button type="submit" class="submit-msg-btn" id="contactSubmit" data-i18n="form.submit">Üzenet küldése</button>
+        <div class="form-status" id="contactFormStatus" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+  </div>
+</section>
+</main>
+
+<!-- Lábléc: Itt MEGMARADT az Adatvédelem link -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <p class="footer-brand">KRILIX<br><em>Tech & Labs</em></p>
+      </div>
+      <div>
+        <h4>
+          <button type="button" class="footer-heading-btn" data-i18n="footer.explore" aria-label="Menü megnyitása">FELFEDEZÉS</button>
+        </h4>
+        <div class="footer-links">
+          <a href="../munkaink/index.html" data-i18n="footer.work">Munkáink</a>
+          <a href="../szolgaltatasok/index.html" data-i18n="footer.services">Szolgáltatások</a>
+          <a href="../rolunk/index.html" data-i18n="footer.about">Rólunk</a>
+          <a href="../adatvedelem/index.html" data-i18n="footer.privacy">Adatvédelem</a>
+        </div>
+      </div>
+      <div>
+        <h4>
+          <a href="../kapcsolat/index.html" aria-current="page" class="footer-heading-link" data-i18n="footer.contactHeading">KAPCSOLAT</a>
+        </h4>
+        <div class="footer-links">
+          <a href="mailto:hello@krilixtechlabs.com">hello@krilixtechlabs.com</a>
+          <a href="tel:+36705695022">+36 70 569 5022</a>
+          <span data-i18n="footer.location">Magyarország</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> KRILIX TECH & LABS</span>
+      <span data-i18n="footer.bottom">TERVEZÉS × FEJLESZTÉS × RENDSZEREK</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    // ================= TÉMAVÁLTÓ KEZELŐ =================
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeLabel = document.getElementById("themeLabel");
+
+    function applyTheme(theme) {
+      if (theme === "light") {
+        document.body.classList.add("light-theme");
+        if (themeIcon) themeIcon.textContent = "🌙";
+        if (themeLabel) themeLabel.textContent = "SÖTÉT";
+      } else {
+        document.body.classList.remove("light-theme");
+        if (themeIcon) themeIcon.textContent = "☀️";
+        if (themeLabel) themeLabel.textContent = "VILÁGOS";
+      }
+      localStorage.setItem("krilix-theme", theme);
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.contains("light-theme");
+      applyTheme(isLight ? "dark" : "light");
+    }
+
+    const savedTheme = localStorage.getItem("krilix-theme") || "dark";
+    applyTheme(savedTheme);
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener("click", toggleTheme);
+    }
+
+    // ================= MENÜ MEGNYITÁS / ZÁRÁS =================
+    const menuOverlay = document.getElementById('menuOverlay');
+    const openMenuBtn = document.getElementById('openMenuBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const footerExploreBtn = document.querySelector('.footer-heading-btn');
+
+    function openMenu() {
+      if (menuOverlay) {
+        menuOverlay.classList.add('active');
+        document.body.classList.add('menu-open');
+        menuOverlay.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    function closeMenu() {
+      if (menuOverlay) {
+        menuOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        menuOverlay.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    if (openMenuBtn) openMenuBtn.addEventListener('click', openMenu);
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
+    if (footerExploreBtn) footerExploreBtn.addEventListener('click', openMenu);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuOverlay && menuOverlay.classList.contains('active')) {
+        closeMenu();
+      }
+    });
+
+    // ================= NYELVI FORDÍTÁSOK =================
+    const translations = {
+      hu: {
+        'nav.work': 'Munkáink',
+        'nav.services': 'Szolgáltatások',
+        'nav.about': 'Rólunk',
+        'nav.contact': 'Kapcsolat',
+        'contact.title': 'KAPCSOLAT',
+        'contact.lead': 'Van egy projekt a fejében? Küldje el a főbb részleteket, és rövid időn belül felvesszük Önnel a kapcsolatot.',
+        'contact.side.title': 'Kezdjük el a közös munkát',
+        'contact.side.desc': 'Írjon nekünk közvetlenül az űrlapon keresztül, vagy keresse csapatunkat e-mailben, illetve telefonon.',
+        'contact.label.email': 'E-mail',
+        'contact.label.phone': 'Telefon',
+        'contact.label.loc': 'Helyszín',
+        'contact.val.loc': 'Magyarország',
+        'form.title': 'Írjon nekünk üzenetet',
+        'form.desc': 'Töltse ki az alábbi mezőket, és 24 órán belül érdemben válaszolunk megkeresésére.',
+        'form.label.name': 'Név',
+        'form.label.email': 'E-mail cím',
+        'form.label.message': 'Üzenet vagy projekt leírása',
+        'form.submit': 'Üzenet küldése',
+        'form.placeholder.name': 'Az Ön neve',
+        'form.placeholder.email': 'pelda@ceg.hu',
+        'form.placeholder.message': 'Írja le röviden elképzeléseit, céljait vagy kérdéseit...',
+        'btn.explore': 'FELFEDEZÉS',
+        'footer.studio': 'Független digitális stúdió · Magyarország',
+        'footer.bottom': 'TERVEZÉS × FEJLESZTÉS × RENDSZEREK',
+        'footer.explore': 'FELFEDEZÉS',
+        'footer.work': 'Munkáink',
+        'footer.services': 'Szolgáltatások',
+        'footer.about': 'Rólunk',
+        'footer.privacy': 'Adatvédelem',
+        'footer.contactHeading': 'KAPCSOLAT',
+        'footer.location': 'Magyarország'
+      },
+      de: {
+        'nav.work': 'Projekte',
+        'nav.services': 'Leistungen',
+        'nav.about': 'Über uns',
+        'nav.contact': 'Kontakt',
+        'contact.title': 'KONTAKT',
+        'contact.lead': 'Haben Sie ein Projekt im Kopf? Senden Sie uns die wichtigsten Details, und wir melden uns zeitnah bei Ihnen.',
+        'contact.side.title': 'Lassen Sie uns gemeinsam starten',
+        'contact.side.desc': 'Schreiben Sie uns über das Formular oder kontaktieren Sie uns direkt per E-Mail oder Telefon.',
+        'contact.label.email': 'E-Mail',
+        'contact.label.phone': 'Telefon',
+        'contact.label.loc': 'Standort',
+        'contact.val.loc': 'Ungarn',
+        'form.title': 'Nachricht senden',
+        'form.desc': 'Füllen Sie die Felder aus – wir melden uns innerhalb von 24 Stunden bei Ihnen.',
+        'form.label.name': 'Name',
+        'form.label.email': 'E-Mail-Adresse',
+        'form.label.message': 'Ihre Nachricht oder Projektbeschreibung',
+        'form.submit': 'Nachricht senden',
+        'form.placeholder.name': 'Ihr Name',
+        'form.placeholder.email': 'name@unternehmen.de',
+        'form.placeholder.message': 'Beschreiben Sie kurz Ihr Projekt, Ihre Ziele oder Ihre Fragen...',
+        'btn.explore': 'ENTDECKEN',
+        'footer.studio': 'Unabhängiges Digitalstudio · Ungarn',
+        'footer.bottom': 'DESIGN × ENTWICKLUNG × SYSTEME',
+        'footer.explore': 'ENTDECKEN',
+        'footer.work': 'Projekte',
+        'footer.services': 'Leistungen',
+        'footer.about': 'Über uns',
+        'footer.privacy': 'Datenschutz',
+        'footer.contactHeading': 'KONTAKT',
+        'footer.location': 'Ungarn'
+      },
+      en: {
+        'nav.work': 'Work',
+        'nav.services': 'Services',
+        'nav.about': 'About',
+        'nav.contact': 'Contact',
+        'contact.title': 'CONTACT',
+        'contact.lead': 'Have a project in mind? Send us the essentials and we will get back to you promptly.',
+        'contact.side.title': 'Let’s work together',
+        'contact.side.desc': 'Send us a message using the form, or contact us directly by email or phone.',
+        'contact.label.email': 'Email',
+        'contact.label.phone': 'Phone',
+        'contact.label.loc': 'Location',
+        'contact.val.loc': 'Hungary',
+        'form.title': 'Send us a message',
+        'form.desc': 'Fill in the details below and we will respond within 24 hours.',
+        'form.label.name': 'Name',
+        'form.label.email': 'Email address',
+        'form.label.message': 'Message or project brief',
+        'form.submit': 'Send message',
+        'form.placeholder.name': 'Your name',
+        'form.placeholder.email': 'name@company.com',
+        'form.placeholder.message': 'Briefly describe your project, goals, or questions...',
+        'btn.explore': 'EXPLORE',
+        'footer.studio': 'Independent digital studio · Hungary',
+        'footer.bottom': 'DESIGN × DEVELOPMENT × SYSTEMS',
+        'footer.explore': 'EXPLORE',
+        'footer.work': 'Work',
+        'footer.services': 'Services',
+        'footer.about': 'About',
+        'footer.privacy': 'Privacy',
+        'footer.contactHeading': 'CONTACT',
+        'footer.location': 'Hungary'
+      }
+    };
+
+    function updateTexts(lang) {
+      localStorage.setItem("krilix-v5-lang", lang);
+      const current = translations[lang] || translations.hu;
+      document.documentElement.lang = lang;
+      Object.keys(current).forEach(key => {
+        document.querySelectorAll(`[data-i18n="${key}"]`).forEach(el => {
+          el.textContent = current[key];
+        });
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (current[key]) el.setAttribute('placeholder', current[key]);
+      });
+      document.querySelectorAll('.lang button[data-lang]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+    }
+
+    document.querySelectorAll('.lang button[data-lang]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        updateTexts(btn.getAttribute('data-lang'));
+      });
+    });
+
+    const initialLang = localStorage.getItem("krilix-v5-lang") || "hu";
+    updateTexts(initialLang);
+
+    const yearEl = document.querySelector('[data-year]');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+  })();
+</script>
+
+<script>
+(function(){
+  const labels={
+    hu:{toLight:'VILÁGOS',toDark:'SÖTÉT'},
+    en:{toLight:'LIGHT',toDark:'DARK'},
+    de:{toLight:'HELL',toDark:'DUNKEL'}
+  };
+  function syncThemeLanguage(){
+    const lang=localStorage.getItem('krilix-v5-lang')||document.documentElement.lang||'hu';
+    const set=labels[lang]||labels.hu;
+    document.documentElement.lang=lang;
+    const label=document.getElementById('themeLabel');
+    if(label) label.textContent=document.body.classList.contains('light-theme')?set.toDark:set.toLight;
+  }
+  document.querySelectorAll('[data-lang]').forEach(btn=>btn.addEventListener('click',()=>setTimeout(syncThemeLanguage,0)));
+  new MutationObserver(syncThemeLanguage).observe(document.body,{attributes:true,attributeFilter:['class']});
+  syncThemeLanguage();
+})();
+</script>
+
+<script>
+(function(){
+  const form = document.getElementById('contactForm');
+  const submit = document.getElementById('contactSubmit');
+  const status = document.getElementById('contactFormStatus');
+  if (!form || !submit || !status) return;
+
+  const messages = {
+    hu: {
+      sending: 'Küldés…',
+      success: 'Köszönjük! Az üzenet megérkezett, hamarosan jelentkezünk.',
+      error: 'Az üzenetet most nem sikerült elküldeni. Kérjük, próbálja újra.'
+    },
+    en: {
+      sending: 'Sending…',
+      success: 'Thank you! Your message has been received. We will get back to you shortly.',
+      error: 'Your message could not be sent right now. Please try again.'
+    },
+    de: {
+      sending: 'Wird gesendet…',
+      success: 'Vielen Dank! Ihre Nachricht ist angekommen. Wir melden uns in Kürze.',
+      error: 'Die Nachricht konnte gerade nicht gesendet werden. Bitte versuchen Sie es erneut.'
+    }
+  };
+
+  function lang(){
+    return localStorage.getItem('krilix-v5-lang') || document.documentElement.lang || 'hu';
+  }
+
+  function originalButtonText(){
+    const l = lang();
+    return l === 'en' ? 'Send message' : l === 'de' ? 'Nachricht senden' : 'Üzenet küldése';
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const l = lang();
+    const copy = messages[l] || messages.hu;
+    const payload = {
+      name: form.elements.name.value.trim(),
+      email: form.elements.email.value.trim(),
+      message: form.elements.message.value.trim()
+    };
+
+    submit.disabled = true;
+    submit.textContent = copy.sending;
+    status.className = 'form-status is-pending';
+    status.textContent = copy.sending;
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok) throw new Error(data.error || copy.error);
+
+      form.reset();
+      status.className = 'form-status is-success';
+      status.textContent = copy.success;
+    } catch (error) {
+      status.className = 'form-status is-error';
+      status.textContent = error && error.message ? error.message : copy.error;
+    } finally {
+      submit.disabled = false;
+      submit.textContent = originalButtonText();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

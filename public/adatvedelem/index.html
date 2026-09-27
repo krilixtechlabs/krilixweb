@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="hu">
+<head>
+
+<script>
+(function () {
+  function softwareRenderingLikely() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl =
+        canvas.getContext('webgl', { powerPreference: 'high-performance' }) ||
+        canvas.getContext('experimental-webgl');
+
+      if (!gl) return true;
+
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      if (!ext) return false;
+
+      const renderer = String(
+        gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || ''
+      ).toLowerCase();
+
+      return /swiftshader|llvmpipe|software|basic render|microsoft basic/i.test(renderer);
+    } catch (_) {
+      return true;
+    }
+  }
+
+  if (softwareRenderingLikely()) {
+    document.documentElement.classList.add('software-render');
+  }
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Adatkezelési Tájékoztató — Krilix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Orbitron:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/base.css">
+
+<link rel="stylesheet" href="../assets/css/pages/adatvedelem.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/responsive.css?v=17">
+</head>
+<body class="inner-page page-adatvedelem">
+
+<svg class="circuit-background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="dotGrid" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="8" cy="8" r="1" fill="currentColor" opacity="0.18" />
+    </pattern>
+  </defs>
+
+  <rect x="60" y="80" width="220" height="160" fill="url(#dotGrid)" />
+  <rect x="1640" y="80" width="220" height="160" fill="url(#dotGrid)" />
+  <rect x="60" y="840" width="220" height="160" fill="url(#dotGrid)" />
+  <rect x="1640" y="840" width="220" height="160" fill="url(#dotGrid)" />
+
+  <g class="trace-deep">
+    <path d="M 480 340 H 340 L 220 220 H 20" />
+    <path d="M 480 370 H 320 L 200 250 H 20" />
+    <path d="M 1440 340 H 1580 L 1700 220 H 1900" />
+    <path d="M 1440 370 H 1600 L 1720 250 H 1900" />
+  </g>
+
+  <g class="trace-main">
+    <path d="M 500 240 L 380 120 H 180" />
+    <path d="M 1420 240 L 1540 120 H 1740" />
+    <path d="M 500 700 L 380 820 H 180" />
+    <path d="M 1420 700 L 1540 820 H 1740" />
+  </g>
+
+  <g class="trace-highlight">
+    <path d="M 480 470 H 260 L 160 370 H 40" />
+    <path d="M 1440 470 H 1660 L 1760 370 H 1880" />
+  </g>
+
+  <circle class="solder-glow" cx="380" cy="120" r="10" />
+  <circle class="solder-bright" cx="380" cy="120" r="4.5" />
+  <circle class="solder-glow" cx="1540" cy="120" r="10" />
+  <circle class="solder-bright" cx="1540" cy="120" r="4.5" />
+  <circle class="solder-glow" cx="260" cy="470" r="9" />
+  <circle class="solder-bright" cx="260" cy="470" r="4" />
+  <circle class="solder-glow" cx="1660" cy="470" r="9" />
+  <circle class="solder-bright" cx="1660" cy="470" r="4" />
+</svg>
+
+<!-- Felfedezés Overlay (Adatvédelem nélkül) -->
+<!-- Felfedezés Overlay — Kapcsolat oldal stílusa -->
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <div class="menu-top">
+    <div class="brand">KRILIX <span class="gold serif">Tech & Labs</span></div>
+    <button class="close-menu" id="closeMenuBtn" aria-label="Bezárás"></button>
+  </div>
+  <nav class="overlay-nav">
+    <a href="../munkaink/index.html"><span class="nav-index">01</span><strong data-i18n="nav.work">Munkáink</strong></a>
+    <a href="../szolgaltatasok/index.html"><span class="nav-index">02</span><strong data-i18n="nav.services">Szolgáltatások</strong></a>
+    <a href="../rolunk/index.html"><span class="nav-index">03</span><strong data-i18n="nav.about">Rólunk</strong></a>
+    <a href="../kapcsolat/index.html"><span class="nav-index">04</span><strong data-i18n="nav.contact">Kapcsolat</strong></a>
+  </nav>
+  <div class="menu-bottom">
+    <span>hello@krilixtechlabs.com</span>
+    <span data-i18n="footer.studio">Független digitális stúdió · Magyarország</span>
+  </div>
+</div>
+
+<main>
+<section class="inner-hero">
+    <div class="inner-top">
+    <a class="inner-brand" href="../index.html">KRILIX <em>Tech & Labs</em></a>
+    <div class="inner-actions">
+      <div class="ctrl-pill">
+        <button class="theme-btn" id="themeToggleBtn" type="button" title="Téma váltása">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel" style="font-size:10px;">VILÁGOS</span>
+        </button>
+      </div>
+      <div class="ctrl-pill lang">
+        <button data-lang="hu" class="active">HU</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="de">DE</button>
+      </div>
+      <button class="inner-menu-btn menu-trigger" id="openMenuBtn" type="button" aria-label="Menü megnyitása" data-i18n="btn.explore">FELFEDEZÉS</button>
+    </div>
+  </div>
+  
+  <div class="inner-title-wrap">
+    <span class="studio-tag" data-i18n="legal.tag">// JOGI NYILATKOZATOK</span>
+    <h1 id="pageHeading" data-i18n="legal.heading">ADATVÉDELEM</h1>
+  </div>
+
+  <div class="legal-tab-wrap">
+    <button type="button" class="legal-tab-btn active" data-tab="privacy" data-i18n="tab.privacy">Adatkezelési Tájékoztató</button>
+    <button type="button" class="legal-tab-btn" data-tab="terms" data-i18n="tab.terms">Általános Szerződési Feltételek</button>
+  </div>
+</section>
+
+<section class="legal-section">
+  <div class="wrap legal-grid">
+    
+    <aside class="legal-sidebar" id="legalNav">
+      <!-- Dinamikusan generálva -->
+    </aside>
+
+    <div class="legal-content-wrap">
+      
+      <!-- 1. ADATVÉDELEM BLOKK -->
+      <article class="legal-block active" id="privacyBlock">
+        <span class="legal-meta" data-i18n="privacy.meta">Krilix Tech & Labs · Adatkezelési Tájékoztató</span>
+
+        <div class="legal-notice-box">
+          <p data-i18n="privacy.notice">A jelen tajekoztató ismerteti, hogyan kezeljük a weboldal kapcsolatfelvételi űrlapján megadott személyes adatokat, milyen célból használjuk azokat, meddig őrizzük meg, és milyen jogok illetik meg az érintetteket.</p>
+        </div>
+
+        <div class="section-header">
+          <span class="section-num">// 1</span>
+          <h2 id="p-1" data-i18n="p1.title">Az adatkezelő adatai</h2>
+        </div>
+        <p data-i18n="p1.desc">A weboldalon keresztül megadott személyes adatok kezelője a Krilix Tech & Labs.</p>
+        <div class="contact-summary-card">
+          <p><strong data-i18n="p1.name">Adatkezelő neve:</strong> Krilix Tech & Labs</p>
+          <p><strong data-i18n="p1.email">Kapcsolati e-mail:</strong> <a href="mailto:hello@krilixtechlabs.com" style="color:var(--text-primary);font-weight:700">hello@krilixtechlabs.com</a></p>
+        </div>
+
+        <div class="section-header">
+          <span class="section-num">// 2</span>
+          <h2 id="p-2" data-i18n="p2.title">Milyen adatokat kezelünk és milyen célból?</h2>
+        </div>
+        <p data-i18n="p2.desc">Személyes adatot kizárólag meghatározott célból, a szükséges mértékben és a vonatkozó adatvédelmi szabályoknak megfelelően kezelünk.</p>
+
+        <div class="table-responsive">
+          <table class="legal-table">
+            <thead>
+              <tr>
+                <th data-i18n="th.scope">Adatkezelés</th>
+                <th data-i18n="th.data">Kezelt adatok</th>
+                <th data-i18n="th.purpose">Cél</th>
+                <th data-i18n="th.legal">Jogalap</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong data-i18n="t.c1">Kapcsolatfelvétel és ajánlatkérés</strong></td>
+                <td data-i18n="t.c2">Név, e-mail cím, az üzenet tartalma, beküldés időpontja</td>
+                <td data-i18n="t.c3">A megkeresés megválaszolása, ajánlat elkészítése, egyeztetés és a lehetséges együttműködés előkészítése.</td>
+                <td data-i18n="t.c4">A GDPR 6. cikk (1) bekezdés b) pontja szerinti, szerződéskötést megelőző lépések megtétele; általános megkeresés esetén a GDPR 6. cikk (1) bekezdés f) pontja szerinti jogos érdek.</td>
+              </tr>
+              <tr>
+                <td><strong data-i18n="t.s1">Weboldal biztonságos működése</strong></td>
+                <td data-i18n="t.s2">IP-cím, böngésző- és eszközadatok, látogatás időpontja, kért oldal és technikai naplóadatok</td>
+                <td data-i18n="t.s3">A weboldal működésének biztosítása, hibák feltárása, visszaélések és informatikai incidensek megelőzése.</td>
+                <td data-i18n="t.s4">A GDPR 6. cikk (1) bekezdés f) pontja szerinti jogos érdek.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong data-i18n="p2.nature.title">Az adatszolgáltatás jellege:</strong> <span data-i18n="p2.nature.desc">a kapcsolatfelvételi űrlap kitöltése önkéntes. A név, az e-mail cím és az üzenet megadása nélkül a megkeresést nem tudjuk feldolgozni és megválaszolni.</span></p>
+        <p><strong data-i18n="p2.auto.title">Automatizált döntéshozatal:</strong> <span data-i18n="p2.auto.desc">a megadott személyes adatok alapján nem végzünk automatizált döntéshozatalt vagy profilalkotást.</span></p>
+
+        <div class="section-header">
+          <span class="section-num">// 3</span>
+          <h2 id="p-3" data-i18n="p3.title">Meddig őrizzük meg az adatokat?</h2>
+        </div>
+        <ul>
+          <li data-i18n="p3.l1">Kapcsolatfelvételi megkeresés: a lezárást követő legfeljebb 12 hónapig.</li>
+          <li data-i18n="p3.l2">Létrejövő szerződés: a szerződés teljesítéséhez szükséges ideig, majd a vonatkozó jogszabályi megőrzési kötelezettségek végéig.</li>
+          <li data-i18n="p3.l3">Technikai naplóadatok: legfeljebb 30 napig, kivéve, ha biztonsági esemény kivizsgálásához hosszabb megőrzés szükséges.</li>
+        </ul>
+        <p data-i18n="p3.desc">A megőrzési idő lejárta után az adatokat töröljük vagy visszaállíthatatlanul anonimizáljuk, amennyiben további adatkezelést jogszabály nem tesz szükségessé.</p>
+
+        <div class="section-header">
+          <span class="section-num">// 4</span>
+          <h2 id="p-4" data-i18n="p4.title">Adatfeldolgozók és adattovábbítás</h2>
+        </div>
+        <p data-i18n="p4.desc">A weboldal működtetéséhez technikai szolgáltatókat vehetünk igénybe. Ezek a szolgáltatók kizárólag a szolgáltatás teljesítéséhez szükséges mértékben, szerződéses kötelezettségeik és az adatkezelő utasításai alapján kezelhetik az adatokat:</p>
+        <ul>
+          <li data-i18n="p4.l1">Tárhely- és infrastruktúra-szolgáltató: a weboldal és a szerver működtetése.</li>
+          <li data-i18n="p4.l2">Adatbázis-szolgáltató: a megkeresések biztonságos tárolása.</li>
+          <li data-i18n="p4.l3">Tranzakciós e-mail-szolgáltató: az üzenetek és visszaigazolások kézbesítése.</li>
+        </ul>
+        <p data-i18n="p4.desc2">Amennyiben valamely szolgáltató az Európai Gazdasági Térségen kívül kezel adatot, az adattovábbítás csak a GDPR szerinti megfelelő garanciák alkalmazásával történhet.</p>
+
+        <div class="section-header">
+          <span class="section-num">// 5</span>
+          <h2 id="p-5" data-i18n="p5.title">Hogyan védjük az adatokat?</h2>
+        </div>
+        <p data-i18n="p5.desc">Az adatok védelme érdekében az adatkezelés jellegéhez és kockázataihoz igazodó technikai és szervezési intézkedéseket alkalmazunk:</p>
+        <ul>
+          <li data-i18n="p5.l1">Hozzáférés-korlátozás és jogosultságkezelés.</li>
+          <li data-i18n="p5.l2">Titkosított adatátvitel HTTPS kapcsolaton keresztül.</li>
+          <li data-i18n="p5.l3">A rendszer és a függőségek rendszeres karbantartása.</li>
+          <li data-i18n="p5.l4">Biztonsági események és rendellenes működés vizsgálata.</li>
+          <li data-i18n="p5.l5">Az adatokhoz csak az arra jogosult személyek férhetnek hozzá.</li>
+        </ul>
+
+        <div class="section-header">
+          <span class="section-num">// 6</span>
+          <h2 id="p-6" data-i18n="p6.title">Sütik és hasonló technológiák</h2>
+        </div>
+        <p data-i18n="p6.desc">A weboldal jelenlegi működése nem alkalmaz marketing vagy analitikai célú sütiket. A tárhelyszolgáltató a weboldal biztonságos és stabil működéséhez szükséges technikai adatokat kezelhet.</p>
+
+        <div class="section-header">
+          <span class="section-num">// 7</span>
+          <h2 id="p-7" data-i18n="p7.title">Milyen jogok illetik meg?</h2>
+        </div>
+        <p data-i18n="p7.desc">Az adatkezeléssel kapcsolatban az alábbi kérelmekkel fordulhat hozzánk a hello@krilixtechlabs.com e-mail címen:</p>
+        <ul>
+          <li data-i18n="p7.l1">Hozzáférés: tájékoztatást kérhet arról, hogy kezeljük-e a személyes adatait, és másolatot kérhet azokról.</li>
+          <li data-i18n="p7.l2">Helyesbítés: kérheti a pontatlan vagy hiányos adatok javítását.</li>
+          <li data-i18n="p7.l3">Törlés: kérheti a személyes adatok törlését, ha annak jogszabályi feltételei fennállnak.</li>
+          <li data-i18n="p7.l4">Korlátozás: kérheti az adatkezelés korlátozását a GDPR-ban meghatározott esetekben.</li>
+          <li data-i18n="p7.l5">Tiltakozás: jogos érdeken alapuló adatkezelés esetén tiltakozhat az adatkezelés ellen.</li>
+          <li data-i18n="p7.l6">Adathordozhatóság: a jogszabályi feltételek fennállása esetén kérheti az adatok géppel olvasható formátumban történő kiadását.</li>
+        </ul>
+        <p data-i18n="p7.desc2">A kérelmeket indokolatlan késedelem nélkül, főszabály szerint a beérkezéstől számított 30 napon belül teljesítjük vagy megválaszoljuk.</p>
+
+        <div class="section-header">
+          <span class="section-num">// 8</span>
+          <h2 id="p-8" data-i18n="p8.title">Panasz és jogorvoslat</h2>
+        </div>
+        <p data-i18n="p8.desc1">Adatkezelési kérdés vagy panasz esetén elsőként a hello@krilixtechlabs.com címen kérhető intézkedés.</p>
+        <p data-i18n="p8.desc2">Amennyiben az érintett úgy ítéli meg, hogy személyes adatainak kezelése sérti a vonatkozó adatvédelmi szabályokat, panaszt nyújthat be a Nemzeti Adatvédelmi és Információszabadság Hatósághoz, továbbá bírósághoz fordulhat.</p>
+        <div class="contact-summary-card">
+          <p><strong data-i18n="p8.auth">Nemzeti Adatvédelmi és Információszabadság Hatóság</strong></p>
+          <p data-i18n="p8.addr">Székhely: 1055 Budapest, Falk Miksa utca 9–11.</p>
+          <p data-i18n="p8.post">Levelezési cím: 1363 Budapest, Pf. 9.</p>
+          <p>E-mail: <a href="mailto:ugyfelszolgalat@naih.hu" style="color:var(--text-primary);text-decoration:underline;">ugyfelszolgalat@naih.hu</a></p>
+          <p>Telefon: +36 (1) 391-1400</p>
+        </div>
+
+        <div class="section-header">
+          <span class="section-num">// 9</span>
+          <h2 id="p-9" data-i18n="p9.title">A tájékoztató módosítása</h2>
+        </div>
+        <p data-i18n="p9.desc">A tájékoztató a weboldal működésének, az alkalmazott szolgáltatásoknak vagy a jogszabályi környezetnek a változása esetén módosítható. Az aktuális változat ezen az oldalon érhető el, a hatálybalépés dátumának feltüntetésével.</p>
+      </article>
+
+      <!-- 2. ÁSZF BLOKK -->
+      <article class="legal-block" id="termsBlock">
+        <span class="legal-meta" data-i18n="terms.meta">Krilix Tech & Labs · Általános Szerződési Feltételek</span>
+
+        <div class="legal-notice-box">
+          <p data-i18n="terms.notice">A megállapodásunk lényege: egyedi, minőségi szoftvert és weboldalt készítünk a megállapodott műszaki tartalom szerint. Tiszta feltételekkel, rejtett költségek és felesleges apróbetűk nélkül dolgozunk.</p>
+        </div>
+
+        <div class="section-header">
+          <span class="section-num">// 1</span>
+          <h2 id="t-1" data-i18n="t1.title">A szerződés tárgya</h2>
+        </div>
+        <p data-i18n="t1.desc">A jelen feltételek a KRILIX Tech & Labs által nyújtott digitális tervezési, fejlesztési és technológiai rendszerek kivitelezésére vonatkoznak.</p>
+
+        <div class="section-header">
+          <span class="section-num">// 2</span>
+          <h2 id="t-2" data-i18n="t2.title">A fejlesztés menete és mérföldkövek</h2>
+        </div>
+        <p data-i18n="t2.desc">A munkafolyamat minden esetben egyértelmű specifikáció és egyeztetett projektterv szerint zajlik:</p>
+        <ul>
+          <li data-i18n="t2.l1">1. Igényfelmérés & Briefing: célok, felületek és funkciók pontos rögzítése.</li>
+          <li data-i18n="t2.l2">2. Tervezés: reszponzív drótvázak és vizuális felületek kialakítása.</li>
+          <li data-i18n="t2.l3">3. Fejlesztés: mérnöki kód, adatbázisok és külső API integrációk (pl. Stripe).</li>
+          <li data-i18n="t2.l4">4. Tesztelés és átadás: funkcionális ellenőrzés és élesítés.</li>
+        </ul>
+
+        <div class="section-header">
+          <span class="section-num">// 3</span>
+          <h2 id="t-3" data-i18n="t3.title">Díjazás és fizetési feltételek</h2>
+        </div>
+        <p data-i18n="t3.desc">A díjazás a jóváhagyott egyedi árajánlatban és szerződésben rögzített ütemezés szerint történik.</p>
+
+        <div class="section-header">
+          <span class="section-num">// 4</span>
+          <h2 id="t-4" data-i18n="t4.title">Szerzői jogok és átadott rendszerek</h2>
+        </div>
+        <p data-i18n="t4.desc">A teljes vállalkozási díj megfizetését követően az egyedileg készített forráskód és vizuális anyagok felhasználási jogai a megrendelőre szállnak át.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <p class="footer-brand">KRILIX<br><em>Tech & Labs</em></p>
+      </div>
+      <div>
+        <h4>
+          <button type="button" class="footer-heading-btn" data-i18n="footer.explore" aria-label="Menü megnyitása">FELFEDEZÉS</button>
+        </h4>
+        <div class="footer-links">
+          <a href="../munkaink/index.html" data-i18n="footer.work">Munkáink</a>
+          <a href="../szolgaltatasok/index.html" data-i18n="footer.services">Szolgáltatások</a>
+          <a href="../rolunk/index.html" data-i18n="footer.about">Rólunk</a>
+          <a href="index.html" data-i18n="footer.privacy">Adatvédelem</a>
+        </div>
+      </div>
+      <div>
+        <h4>
+          <a href="../kapcsolat/index.html" class="footer-heading-link" data-i18n="footer.contactHeading">KAPCSOLAT</a>
+        </h4>
+        <div class="footer-links">
+          <a href="mailto:hello@krilixtechlabs.com">hello@krilixtechlabs.com</a>
+          <a href="tel:+36705695022">+36 70 569 5022</a>
+          <span data-i18n="footer.location">Magyarország</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> KRILIX TECH & LABS</span>
+      <span data-i18n="footer.bottom">TERVEZÉS × FEJLESZTÉS × RENDSZEREK</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    // ================= TÉMAVÁLTÓ KEZELŐ =================
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeLabel = document.getElementById("themeLabel");
+
+    function applyTheme(theme) {
+      if (theme === "light") {
+        document.body.classList.add("light-theme");
+        if (themeIcon) themeIcon.textContent = "🌙";
+        if (themeLabel) themeLabel.textContent = "SÖTÉT";
+      } else {
+        document.body.classList.remove("light-theme");
+        if (themeIcon) themeIcon.textContent = "☀️";
+        if (themeLabel) themeLabel.textContent = "VILÁGOS";
+      }
+      localStorage.setItem("krilix-theme", theme);
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.contains("light-theme");
+      applyTheme(isLight ? "dark" : "light");
+    }
+
+    const savedTheme = localStorage.getItem("krilix-theme") || "dark";
+    applyTheme(savedTheme);
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener("click", toggleTheme);
+    }
+
+    // ================= MENÜ MEGNYITÁS / ZÁRÁS =================
+    const menuOverlay = document.getElementById('menuOverlay');
+    const openMenuBtn = document.getElementById('openMenuBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const footerExploreBtn = document.querySelector('.footer-heading-btn');
+
+    function openMenu() {
+      if (menuOverlay) {
+        menuOverlay.classList.add('active');
+        document.body.classList.add('menu-open');
+        menuOverlay.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    function closeMenu() {
+      if (menuOverlay) {
+        menuOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        menuOverlay.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    if (openMenuBtn) openMenuBtn.addEventListener('click', openMenu);
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
+    if (footerExploreBtn) footerExploreBtn.addEventListener('click', openMenu);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuOverlay && menuOverlay.classList.contains('active')) {
+        closeMenu();
+      }
+    });
+
+    // ================= FÜLEK ÉS NAVIGÁCIÓ =================
+    const tabButtons = document.querySelectorAll('.legal-tab-btn');
+    const privacyBlock = document.getElementById('privacyBlock');
+    const termsBlock = document.getElementById('termsBlock');
+    const heading = document.getElementById('pageHeading');
+    const legalNav = document.getElementById('legalNav');
+
+    const navItemsTranslations = {
+      hu: {
+        privacy: [
+          { href: '#p-1', label: '1. Adatkezelő adatai' },
+          { href: '#p-2', label: '2. Kezelt adatok köre és célja' },
+          { href: '#p-3', label: '3. Megőrzési idő' },
+          { href: '#p-4', label: '4. Adatfeldolgozók' },
+          { href: '#p-5', label: '5. Adatbiztonság' },
+          { href: '#p-6', label: '6. Sütik' },
+          { href: '#p-7', label: '7. Érintetti jogok' },
+          { href: '#p-8', label: '8. Panasz és jogorvoslat' },
+          { href: '#p-9', label: '9. Tájékoztató módosítása' }
+        ],
+        terms: [
+          { href: '#t-1', label: '1. A szerződés tárgya' },
+          { href: '#t-2', label: '2. A fejlesztés menete' },
+          { href: '#t-3', label: '3. Díjazás és feltételek' },
+          { href: '#t-4', label: '4. Szerzői jogok' }
+        ]
+      },
+      en: {
+        privacy: [
+          { href: '#p-1', label: '1. Controller Details' },
+          { href: '#p-2', label: '2. Data Processed & Purpose' },
+          { href: '#p-3', label: '3. Retention Period' },
+          { href: '#p-4', label: '4. Data Processors' },
+          { href: '#p-5', label: '5. Data Security' },
+          { href: '#p-6', label: '6. Cookies' },
+          { href: '#p-7', label: '7. Data Subject Rights' },
+          { href: '#p-8', label: '8. Complaints & Remedies' },
+          { href: '#p-9', label: '9. Policy Amendments' }
+        ],
+        terms: [
+          { href: '#t-1', label: '1. Subject of Contract' },
+          { href: '#t-2', label: '2. Development Process' },
+          { href: '#t-3', label: '3. Fees and Payment' },
+          { href: '#t-4', label: '4. Intellectual Property' }
+        ]
+      },
+      de: {
+        privacy: [
+          { href: '#p-1', label: '1. Verantwortliche Stelle' },
+          { href: '#p-2', label: '2. Verarbeitete Daten & Zweck' },
+          { href: '#p-3', label: '3. Speicherdauer' },
+          { href: '#p-4', label: '4. Auftragsverarbeiter' },
+          { href: '#p-5', label: '5. Datensicherheit' },
+          { href: '#p-6', label: '6. Cookies' },
+          { href: '#p-7', label: '7. Betroffenenrechte' },
+          { href: '#p-8', label: '8. Beschwerde & Rechtsbehelf' },
+          { href: '#p-9', label: '9. Änderungen' }
+        ],
+        terms: [
+          { href: '#t-1', label: '1. Vertragsgegenstand' },
+          { href: '#t-2', label: '2. Entwicklungsablauf' },
+          { href: '#t-3', label: '3. Vergütung & Zahlung' },
+          { href: '#t-4', label: '4. Nutzungsrechte' }
+        ]
+      }
+    };
+
+    const legalTranslations = {
+      hu: {
+        'btn.explore': 'FELFEDEZÉS',
+        'legal.tag': '// JOGI NYILATKOZATOK',
+        'legal.heading': 'ADATVÉDELEM',
+        'legal.heading.terms': 'SZERZŐDÉSI FELTÉTELEK',
+        'tab.privacy': 'Adatkezelési Tájékoztató',
+        'tab.terms': 'Általános Szerződési Feltételek',
+        'nav.work': 'Munkáink',
+        'nav.services': 'Szolgáltatások',
+        'nav.about': 'Rólunk',
+        'nav.contact': 'Kapcsolat',
+        'footer.explore': 'FELFEDEZÉS',
+        'footer.work': 'Munkáink',
+        'footer.services': 'Szolgáltatások',
+        'footer.about': 'Rólunk',
+        'footer.privacy': 'Adatvédelem',
+        'footer.contactHeading': 'KAPCSOLAT',
+        'footer.location': 'Magyarország',
+        'footer.studio': 'Független digitális stúdió · Magyarország',
+        'footer.bottom': 'TERVEZÉS × FEJLESZTÉS × RENDSZEREK',
+
+        'privacy.meta': 'Krilix Tech & Labs · Adatkezelési Tájékoztató',
+        'privacy.notice': 'A jelen tajekoztató ismerteti, hogyan kezeljük a weboldal kapcsolatfelvételi űrlapján megadott személyes adatokat, milyen célból használjuk azokat, meddig őrizzük meg, és milyen jogok illetik meg az érintetteket.',
+        'p1.title': 'Az adatkezelő adatai',
+        'p1.desc': 'A weboldalon keresztül megadott személyes adatok kezelője a Krilix Tech & Labs.',
+        'p1.name': 'Adatkezelő neve:',
+        'p1.email': 'Kapcsolati e-mail:',
+        'p2.title': 'Milyen adatokat kezelünk és milyen célból?',
+        'p2.desc': 'Személyes adatot kizárólag meghatározott célból, a szükséges mértékben és a vonatkozó adatvédelmi szabályoknak megfelelően kezelünk.',
+        'th.scope': 'Adatkezelés',
+        'th.data': 'Kezelt adatok',
+        'th.purpose': 'Cél',
+        'th.legal': 'Jogalap',
+        't.c1': 'Kapcsolatfelvétel és ajánlatkérés',
+        't.c2': 'Név, e-mail cím, az üzenet tartalma, beküldés időpontja',
+        't.c3': 'A megkeresés megválaszolása, ajánlat elkészítése, egyeztetés és a lehetséges együttműködés előkészítése.',
+        't.c4': 'A GDPR 6. cikk (1) bekezdés b) pontja szerinti, szerződéskötést megelőző lépések megtétele; általános megkeresés esetén a GDPR 6. cikk (1) bekezdés f) pontja szerinti jogos érdek.',
+        't.s1': 'Weboldal biztonságos működése',
+        't.s2': 'IP-cím, böngésző- és eszközadatok, látogatás időpontja, kért oldal és technikai naplóadatok',
+        't.s3': 'A weboldal működésének biztosítása, hibák feltárása, visszaélések és informatikai incidensek megelőzése.',
+        't.s4': 'A GDPR 6. cikk (1) bekezdés f) pontja szerinti jogos érdek.',
+        'p2.nature.title': 'Az adatszolgáltatás jellege:',
+        'p2.nature.desc': 'a kapcsolatfelvételi űrlap kitöltése önkéntes. A név, az e-mail cím és az üzenet megadása nélkül a megkeresést nem tudjuk feldolgozni és megválaszolni.',
+        'p2.auto.title': 'Automatizált döntéshozatal:',
+        'p2.auto.desc': 'a megadott személyes adatok alapján nem végzünk automatizált döntéshozatalt vagy profilalkotást.',
+        'p3.title': 'Meddig őrizzük meg az adatokat?',
+        'p3.l1': 'Kapcsolatfelvételi megkeresés: a lezárást követő legfeljebb 12 hónapig.',
+        'p3.l2': 'Létrejövő szerződés: a szerződés teljesítéséhez szükséges ideig, majd a vonatkozó jogszabályi megőrzési kötelezettségek végéig.',
+        'p3.l3': 'Technikai naplóadatok: legfeljebb 30 napig, kivéve, ha biztonsági esemény kivizsgálásához hosszabb megőrzés szükséges.',
+        'p3.desc': 'A megőrzési idő lejárta után az adatokat töröljük vagy visszaállíthatatlanul anonimizáljuk, amennyiben további adatkezelést jogszabály nem tesz szükségessé.',
+        'p4.title': 'Adatfeldolgozók és adattovábbítás',
+        'p4.desc': 'A weboldal működtetéséhez technikai szolgáltatókat vehetünk igénybe. Ezek a szolgáltatók kizárólag a szolgáltatás teljesítéséhez szükséges mértékben, szerződéses kötelezettségeik és az adatkezelő utasításai alapján kezelhetik az adatokat:',
+        'p4.l1': 'Tárhely- és infrastruktúra-szolgáltató: a weboldal és a szerver működtetése.',
+        'p4.l2': 'Adatbázis-szolgáltató: a megkeresések biztonságos tárolása.',
+        'p4.l3': 'Tranzakciós e-mail-szolgáltató: az üzenetek és visszaigazolások kézbesítése.',
+        'p4.desc2': 'Amennyiben valamely szolgáltató az Európai Gazdasági Térségen kívül kezel adatot, az adattovábbítás csak a GDPR szerinti megfelelő garanciák alkalmazásával történhet.',
+        'p5.title': 'Hogyan védjük az adatokat?',
+        'p5.desc': 'Az adatok védelme érdekében az adatkezelés jellegéhez és kockázataihoz igazodó technikai és szervezési intézkedéseket alkalmazunk:',
+        'p5.l1': 'Hozzáférés-korlátozás és jogosultságkezelés.',
+        'p5.l2': 'Titkosított adatátvitel HTTPS kapcsolaton keresztül.',
+        'p5.l3': 'A rendszer és a függőségek rendszeres karbantartása.',
+        'p5.l4': 'Biztonsági események és rendellenes működés vizsgálata.',
+        'p5.l5': 'Az adatokhoz csak az arra jogosult személyek férhetnek hozzá.',
+        'p6.title': 'Sütik és hasonló technológiák',
+        'p6.desc': 'A weboldal jelenlegi működése nem alkalmaz marketing vagy analitikai célú sütiket. A tárhelyszolgáltató a weboldal biztonságos és stabil működéséhez szükséges technikai adatokat kezelhet.',
+        'p7.title': 'Milyen jogok illetik meg?',
+        'p7.desc': 'Az adatkezeléssel kapcsolatban az alábbi kérelmekkel fordulhat hozzánk a hello@krilixtechlabs.com e-mail címen:',
+        'p7.l1': 'Hozzáférés: tájékoztatást kérhet arról, hogy kezeljük-e a személyes adatait, és másolatot kérhet azokról.',
+        'p7.l2': 'Helyesbítés: kérheti a pontatlan vagy hiányos adatok javítását.',
+        'p7.l3': 'Törlés: kérheti a személyes adatok törlését, ha annak jogszabályi feltételei fennállnak.',
+        'p7.l4': 'Korlátozás: kérheti az adatkezelés korlátozását a GDPR-ban meghatározott esetekben.',
+        'p7.l5': 'Tiltakozás: jogos érdeken alapuló adatkezelés esetén tiltakozhat az adatkezelés ellen.',
+        'p7.l6': 'Adathordozhatóság: a jogszabályi feltételek fennállása esetén kérheti az adatok géppel olvasható formátumban történő kiadását.',
+        'p7.desc2': 'A kérelmeket indokolatlan késedelem nélkül, főszabály szerint a beérkezéstől számított 30 napon belül teljesítjük vagy megválaszoljuk.',
+        'p8.title': 'Panasz és jogorvoslat',
+        'p8.desc1': 'Adatkezelési kérdés vagy panasz esetén elsőként a hello@krilixtechlabs.com címen kérhető intézkedés.',
+        'p8.desc2': 'Amennyiben az érintett úgy ítéli meg, hogy személyes adatainak kezelése sérti a vonatkozó adatvédelmi szabályokat, panaszt nyújthat be a Nemzeti Adatvédelmi és Információszabadság Hatósághoz, továbbá bírósághoz fordulhat.',
+        'p8.auth': 'Nemzeti Adatvédelmi és Információszabadság Hatóság',
+        'p8.addr': 'Székhely: 1055 Budapest, Falk Miksa utca 9–11.',
+        'p8.post': 'Levelezési cím: 1363 Budapest, Pf. 9.',
+        'p9.title': 'A tájékoztató módosítása',
+        'p9.desc': 'A tájékoztató a weboldal működésének, az alkalmazott szolgáltatásoknak vagy a jogszabályi környezetnek a változása esetén módosítható. Az aktuális változat ezen az oldalon érhető el, a hatálybalépés dátumának feltüntetésével.',
+
+        'terms.meta': 'Krilix Tech & Labs · Általános Szerződési Feltételek',
+        'terms.notice': 'A megállapodásunk lényege: egyedi, minőségi szoftvert és weboldalt készítünk a megállapodott műszaki tartalom szerint. Tiszta feltételekkel, rejtett költségek és felesleges apróbetűk nélkül dolgozunk.',
+        't1.title': 'A szerződés tárgya',
+        't1.desc': 'A jelen feltételek a KRILIX Tech & Labs által nyújtott digitális tervezési, fejlesztési és technológiai rendszerek kivitelezésére vonatkoznak.',
+        't2.title': 'A fejlesztés menete és mérföldkövek',
+        't2.desc': 'A munkafolyamat minden esetben egyértelmű specifikáció és egyeztetett projektterv szerint zajlik:',
+        't2.l1': '1. Igényfelmérés & Briefing: célok, felületek és funkciók pontos rögzítése.',
+        't2.l2': '2. Tervezés: reszponzív drótvázak és vizuális felületek kialakítása.',
+        't2.l3': '3. Fejlesztés: mérnöki kód, adatbázisok és külső API integrációk (pl. Stripe).',
+        't2.l4': '4. Tesztelés és átadás: funkcionális ellenőrzés és élesítés.',
+        't3.title': 'Díjazás és fizetési feltételek',
+        't3.desc': 'A díjazás a jóváhagyott egyedi árajánlatban és szerződésben rögzített ütemezés szerint történik.',
+        't4.title': 'Szerzői jogok és átadott rendszerek',
+        't4.desc': 'A teljes vállalkozási díj megfizetését követően az egyedileg készített forráskód és vizuális anyagok felhasználási jogai a megrendelőre szállnak át.'
+      },
+      en: {
+        'btn.explore': 'EXPLORE',
+        'legal.tag': '// LEGAL NOTICES',
+        'legal.heading': 'PRIVACY POLICY',
+        'legal.heading.terms': 'TERMS & CONDITIONS',
+        'tab.privacy': 'Privacy Policy',
+        'tab.terms': 'Terms & Conditions',
+        'nav.work': 'Work',
+        'nav.services': 'Services',
+        'nav.about': 'About',
+        'nav.contact': 'Contact',
+        'footer.explore': 'EXPLORE',
+        'footer.work': 'Work',
+        'footer.services': 'Services',
+        'footer.about': 'About',
+        'footer.privacy': 'Privacy',
+        'footer.contactHeading': 'CONTACT',
+        'footer.location': 'Hungary',
+        'footer.studio': 'Independent digital studio · Hungary',
+        'footer.bottom': 'DESIGN × DEVELOPMENT × SYSTEMS',
+
+        'privacy.meta': 'Krilix Tech & Labs · Privacy Policy',
+        'privacy.notice': 'This policy outlines how we process personal data submitted via the contact form on our website, the purposes of processing, retention periods, and your rights as a data subject.',
+        'p1.title': 'Data Controller Details',
+        'p1.desc': 'The controller of personal data submitted through this website is Krilix Tech & Labs.',
+        'p1.name': 'Controller name:',
+        'p1.email': 'Contact email:',
+        'p2.title': 'What data do we process and why?',
+        'p2.desc': 'We process personal data solely for specified purposes, to the extent necessary, and in compliance with applicable data protection legislation.',
+        'th.scope': 'Processing Activity',
+        'th.data': 'Data Categories',
+        'th.purpose': 'Purpose',
+        'th.legal': 'Legal Basis',
+        't.c1': 'Contact and Quote Requests',
+        't.c2': 'Name, email address, message content, submission timestamp',
+        't.c3': 'Responding to inquiries, preparing quotes, coordinating next steps, and preparing potential cooperation.',
+        't.c4': 'Steps prior to entering into a contract pursuant to GDPR Art. 6(1)(b); legitimate interest under GDPR Art. 6(1)(f) for general inquiries.',
+        't.s1': 'Secure Operation of the Website',
+        't.s2': 'IP address, browser and device info, visit timestamp, requested URL, technical server logs',
+        't.s3': 'Ensuring reliable website operation, troubleshooting errors, and preventing abuse and IT security incidents.',
+        't.s4': 'Legitimate interest under GDPR Art. 6(1)(f).',
+        'p2.nature.title': 'Nature of Provision:',
+        'p2.nature.desc': 'submitting data via our contact form is voluntary. However, without providing a name, email address, and message, we cannot process and answer your request.',
+        'p2.auto.title': 'Automated Decision-Making:',
+        'p2.auto.desc': 'we do not carry out automated decision-making or profiling based on personal data submitted.',
+        'p3.title': 'How long do we retain data?',
+        'p3.l1': 'General inquiries: up to 12 months after resolution.',
+        'p3.l2': 'Client contracts: for the duration of the contract, followed by statutory retention obligations.',
+        'p3.l3': 'Technical log data: up to 30 days, unless a security event requires prolonged retention.',
+        'p3.desc': 'Upon expiration of the retention period, data is permanently deleted or irreversibly anonymized unless mandated otherwise by applicable law.',
+        'p4.title': 'Data Processors and Data Transfers',
+        'p4.desc': 'We may use technical service providers to operate the website. They process data only to the extent required to provide their services, under contractual obligations and our instructions:',
+        'p4.l1': 'Hosting and infrastructure providers: operating the website and servers.',
+        'p4.l2': 'Database providers: secure storage of inquiries.',
+        'p4.l3': 'Transactional email providers: delivering messages and confirmations.',
+        'p4.desc2': 'If a service provider processes data outside the European Economic Area, the transfer takes place only with appropriate safeguards required by the GDPR.',
+        'p5.title': 'How do we protect your data?',
+        'p5.desc': 'We apply technical and organizational measures appropriate to the nature and risks of the processing:',
+        'p5.l1': 'Access restrictions and role-based authorization.',
+        'p5.l2': 'Encrypted data transmission over HTTPS/TLS.',
+        'p5.l3': 'Regular maintenance of systems and software dependencies.',
+        'p5.l4': 'Monitoring and investigating security incidents and abnormal system behavior.',
+        'p5.l5': 'Access to personal data is limited to authorized persons.',
+        'p6.title': 'Cookies and Tracking',
+        'p6.desc': 'The website currently does not use cookies for marketing or analytics. Hosting providers may process technical data required for the secure and stable operation of the website.',
+        'p7.title': 'Your Data Subject Rights',
+        'p7.desc': 'You may exercise any of the following rights at any time by contacting hello@krilixtechlabs.com:',
+        'p7.l1': 'Access: request confirmation whether your data is processed, and receive a copy.',
+        'p7.l2': 'Rectification: request correction of inaccurate or incomplete details.',
+        'p7.l3': 'Erasure: request deletion of your personal data where statutory grounds apply.',
+        'p7.l4': 'Restriction: request restriction of processing in statutory cases specified in the GDPR.',
+        'p7.l5': 'Objection: object to processing based on legitimate interests.',
+        'p7.l6': 'Portability: request your data in a structured, machine-readable format.',
+        'p7.desc2': 'We handle requests without undue delay and, as a general rule, within 30 days of receipt.',
+        'p8.title': 'Complaints & Legal Remedies',
+        'p8.desc1': 'For any data protection concerns, please reach out to us first at hello@krilixtechlabs.com.',
+        'p8.desc2': 'If you consider that the processing infringes your rights, you have the right to lodge a complaint with the National Authority for Data Protection and Freedom of Information (NAIH) or initiate court proceedings.',
+        'p8.auth': 'National Authority for Data Protection and Freedom of Information',
+        'p8.addr': 'Headquarters: 1055 Budapest, Falk Miksa utca 9–11., Hungary',
+        'p8.post': 'Postal address: 1363 Budapest, Pf. 9., Hungary',
+        'p9.title': 'Amendments to this Policy',
+        'p9.desc': 'We may periodically update this policy to reflect platform updates, technical adjustments, or legislative changes. The latest version is always published on this page.',
+
+        'terms.meta': 'Krilix Tech & Labs · General Terms and Conditions',
+        'terms.notice': 'Our approach is simple: we build tailored, high-quality digital systems and websites according to agreed requirements. Clear terms, no hidden costs, and no unnecessary fine print.',
+        't1.title': 'Subject of the Contract',
+        't1.desc': 'These terms govern digital design, custom development, and technology systems provided by KRILIX Tech & Labs.',
+        't2.title': 'Development Workflow & Milestones',
+        't2.desc': 'Each project follows a clear specification and an agreed project plan:',
+        't2.l1': '1. Discovery & Briefing: defining goals, interfaces, and required features.',
+        't2.l2': '2. Design: creating responsive wireframes and visual interfaces.',
+        't2.l3': '3. Development: clean code, databases, and external API integrations (e.g. Stripe).',
+        't2.l4': '4. Testing & Handover: functional verification and production launch.',
+        't3.title': 'Remuneration & Payment Terms',
+        't3.desc': 'Pricing and payment schedules follow approved individual proposals and contractual agreements.',
+        't4.title': 'Intellectual Property and Usage Rights',
+        't4.desc': 'Once the full project fee has been paid, the agreed rights of use for the custom source code and visual assets are transferred to the client.'
+      },
+      de: {
+        'btn.explore': 'ENTDECKEN',
+        'legal.tag': '// RECHTLICHE HINWEISE',
+        'legal.heading': 'DATENSCHUTZ',
+        'legal.heading.terms': 'AGB',
+        'tab.privacy': 'Datenschutzerklärung',
+        'tab.terms': 'Allgemeine Geschäftsbedingungen',
+        'nav.work': 'Projekte',
+        'nav.services': 'Leistungen',
+        'nav.about': 'Über uns',
+        'nav.contact': 'Kontakt',
+        'footer.explore': 'ENTDECKEN',
+        'footer.work': 'Projekte',
+        'footer.services': 'Leistungen',
+        'footer.about': 'Über uns',
+        'footer.privacy': 'Datenschutz',
+        'footer.contactHeading': 'KONTAKT',
+        'footer.location': 'Ungarn',
+        'footer.studio': 'Unabhängiges Digitalstudio · Ungarn',
+        'footer.bottom': 'DESIGN × ENTWICKLUNG × SYSTEME',
+
+        'privacy.meta': 'Krilix Tech & Labs · Datenschutzerklärung',
+        'privacy.notice': 'Diese Hinweise informieren darüber, wie wir über unser Kontaktformular übermittelte personenbezogene Daten verarbeiten, zu welchem Zweck wir diese nutzen, wie lange sie gespeichert werden und welche Rechte Ihnen zustehen.',
+        'p1.title': 'Angaben zur verantwortlichen Stelle',
+        'p1.desc': 'Verantwortlich für die Datenverarbeitung auf dieser Website ist Krilix Tech & Labs.',
+        'p1.name': 'Name des Verantwortlichen:',
+        'p1.email': 'Kontakt-E-Mail:',
+        'p2.title': 'Welche Daten verarbeiten wir und zu welchem Zweck?',
+        'p2.desc': 'Personenbezogene Daten verarbeiten wir ausschließlich zweckgebunden, im erforderlichen Umfang und im Einklang mit den geltenden Datenschutzbestimmungen.',
+        'th.scope': 'Datenverarbeitung',
+        'th.data': 'Verarbeitete Daten',
+        'th.purpose': 'Zweck',
+        'th.legal': 'Rechtsgrundlage',
+        't.c1': 'Kontaktaufnahme und Angebotsanfragen',
+        't.c2': 'Name, E-Mail-Adresse, Inhalt der Nachricht, Absendezeitpunkt',
+        't.c3': 'Beantwortung von Anfragen, Erstellung individueller Angebote und Vorbereitung von Kooperationen.',
+        't.c4': 'Zur Durchführung vorvertraglicher Maßnahmen gem. Art. 6 Abs. 1 lit. b DSGVO; berechtigtes Interesse gem. Art. 6 Abs. 1 lit. f DSGVO bei allgemeinen Anfragen.',
+        't.s1': 'Sicherer Website-Betrieb',
+        't.s2': 'IP-Adresse, Browser- und Gerätedaten, Zugriffszeit, abgerufene Seite, Protokolldaten',
+        't.s3': 'Gewährleistung der Stabilität, Fehleranalyse sowie Abwehr von Missbrauch und Sicherheitsvorfällen.',
+        't.s4': 'Berechtigtes Interesse gemäß Art. 6 Abs. 1 lit. f DSGVO.',
+        'p2.nature.title': 'Art der Datenbereitstellung:',
+        'p2.nature.desc': 'das Ausfüllen des Formulars ist freiwillig. Ohne Name, E-Mail und Nachricht können wir Ihre Anfrage jedoch nicht bearbeiten.',
+        'p2.auto.title': 'Automatisierte Entscheidungsfindung:',
+        'p2.auto.desc': 'es findet weder eine automatisierte Entscheidungsfindung noch Profiling statt.',
+        'p3.title': 'Wie lange werden die Daten gespeichert?',
+        'p3.l1': 'Kontaktanfragen: bis zu 12 Monate nach Klärung des Anliegens.',
+        'p3.l2': 'Kundenverträge: für die Dauer der Vertragserfüllung und anschließende gesetzliche Aufbewahrungsfristen.',
+        'p3.l3': 'Server-Protokolle: bis zu 30 Tage, sofern keine sicherheitsrelevante Untersuchung erforderlich ist.',
+        'p3.desc': 'Nach Ablauf der Speicherfristen werden die Daten dauerhaft gelöscht oder irreversibel anonymisiert.',
+        'p4.title': 'Auftragsverarbeiter und Datenübermittlung',
+        'p4.desc': 'Zur Bereitstellung unseres Onlineangebots nutzen wir technische Dienstleister, die Daten streng weisungsgebunden auf Basis vertraglicher Vereinbarungen verarbeiten:',
+        'p4.l1': 'Hosting- und Infrastruktur-Anbieter: Betrieb der Website und Server.',
+        'p4.l2': 'Datenbankanbieter: sichere Speicherung von Anfragen.',
+        'p4.l3': 'Transaktionale E-Mail-Anbieter: Zustellung von Nachrichten und Bestätigungen.',
+        'p4.desc2': 'Erfolgt eine Datenverarbeitung außerhalb des EWR, erfolgt die Übermittlung ausschließlich unter Anwendung der von der DSGVO geforderten Garantien.',
+        'p5.title': 'Wie schützen wir Ihre Daten?',
+        'p5.desc': 'Wir setzen technische und organisatorische Maßnahmen ein, die der Art und den Risiken der Verarbeitung angemessen sind:',
+        'p5.l1': 'Rollenbasierte Zugriffskontrollen und Berechtigungskonzepte.',
+        'p5.l2': 'Verschlüsselte Datenübertragung über HTTPS/TLS.',
+        'p5.l3': 'Regelmäßige Systemwartung und Sicherheitsaktualisierungen.',
+        'p5.l4': 'Überwachung und Untersuchung von Sicherheitsvorfällen und ungewöhnlichem Systemverhalten.',
+        'p5.l5': 'Zugriff auf personenbezogene Daten erhalten nur hierzu berechtigte Personen.',
+        'p6.title': 'Cookies und ähnliche Technologien',
+        'p6.desc': 'Die Website verwendet derzeit keine Cookies zu Marketing- oder Analysezwecken. Hosting-Anbieter können technische Daten verarbeiten, die für den sicheren und stabilen Betrieb der Website erforderlich sind.',
+        'p7.title': 'Ihre Rechte als betroffene Person',
+        'p7.desc': 'Sie können bezüglich Ihrer Daten jederzeit folgende Rechte über hello@krilixtechlabs.com geltend machen:',
+        'p7.l1': 'Auskunft: Bestätigung über verarbeitete Daten und Bereitstellung einer Kopie.',
+        'p7.l2': 'Berichtigung: Berichtigung unrichtiger oder unvollständiger Daten.',
+        'p7.l3': 'Löschung: Löschung gespeicherter personenbezogener Daten bei Vorliegen der Voraussetzungen.',
+        'p7.l4': 'Einschränkung: Einschränkung der Verarbeitung in gesetzlich definierten Fällen.',
+        'p7.l5': 'Widerspruch: Widerspruch gegen Verarbeitungen auf Basis berechtigter Interessen.',
+        'p7.l6': 'Datenübertragbarkeit: Bereitstellung Ihrer Daten in einem strukturierten, maschinenlesbaren Format.',
+        'p7.desc2': 'Anfragen werden unverzüglich und in der Regel innerhalb von 30 Tagen nach Eingang bearbeitet.',
+        'p8.title': 'Beschwerde und Rechtsbehelf',
+        'p8.desc1': 'Bei datenschutzrechtlichen Anliegen können Sie sich vorab direkt an hello@krilixtechlabs.com wenden.',
+        'p8.desc2': 'Sind Sie der Ansicht, dass die Verarbeitung gegen das Datenschutzrecht verstößt, steht Ihnen ein Beschwerderecht bei der Aufsichtsbehörde (NAIH) sowie der Klageweg zu.',
+        'p8.auth': 'Nationale Behörde für Datenschutz und Informationsfreiheit',
+        'p8.addr': 'Sitz: 1055 Budapest, Falk Miksa utca 9–11., Ungarn',
+        'p8.post': 'Postanschrift: 1363 Budapest, Pf. 9., Ungarn',
+        'p9.title': 'Änderung dieser Hinweise',
+        'p9.desc': 'Wir behalten uns vor, diese Datenschutzerklärung bei geänderten rechtlichen oder technischen Rahmenbedingungen anzupassen. Die jeweils aktuelle Fassung finden Sie hier.',
+
+        'terms.meta': 'Krilix Tech & Labs · Allgemeine Geschäftsbedingungen',
+        'terms.notice': 'Unser Ansatz ist einfach: Wir entwickeln maßgeschneiderte, hochwertige digitale Systeme und Websites nach den vereinbarten Anforderungen. Klare Konditionen, keine versteckten Kosten und kein unnötiges Kleingedrucktes.',
+        't1.title': 'Vertragsgegenstand',
+        't1.desc': 'Diese Bedingungen gelten für alle von KRILIX Tech & Labs erbrachten digitalen Design-, Entwicklungs- und Systemleistungen.',
+        't2.title': 'Projektablauf & Meilensteine',
+        't2.desc': 'Jedes Projekt folgt einer klaren Spezifikation und einem abgestimmten Projektplan:',
+        't2.l1': '1. Anforderungsanalyse & Briefing: Festlegung von Zielen, Oberflächen und Funktionen.',
+        't2.l2': '2. Design: Erstellung responsiver Wireframes und visueller Oberflächen.',
+        't2.l3': '3. Entwicklung: sauberer Code, Datenbanken und externe API-Integrationen (z. B. Stripe).',
+        't2.l4': '4. Test und Übergabe: funktionale Prüfung und Produktivsetzung.',
+        't3.title': 'Vergütung & Zahlungsbedingungen',
+        't3.desc': 'Die Vergütung richtet sich nach dem freigegebenen individuellen Angebot und den vereinbarten Meilensteinen.',
+        't4.title': 'Nutzungsrechte und geistiges Eigentum',
+        't4.desc': 'Nach vollständiger Zahlung gehen die vereinbarten Nutzungsrechte am individuell erstellten Quellcode und an den visuellen Materialien auf den Kunden über.'
+      }
+    };
+
+    let currentTab = 'privacy';
+    let currentLang = 'hu';
+
+    function updateNav() {
+      legalNav.innerHTML = '';
+      const langItems = navItemsTranslations[currentLang] || navItemsTranslations.hu;
+      const items = langItems[currentTab] || [];
+      items.forEach(item => {
+        const a = document.createElement('a');
+        a.href = item.href;
+        a.textContent = item.label;
+        legalNav.appendChild(a);
+      });
+    }
+
+    function switchTab(type) {
+      currentTab = type;
+      tabButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === type);
+      });
+
+      const trans = legalTranslations[currentLang] || legalTranslations.hu;
+
+      if (type === 'terms') {
+        privacyBlock.classList.remove('active');
+        termsBlock.classList.add('active');
+        heading.textContent = trans['legal.heading.terms'];
+        document.title = (currentLang === 'de' ? 'AGB' : currentLang === 'en' ? 'Terms & Conditions' : 'ÁSZF') + ' — Krilix';
+      } else {
+        termsBlock.classList.remove('active');
+        privacyBlock.classList.add('active');
+        heading.textContent = trans['legal.heading'];
+        document.title = (currentLang === 'de' ? 'Datenschutzerklärung' : currentLang === 'en' ? 'Privacy Policy' : 'Adatkezelési Tájékoztató') + ' — Krilix';
+      }
+      updateNav();
+    }
+
+    function updateTexts(lang) {
+      currentLang = lang;
+      localStorage.setItem('krilix-v5-lang', lang);
+      const current = legalTranslations[lang] || legalTranslations.hu;
+      document.documentElement.lang = lang;
+      Object.keys(current).forEach(key => {
+        document.querySelectorAll(`[data-i18n="${key}"]`).forEach(el => {
+          el.textContent = current[key];
+        });
+      });
+
+      switchTab(currentTab);
+
+      document.querySelectorAll('.lang button[data-lang]').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+      });
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchTab(btn.dataset.tab);
+      });
+    });
+
+    if (window.location.hash === '#aszf' || window.location.hash.startsWith('#t-')) {
+      switchTab('terms');
+    } else {
+      switchTab('privacy');
+    }
+
+    document.querySelectorAll('.lang button[data-lang]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        updateTexts(btn.getAttribute('data-lang'));
+      });
+    });
+
+    const initialLang = localStorage.getItem('krilix-v5-lang') || 'hu';
+    updateTexts(initialLang);
+
+    const yearEl = document.querySelector('[data-year]');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+  })();
+</script>
+
+<script>
+(function(){
+  const labels={
+    hu:{toLight:'VILÁGOS',toDark:'SÖTÉT'},
+    en:{toLight:'LIGHT',toDark:'DARK'},
+    de:{toLight:'HELL',toDark:'DUNKEL'}
+  };
+  function syncThemeLanguage(){
+    const lang=localStorage.getItem('krilix-v5-lang')||document.documentElement.lang||'hu';
+    const set=labels[lang]||labels.hu;
+    document.documentElement.lang=lang;
+    const label=document.getElementById('themeLabel');
+    if(label) label.textContent=document.body.classList.contains('light-theme')?set.toDark:set.toLight;
+  }
+  document.querySelectorAll('[data-lang]').forEach(btn=>btn.addEventListener('click',()=>setTimeout(syncThemeLanguage,0)));
+  new MutationObserver(syncThemeLanguage).observe(document.body,{attributes:true,attributeFilter:['class']});
+  syncThemeLanguage();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="hu">
+<head>
+
+<script>
+(function () {
+  function softwareRenderingLikely() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl =
+        canvas.getContext('webgl', { powerPreference: 'high-performance' }) ||
+        canvas.getContext('experimental-webgl');
+
+      if (!gl) return true;
+
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      if (!ext) return false;
+
+      const renderer = String(
+        gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || ''
+      ).toLowerCase();
+
+      return /swiftshader|llvmpipe|software|basic render|microsoft basic/i.test(renderer);
+    } catch (_) {
+      return true;
+    }
+  }
+
+  if (softwareRenderingLikely()) {
+    document.documentElement.classList.add('software-render');
+  }
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07080a">
+<title>Munkáink — Krilix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Ugyanaz a tipográfiai rendszer, mint a főoldalon -->
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/base.css">
+
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/pages/munkaink.css">
+<link rel="stylesheet" href="../assets/css/responsive.css?v=17">
+</head>
+<body class="inner-page page-munkaink">
+
+<svg class="circuit-background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="dotGrid" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle class="circuit-dot" cx="8" cy="8" r="1" />
+    </pattern>
+  </defs>
+
+  <rect x="60" y="80" width="220" height="160" fill="url(#dotGrid)" opacity="0.65" />
+  <rect x="1640" y="80" width="220" height="160" fill="url(#dotGrid)" opacity="0.65" />
+  <rect x="60" y="840" width="220" height="160" fill="url(#dotGrid)" opacity="0.65" />
+  <rect x="1640" y="840" width="220" height="160" fill="url(#dotGrid)" opacity="0.65" />
+
+  <g class="trace-deep">
+    <path d="M 480 340 H 340 L 220 220 H 20" />
+    <path d="M 480 370 H 320 L 200 250 H 20" />
+    <path d="M 1440 340 H 1580 L 1700 220 H 1900" />
+    <path d="M 1440 370 H 1600 L 1720 250 H 1900" />
+    <path d="M 680 220 V 120 L 600 40 V 0" />
+    <path d="M 1240 220 V 120 L 1320 40 V 0" />
+  </g>
+
+  <g class="trace-main">
+    <path d="M 500 240 L 380 120 H 180" />
+    <path d="M 1420 240 L 1540 120 H 1740" />
+    <path d="M 500 700 L 380 820 H 180" />
+    <path d="M 1420 700 L 1540 820 H 1740" />
+  </g>
+
+  <g class="trace-highlight">
+    <path d="M 480 470 H 260 L 160 370 H 40" />
+    <path d="M 1440 470 H 1660 L 1760 370 H 1880" />
+    <path d="M 960 220 V 80 L 900 20 H 780" />
+    <path d="M 960 220 V 80 L 1020 20 H 1140" />
+  </g>
+
+  <circle class="solder-glow" cx="380" cy="120" r="10" />
+  <circle class="solder-bright" cx="380" cy="120" r="4.5" />
+  <circle class="solder-glow" cx="1540" cy="120" r="10" />
+  <circle class="solder-bright" cx="1540" cy="120" r="4.5" />
+  <circle class="solder-glow" cx="260" cy="470" r="9" />
+  <circle class="solder-bright" cx="260" cy="470" r="4" />
+  <circle class="solder-glow" cx="1660" cy="470" r="9" />
+  <circle class="solder-bright" cx="1660" cy="470" r="4" />
+</svg>
+
+<!-- Felfedezés Overlay — Kapcsolat oldal stílusa -->
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+  <div class="menu-top">
+    <div class="brand">KRILIX <span class="gold serif">Tech & Labs</span></div>
+    <button class="close-menu" id="closeMenuBtn" aria-label="Bezárás"></button>
+  </div>
+  <nav class="overlay-nav">
+    <a href="../munkaink/index.html" aria-current="page"><span class="nav-index">01</span><strong data-i18n="nav.work">Munkáink</strong></a>
+    <a href="../szolgaltatasok/index.html"><span class="nav-index">02</span><strong data-i18n="nav.services">Szolgáltatások</strong></a>
+    <a href="../rolunk/index.html"><span class="nav-index">03</span><strong data-i18n="nav.about">Rólunk</strong></a>
+    <a href="../kapcsolat/index.html"><span class="nav-index">04</span><strong data-i18n="nav.contact">Kapcsolat</strong></a>
+  </nav>
+  <div class="menu-bottom">
+    <span>hello@krilixtechlabs.com</span>
+    <span data-i18n="footer.studio">Független digitális stúdió · Magyarország</span>
+  </div>
+</div>
+
+<main>
+<section class="inner-hero">
+    <div class="inner-top">
+    <a class="inner-brand" href="../index.html">KRILIX <em>Tech & Labs</em></a>
+    <div class="inner-actions">
+      <div class="ctrl-pill">
+        <button class="theme-btn" id="themeToggleBtn" type="button" title="Téma váltása">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel" style="font-size:10px;">VILÁGOS</span>
+        </button>
+      </div>
+      <div class="ctrl-pill lang">
+        <button data-lang="hu" class="active">HU</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="de">DE</button>
+      </div>
+      <button class="inner-menu-btn menu-trigger" id="openMenuBtn" type="button" aria-label="Menü megnyitása" data-i18n="btn.explore">FELFEDEZÉS</button>
+    </div>
+  </div>
+  
+  <div class="inner-title-wrap">
+    <h1><span data-i18n="work.title">MUNKÁINK</span></h1>
+    
+    <div class="hero-meta">
+      <div class="hero-counter" title="Elérhető publikus munkák">
+        <span class="count-label" data-i18n="hero.counter">PROJEKTEK SZÁMA:</span>
+        <span class="count-num">05</span>
+      </div>
+
+      <a href="#projects" class="hero-scroll" aria-label="Ugrás a projektekhez">
+        <span data-i18n="hero.scroll">GÖRGESSEN LE</span>
+        <span class="scroll-arrow">↓</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="projects" id="projects" aria-label="Kiemelt munkáink">
+  <div class="wrap project-list">
+
+    <a class="project" href="https://balatonessence.com/" target="_blank" rel="noopener noreferrer">
+      <div class="project-copy">
+        <span class="project-index">01</span>
+        <h3>Balaton Essence</h3>
+      </div>
+      <div class="project-visual">
+        <div class="browser-frame">
+          <div class="browser-bar" aria-hidden="true">
+            <span class="browser-dots"><i></i><i></i><i></i></span>
+            <span class="browser-url">balatonessence.com</span>
+          </div>
+          <div class="browser-viewport">
+            <div class="preview-loader" aria-hidden="true">
+              <span class="preview-loader-dot"></span>
+              <span>ÉLŐ ELŐNÉZET</span>
+            </div>
+            <div class="preview-honest-fallback" aria-hidden="true">
+              <span>LIVE PREVIEW</span>
+              <strong>Balaton Essence</strong>
+              <p>Ha az élő előnézet itt nem tölt be, kattintással megnyílik az éles oldal.</p>
+            </div>
+            <iframe
+              class="preview-live-frame"
+              data-src="https://balatonessence.com/"
+              title="Balaton Essence weboldal élő előnézet"
+              loading="eager"
+              scrolling="no"
+              tabindex="-1"
+              aria-hidden="true"
+              sandbox="allow-same-origin"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+        <span class="project-open" aria-hidden="true">↗</span>
+      </div>
+    </a>
+
+    <a class="project" href="https://silentlakelatrany.com/" target="_blank" rel="noopener noreferrer">
+      <div class="project-copy">
+        <span class="project-index">02</span>
+        <h3>Silent Lake Látrány</h3>
+      </div>
+      <div class="project-visual">
+        <div class="browser-frame">
+          <div class="browser-bar" aria-hidden="true">
+            <span class="browser-dots"><i></i><i></i><i></i></span>
+            <span class="browser-url">silentlakelatrany.com</span>
+          </div>
+          <div class="browser-viewport">
+            <div class="preview-loader" aria-hidden="true">
+              <span class="preview-loader-dot"></span>
+              <span>ÉLŐ ELŐNÉZET</span>
+            </div>
+            <iframe
+              class="preview-live-frame"
+              data-src="https://silentlakelatrany.com/"
+              title="Silent Lake Látrány weboldal élő előnézet"
+              loading="lazy"
+              scrolling="no"
+              tabindex="-1"
+              aria-hidden="true"
+              sandbox="allow-scripts allow-same-origin"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+        <span class="project-open" aria-hidden="true">↗</span>
+      </div>
+    </a>
+
+    <a class="project" href="https://zoldtarahaza.hu/" target="_blank" rel="noopener noreferrer">
+      <div class="project-copy">
+        <span class="project-index">03</span>
+        <h3>Zöld Tara Háza</h3>
+      </div>
+      <div class="project-visual">
+        <div class="browser-frame">
+          <div class="browser-bar" aria-hidden="true">
+            <span class="browser-dots"><i></i><i></i><i></i></span>
+            <span class="browser-url">zoldtarahaza.hu</span>
+          </div>
+          <div class="browser-viewport">
+            <img class="preview-static-shot" src="../assets/previews/zold-tara-real.webp" alt="Zöld Tara Háza valódi weboldal előnézet" loading="lazy" decoding="async">
+          </div>
+        </div>
+        <span class="project-open" aria-hidden="true">↗</span>
+      </div>
+    </a>
+
+    <a class="project" href="https://lujdort-az-asztalos.com/" target="_blank" rel="noopener noreferrer">
+      <div class="project-copy">
+        <span class="project-index">04</span>
+        <h3>Lujdort az asztalos</h3>
+      </div>
+      <div class="project-visual">
+        <div class="browser-frame">
+          <div class="browser-bar" aria-hidden="true">
+            <span class="browser-dots"><i></i><i></i><i></i></span>
+            <span class="browser-url">lujdort-az-asztalos.com</span>
+          </div>
+          <div class="browser-viewport">
+            <div class="preview-loader" aria-hidden="true">
+              <span class="preview-loader-dot"></span>
+              <span>ÉLŐ ELŐNÉZET</span>
+            </div>
+            <iframe
+              class="preview-live-frame preview-live-frame--scripts"
+              data-src="https://lujdort-az-asztalos.com/"
+              title="Lujdort az asztalos weboldal élő előnézet"
+              loading="lazy"
+              scrolling="no"
+              tabindex="-1"
+              aria-hidden="true"
+              sandbox="allow-scripts allow-same-origin"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+        <span class="project-open" aria-hidden="true">↗</span>
+      </div>
+    </a>
+
+    <a class="project" href="https://ingsign.com/" target="_blank" rel="noopener noreferrer">
+      <div class="project-copy">
+        <span class="project-index">05</span>
+        <h3>INGSIGN <span class="project-tag" data-i18n="project.ingsign.tag">(katalógusok)</span></h3>
+      </div>
+      <div class="project-visual">
+        <div class="browser-frame">
+          <div class="browser-bar" aria-hidden="true">
+            <span class="browser-dots"><i></i><i></i><i></i></span>
+            <span class="browser-url">ingsign.com</span>
+          </div>
+          <div class="browser-viewport">
+            <div class="preview-loader" aria-hidden="true">
+              <span class="preview-loader-dot"></span>
+              <span>ÉLŐ ELŐNÉZET</span>
+            </div>
+            <iframe
+              class="preview-live-frame preview-live-frame--scripts"
+              data-src="https://ingsign.com/"
+              title="INGSIGN weboldal élő előnézet"
+              loading="lazy"
+              scrolling="no"
+              tabindex="-1"
+              aria-hidden="true"
+              sandbox="allow-scripts allow-same-origin"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+        <span class="project-open" aria-hidden="true">↗</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <p class="footer-brand">KRILIX<br><em>Tech & Labs</em></p>
+      </div>
+      <div>
+        <h4>
+          <button type="button" class="footer-heading-btn" data-i18n="footer.explore" aria-label="Menü megnyitása">FELFEDEZÉS</button>
+        </h4>
+        <div class="footer-links">
+          <a href="../munkaink/index.html" aria-current="page" data-i18n="footer.work">Munkáink</a>
+          <a href="../szolgaltatasok/index.html" data-i18n="footer.services">Szolgáltatások</a>
+          <a href="../rolunk/index.html" data-i18n="footer.about">Rólunk</a>
+          <a href="../adatvedelem/index.html" data-i18n="footer.privacy">Adatvédelem</a>
+        </div>
+      </div>
+      <div>
+        <h4>
+          <a href="../kapcsolat/index.html" class="footer-heading-link" data-i18n="footer.contactHeading">KAPCSOLAT</a>
+        </h4>
+        <div class="footer-links">
+          <a href="mailto:hello@krilixtechlabs.com">hello@krilixtechlabs.com</a>
+          <a href="tel:+36705695022">+36 70 569 5022</a>
+          <span data-i18n="footer.location">Magyarország</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> KRILIX TECH & LABS</span>
+      <span data-i18n="footer.bottom">TERVEZÉS × FEJLESZTÉS × RENDSZEREK</span>
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script>
+(function () {
+  const body = document.body;
+  const overlay = document.getElementById('menuOverlay');
+  const openBtn = document.getElementById('openMenuBtn');
+  const closeBtn = document.getElementById('closeMenuBtn');
+  const footerOpen = document.querySelector('.footer-heading-btn');
+  const themeBtn = document.getElementById('themeToggleBtn');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeLabel = document.getElementById('themeLabel');
+
+  const translations = {
+    hu: {
+      'nav.work': 'Munkáink',
+      'nav.services': 'Szolgáltatások',
+      'nav.about': 'Rólunk',
+      'nav.contact': 'Kapcsolat',
+      'btn.explore': 'FELFEDEZÉS',
+      'footer.studio': 'Független digitális stúdió · Magyarország',
+      'work.title': 'MUNKÁINK',
+      'hero.counter': 'PROJEKTEK:',
+      'hero.scroll': 'GÖRGESSEN LE',
+      'project.ingsign.tag': '(katalógusok)',
+      'footer.explore': 'FELFEDEZÉS',
+      'footer.work': 'Munkáink',
+      'footer.services': 'Szolgáltatások',
+      'footer.about': 'Rólunk',
+      'footer.privacy': 'Adatvédelem',
+      'footer.contactHeading': 'KAPCSOLAT',
+      'footer.location': 'Magyarország',
+      'footer.bottom': 'TERVEZÉS × FEJLESZTÉS × RENDSZEREK'
+    },
+    en: {
+      'nav.work': 'Work',
+      'nav.services': 'Services',
+      'nav.about': 'About',
+      'nav.contact': 'Contact',
+      'btn.explore': 'EXPLORE',
+      'footer.studio': 'Independent digital studio · Hungary',
+      'work.title': 'OUR WORK',
+      'hero.counter': 'PROJECTS:',
+      'hero.scroll': 'SCROLL DOWN',
+      'project.ingsign.tag': '(catalogues)',
+      'footer.explore': 'EXPLORE',
+      'footer.work': 'Work',
+      'footer.services': 'Services',
+      'footer.about': 'About',
+      'footer.privacy': 'Privacy',
+      'footer.contactHeading': 'CONTACT',
+      'footer.location': 'Hungary',
+      'footer.bottom': 'DESIGN × DEVELOPMENT × SYSTEMS'
+    },
+    de: {
+      'nav.work': 'Projekte',
+      'nav.services': 'Leistungen',
+      'nav.about': 'Über uns',
+      'nav.contact': 'Kontakt',
+      'btn.explore': 'ENTDECKEN',
+      'footer.studio': 'Unabhängiges Digitalstudio · Ungarn',
+      'work.title': 'PROJEKTE',
+      'hero.counter': 'PROJEKTE:',
+      'hero.scroll': 'WEITER NACH UNTEN',
+      'project.ingsign.tag': '(Kataloge)',
+      'footer.explore': 'ENTDECKEN',
+      'footer.work': 'Projekte',
+      'footer.services': 'Leistungen',
+      'footer.about': 'Über uns',
+      'footer.privacy': 'Datenschutz',
+      'footer.contactHeading': 'KONTAKT',
+      'footer.location': 'Ungarn',
+      'footer.bottom': 'DESIGN × ENTWICKLUNG × SYSTEME'
+    }
+  };
+
+  const themeLabels = {
+    hu: { light: 'VILÁGOS', dark: 'SÖTÉT' },
+    en: { light: 'LIGHT', dark: 'DARK' },
+    de: { light: 'HELL', dark: 'DUNKEL' }
+  };
+
+  function closeMenu() {
+    body.classList.remove('menu-open');
+    if (overlay) {
+      overlay.classList.remove('active', 'open');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  function openMenu() {
+    if (!overlay) return;
+    body.classList.add('menu-open');
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+  }
+
+  // Mindig tiszta állapotból induljon az oldal.
+  closeMenu();
+  window.addEventListener('pageshow', closeMenu);
+
+  if (openBtn) openBtn.addEventListener('click', openMenu);
+  if (footerOpen) footerOpen.addEventListener('click', openMenu);
+  if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+  overlay?.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  function currentLang() {
+    return localStorage.getItem('krilix-v5-lang') || 'hu';
+  }
+
+  function syncThemeLabel() {
+    const lang = currentLang();
+    const labels = themeLabels[lang] || themeLabels.hu;
+    const light = body.classList.contains('light-theme');
+    if (themeLabel) themeLabel.textContent = light ? labels.dark : labels.light;
+    if (themeIcon) themeIcon.textContent = light ? '🌙' : '☀️';
+  }
+
+  function applyTheme(theme) {
+    body.classList.toggle('light-theme', theme === 'light');
+    localStorage.setItem('krilix-theme', theme);
+    syncThemeLabel();
+  }
+
+  applyTheme(localStorage.getItem('krilix-theme') || 'dark');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      applyTheme(body.classList.contains('light-theme') ? 'dark' : 'light');
+    });
+  }
+
+  function setLanguage(lang) {
+    localStorage.setItem('krilix-v5-lang', lang);
+    document.documentElement.lang = lang;
+    const current = translations[lang] || translations.hu;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (Object.prototype.hasOwnProperty.call(current, key)) {
+        el.textContent = current[key];
+      }
+    });
+
+    document.querySelectorAll('[data-lang]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    syncThemeLabel();
+  }
+
+  document.querySelectorAll('[data-lang]').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+  });
+
+  setLanguage(currentLang());
+
+  const projectCount = document.querySelectorAll('.projects .project').length;
+  const counter = document.querySelector('.hero-counter .count-num');
+  if (counter) counter.textContent = String(projectCount).padStart(2, '0');
+
+  document.querySelectorAll('[data-year]').forEach(el => {
+    el.textContent = new Date().getFullYear();
+  });
+})();
+</script>
+
+
+
+
+
+
+<script>
+(function () {
+  const viewports = Array.from(document.querySelectorAll('.browser-viewport'));
+  if (!viewports.length) return;
+
+  function previewWidthForPage() {
+    const w = window.innerWidth || document.documentElement.clientWidth || 1440;
+    if (w <= 520) return 390;   // valódi mobil layout
+    if (w <= 900) return 768;   // valódi tablet layout
+    if (w <= 1180) return 1024; // kis laptop / fekvő tablet
+    return 1440;                // desktop
+  }
+
+  function fitPreview(viewport) {
+    const frame = viewport.querySelector('.preview-live-frame');
+    if (!frame) return;
+
+    const boxWidth = viewport.clientWidth;
+    const boxHeight = viewport.clientHeight;
+    if (!boxWidth || !boxHeight) return;
+
+    const virtualWidth = previewWidthForPage();
+    const scale = boxWidth / virtualWidth;
+    const virtualHeight = Math.max(320, Math.ceil(boxHeight / scale));
+
+    frame.style.width = virtualWidth + 'px';
+    frame.style.height = virtualHeight + 'px';
+    frame.style.transform = 'scale(' + scale + ')';
+  }
+
+  function loadPreview(viewport) {
+    const frame = viewport.querySelector('.preview-live-frame');
+    if (!frame || frame.dataset.loaded === '1') return;
+
+    frame.dataset.loaded = '1';
+    fitPreview(viewport);
+
+    const loader = viewport.querySelector('.preview-loader');
+    const label = loader ? loader.querySelector('span:last-child') : null;
+
+    const reveal = () => {
+      viewport.classList.add('preview-loaded');
+      window.setTimeout(() => viewport.classList.add('preview-settled'), 180);
+    };
+
+    frame.addEventListener('load', reveal, { once: true });
+    frame.src = frame.dataset.src;
+
+    // Ha egy külső oldal tiltja az iframe-et, nem helyettesítjük kamu képpel.
+    // Inkább őszinte fallback üzenetet mutatunk, és a kártya továbbra is
+    // közvetlenül a valódi oldalra kattintható.
+    window.setTimeout(() => {
+      if (!viewport.classList.contains('preview-loaded') && label) {
+        label.textContent = 'ELŐNÉZET BETÖLTÉSE…';
+      }
+    }, 2500);
+
+    window.setTimeout(() => {
+      if (!viewport.classList.contains('preview-loaded')) {
+        viewport.classList.add('preview-failed');
+        if (label) label.textContent = 'MEGNYITÁS ↗';
+      }
+    }, 6500);
+  }
+
+  const resizeObserver = 'ResizeObserver' in window
+    ? new ResizeObserver(entries => entries.forEach(entry => fitPreview(entry.target)))
+    : null;
+
+  viewports.forEach(viewport => {
+    if (viewport.querySelector('.preview-live-frame')) {
+      resizeObserver?.observe(viewport);
+      fitPreview(viewport);
+    }
+  });
+
+  const liveViewports = viewports.filter(viewport => viewport.querySelector('.preview-live-frame'));
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        loadPreview(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '700px 0px' });
+
+    liveViewports.forEach(viewport => observer.observe(viewport));
+  } else {
+    liveViewports.forEach(loadPreview);
+  }
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => liveViewports.forEach(fitPreview), 120);
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

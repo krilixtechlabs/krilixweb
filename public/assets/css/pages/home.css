@@ -1,0 +1,525 @@
+* {
+    box-sizing: border-box;
+  }
+
+  /* ========================================================
+     SÖTÉT MÓD VÁLTOZÓK (ÉRINTETLEN — #800020 ÉS #60241E)
+     ======================================================== */
+  :root {
+    --bg-gradient: radial-gradient(circle at 50% 50%, #15181e 0%, #0b0c0f 55%, #040507 100%);
+    --bg-color: #040507;
+    --text-primary: #FFFFFF;
+    --text-secondary: #FFFFFF;
+    --text-muted: #94a3b8;
+    --line: rgba(255, 255, 255, 0.12);
+    --stroke-color: #60241E;
+    --hero-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+    --hero-sub-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    --btn-bg: rgba(18, 20, 26, 0.85);
+    --btn-border: #60241E;
+    --btn-text: #FFFFFF;
+    --btn-hover-bg: #60241E;
+    --btn-hover-text: #FFFFFF;
+    --btn-hover-shadow: 0 0 25px rgba(96, 36, 30, 0.35);
+    --overlay-bg: rgba(8, 10, 14, 0.92);
+    --overlay-border: rgba(96, 36, 30, 0.25);
+    --brand-span: #800020;
+
+    /* Háttér chip és áramkör sötétben */
+    --trace-deep: rgba(128, 0, 32, 0.28);
+    --trace-main: rgba(128, 0, 32, 0.7);
+    --trace-highlight: #800020;
+    --smd-chip-fill: #140306;
+    --smd-chip-stroke: #800020;
+    --socket-outer: #0e0204;
+    --socket-outer-stroke: #800020;
+    --socket-mid: #150306;
+    --socket-inner: #0a0103;
+    --solder-bright: #d94b68;
+    --solder-glow: #800020;
+    --dot-color: #800020;
+    --circuit-opacity: 1;
+
+    --nav-strong: #FFFFFF;
+    --nav-border: #60241E;
+    --ctrl-bg: rgba(13, 15, 20, 0.85);
+    --ctrl-border: #374151;
+    --ctrl-btn-color: #60241E;
+    --ctrl-btn-active-bg: #60241E;
+    --ctrl-btn-active-text: #FFFFFF;
+  }
+
+  /* ========================================================
+     VILÁGOS MÓD VÁLTOZÓK — AZ INDEX2 RENDSZERE ALAPJÁN
+     ======================================================== */
+  body.light-theme {
+    --bg-color: #f1f5f9;
+    --bg-gradient: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%);
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --line: rgba(15, 23, 42, 0.12);
+    --stroke-color: transparent;
+    --hero-shadow: none;
+    --hero-sub-shadow: none;
+    --btn-bg: #ffffff;
+    --btn-border: #0f172a;
+    --btn-text: #0f172a;
+    --btn-hover-bg: #0f172a;
+    --btn-hover-text: #ffffff;
+    --btn-hover-shadow: 0 4px 20px rgba(15, 23, 42, 0.18);
+    --overlay-bg: rgba(255, 255, 255, 0.94);
+    --overlay-border: rgba(15, 23, 42, 0.12);
+    --brand-span: #64748b;
+    --trace-deep: #cbd5e1;
+    --trace-main: #94a3b8;
+    --trace-highlight: #64748b;
+    --smd-chip-fill: #e2e8f0;
+    --smd-chip-stroke: #94a3b8;
+    --socket-outer: #e2e8f0;
+    --socket-outer-stroke: #94a3b8;
+    --socket-mid: #f8fafc;
+    --socket-inner: #ffffff;
+    --solder-bright: #475569;
+    --solder-glow: #94a3b8;
+    --dot-color: #94a3b8;
+    --circuit-opacity: 0.45;
+    --nav-strong: #0f172a;
+    --nav-border: rgba(15, 23, 42, 0.12);
+    --ctrl-bg: rgba(255, 255, 255, 0.9);
+    --ctrl-border: #cbd5e1;
+    --ctrl-btn-color: #64748b;
+    --ctrl-btn-active-bg: #0f172a;
+    --ctrl-btn-active-text: #ffffff;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  body {
+    background: var(--bg-gradient) !important;
+    background-attachment: fixed !important;
+    overflow-x: hidden;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    color: var(--text-primary);
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* Teljes képernyős processzor és áramköri háttér */
+  .circuit-background {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: var(--circuit-opacity);
+    transition: filter 0.4s ease, opacity 0.4s ease;
+  }
+
+  body.menu-open .circuit-background {
+    filter: blur(4px);
+    opacity: 0.25;
+  }
+
+  .circuit-dot {
+    fill: var(--dot-color);
+    opacity: 0.35;
+    transition: fill 0.3s ease;
+  }
+
+  .trace-deep { fill: none; stroke: var(--trace-deep); stroke-width: 3.6; stroke-linecap: square; stroke-linejoin: round; transition: stroke 0.3s ease; }
+  .trace-main { fill: none; stroke: var(--trace-main); stroke-width: 4.2; stroke-linecap: square; stroke-linejoin: round; transition: stroke 0.3s ease; }
+  .trace-highlight { fill: none; stroke: var(--trace-highlight); stroke-width: 4.6; stroke-linecap: square; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.1)); transition: stroke 0.3s ease; }
+  .smd-chip { fill: var(--smd-chip-fill); stroke: var(--smd-chip-stroke); stroke-width: 1; transition: fill 0.3s ease, stroke 0.3s ease; }
+  .solder-bright { fill: var(--solder-bright); transition: fill 0.3s ease; }
+  .solder-glow { fill: var(--solder-glow); opacity: 0.35; transition: fill 0.3s ease; }
+
+  .serif,
+  .gold.serif,
+  .home-brand-script {
+    font-family: Georgia, serif !important;
+    font-style: italic;
+  }
+
+  /* Középre rendezett főoldali blokk */
+  main {
+    width: 100%;
+    min-height: 100vh;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+  }
+
+  body.menu-open main {
+    transform: scale(0.97);
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  /* Feliratok és gomb pozíciója */
+  .home-only {
+    width: 100%;
+    max-width: 1200px;
+    background: transparent !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+    transform: translateY(-10px);
+  }
+
+  .home-brand {
+    text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+    width: 100%;
+  }
+
+  /* KRILIX felirat */
+  .home-brand-word {
+    font-family: 'Black Ops One', cursive, sans-serif;
+    font-weight: 400;
+    margin: 0 auto !important;
+    line-height: 0.95;
+    letter-spacing: 0.04em;
+    font-size: clamp(72px, 14vw, 190px) !important;
+    color: var(--text-primary) !important;
+    -webkit-text-stroke: clamp(2px, 0.35vw, 4px) var(--stroke-color);
+    paint-order: stroke fill;
+    text-shadow: var(--hero-shadow);
+    text-align: center;
+    transition: color 0.3s ease, -webkit-text-stroke 0.3s ease;
+  }
+
+  /* Tech & Labs alcím */
+  .home-brand-script {
+    position: static !important;
+    margin: 0.15rem auto 0 auto !important;
+    font-size: clamp(18px, 2.8vw, 38px) !important;
+    font-weight: 600 !important;
+    line-height: 1.1;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary) !important;
+    -webkit-text-stroke: 1.2px var(--stroke-color);
+    paint-order: stroke fill;
+    text-shadow: var(--hero-sub-shadow);
+    text-align: center;
+    opacity: 1;
+    transition: color 0.3s ease, -webkit-text-stroke 0.3s ease;
+  }
+
+  /* FELFEDEZÉS GOMB */
+  .home-only-menu {
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 16px auto 0 auto !important;
+    padding: 0.7rem 2.4rem !important;
+    font-family: 'Black Ops One', cursive, sans-serif !important;
+    background: var(--btn-bg) !important;
+    border: 2px solid var(--btn-border) !important;
+    color: var(--btn-text) !important;
+    -webkit-text-stroke: 0.8px var(--stroke-color);
+    paint-order: stroke fill;
+    font-size: clamp(0.75rem, 0.95vw, 0.9rem) !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    border-radius: 9999px !important;
+    cursor: pointer !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    z-index: 5 !important;
+  }
+
+  .home-only-menu:hover {
+    background: var(--btn-hover-bg) !important;
+    color: var(--btn-hover-text) !important;
+    -webkit-text-stroke: 0 transparent;
+    border-color: var(--btn-hover-bg) !important;
+    box-shadow: var(--btn-hover-shadow) !important;
+    transform: translateY(-2px);
+  }
+
+  /* Overlay Menü */
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 60px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+
+  .menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+
+  .menu-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .menu-top .brand {
+    font-family: 'Black Ops One', cursive, sans-serif;
+    font-size: 1.35rem;
+    letter-spacing: 0.08em;
+    color: var(--text-primary) !important;
+    -webkit-text-stroke: 1px var(--stroke-color);
+    paint-order: stroke fill;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .menu-top .brand span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--brand-span) !important;
+    -webkit-text-stroke: 0 !important;
+  }
+
+  .close-menu {
+    width: 44px;
+    height: 44px;
+    background: rgba(125, 125, 125, 0.08);
+    border: 1.5px solid var(--btn-border);
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .close-menu::before,
+  .close-menu::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: var(--btn-border);
+    transition: transform 0.25s ease, background-color 0.25s ease;
+  }
+
+  .close-menu::before { transform: rotate(45deg); }
+  .close-menu::after { transform: rotate(-45deg); }
+
+  .close-menu:hover {
+    background: var(--btn-border);
+    transform: rotate(90deg);
+  }
+
+  .close-menu:hover::before,
+  .close-menu:hover::after {
+    background-color: var(--btn-hover-text);
+  }
+
+  /* Aloldal-választó lista */
+  .overlay-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 0;
+  }
+
+  .overlay-nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    transition: all 0.25s ease;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .menu-overlay.active .overlay-nav a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .menu-overlay.active .overlay-nav a:nth-child(1) { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s; }
+  .menu-overlay.active .overlay-nav a:nth-child(2) { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.14s; }
+  .menu-overlay.active .overlay-nav a:nth-child(3) { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.20s; }
+  .menu-overlay.active .overlay-nav a:nth-child(4) { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.26s; }
+
+  .overlay-nav .nav-index {
+    font-family: 'Black Ops One', monospace;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+    letter-spacing: 0.12em;
+  }
+
+  .overlay-nav strong {
+    font-size: clamp(2.6rem, 6.5vw, 5.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--nav-strong) !important;
+    -webkit-text-stroke: 1.8px var(--stroke-color);
+    paint-order: stroke fill;
+    border-left: 6px solid var(--nav-border);
+    padding-left: 28px;
+    line-height: 1.05;
+    display: inline-block;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .overlay-nav a:hover strong {
+    padding-left: 42px;
+  }
+
+  body.light-theme .overlay-nav strong {
+    color: var(--text-secondary) !important;
+    border-left-color: var(--line);
+  }
+
+  body.light-theme .overlay-nav a:hover strong {
+    color: var(--text-primary) !important;
+    border-left-color: var(--text-primary);
+  }
+
+  body.light-theme .overlay-nav a:hover .nav-index {
+    color: var(--text-primary);
+  }
+
+  .menu-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--overlay-border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  .menu-bottom a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .menu-bottom a:hover {
+    color: var(--text-primary);
+  }
+
+  /* Vezérlősáv: Témaváltó és Nyelvválasztó */
+  .bottom-controls {
+    position: fixed !important;
+    bottom: 28px !important;
+    right: 32px !important;
+    z-index: 150 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .ctrl-box {
+    display: inline-flex !important;
+    align-items: center !important;
+    border: 1.5px solid var(--ctrl-border) !important;
+    border-radius: 9999px !important;
+    background: var(--ctrl-bg) !important;
+    backdrop-filter: blur(8px);
+    padding: 3px !important;
+    gap: 2px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .ctrl-box button {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.05em !important;
+    color: var(--ctrl-btn-color) !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 5px 9px !important;
+    border-radius: 9999px !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
+    transition: background-color 0.15s ease, color 0.15s ease !important;
+  }
+
+  .ctrl-box button:hover {
+    color: var(--text-primary) !important;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .ctrl-box button.active {
+    background: var(--ctrl-btn-active-bg) !important;
+    color: var(--ctrl-btn-active-text) !important;
+  }
+
+  .theme-toggle-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 5px 12px !important;
+  }
+
+  @media (max-width: 768px) {
+    .menu-overlay { padding: 24px 20px; }
+    .overlay-nav { gap: 14px; }
+    .overlay-nav strong { font-size: clamp(2rem, 9vw, 2.75rem); padding-left: 16px; border-left-width: 4px; }
+    .overlay-nav a { gap: 14px; }
+    .overlay-nav .nav-index { font-size: 1rem; }
+    .overlay-nav a:hover strong { padding-left: 24px; }
+    .menu-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .home-only { transform: translateY(0); }
+    .home-only-menu { margin-top: 10px !important; padding: 0.55rem 1.7rem !important; font-size: 0.8rem !important; }
+    .bottom-controls { bottom: 16px !important; right: 16px !important; }
+  }
+
+
+/* HOME DARK CIRCUIT HARD OVERRIDE — every trace is burgundy/red */
+body.home-page:not(.light-theme) .trace-deep { stroke: rgba(96, 36, 30, .58) !important; }
+body.home-page:not(.light-theme) .trace-main { stroke: rgba(128, 0, 32, .78) !important; }
+body.home-page:not(.light-theme) .trace-highlight { stroke: #800020 !important; }
+body.home-page:not(.light-theme) .solder-bright { fill: #d94b68 !important; }
+body.home-page:not(.light-theme) .solder-glow { fill: #800020 !important; }

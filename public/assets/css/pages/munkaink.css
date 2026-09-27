@@ -1,0 +1,764 @@
+/* =========================================================
+   KRILIX TECH & LABS — MUNKÁINK / PREVIEW SYSTEM V2
+   Egységes, iframe-mentes, GPU-barát projekt-preview rendszer.
+   ========================================================= */
+
+body.page-munkaink {
+  --work-red: #800020;
+  --work-red-2: #c52a4f;
+  --work-blue: #2563eb;
+  --work-surface: #0a0b0f;
+}
+
+/* ---------- háttér ---------- */
+body.page-munkaink:not(.light-theme) .circuit-dot { fill: rgba(128,0,32,.34) !important; }
+body.page-munkaink:not(.light-theme) .trace-deep { stroke: rgba(96,36,30,.72) !important; }
+body.page-munkaink:not(.light-theme) .trace-main { stroke: rgba(128,0,32,.88) !important; }
+body.page-munkaink:not(.light-theme) .trace-highlight { stroke: #a81238 !important; }
+body.page-munkaink:not(.light-theme) .solder-bright { fill: #d94b68 !important; }
+body.page-munkaink:not(.light-theme) .solder-glow { fill: #800020 !important; }
+
+body.page-munkaink.light-theme .circuit-dot { fill: #94a3b8 !important; }
+body.page-munkaink.light-theme .trace-deep { stroke: #cbd5e1 !important; }
+body.page-munkaink.light-theme .trace-main { stroke: #94a3b8 !important; }
+body.page-munkaink.light-theme .trace-highlight { stroke: #64748b !important; }
+body.page-munkaink.light-theme .solder-bright { fill: #475569 !important; }
+body.page-munkaink.light-theme .solder-glow { fill: #94a3b8 !important; }
+
+/* ---------- hero ---------- */
+body.page-munkaink .inner-title-wrap {
+  padding-top: clamp(54px, 7vw, 92px) !important;
+  padding-bottom: clamp(42px, 5vw, 68px) !important;
+  gap: 20px !important;
+}
+
+body.page-munkaink .inner-title-wrap h1 {
+  font-family: 'Black Ops One', 'Arial Black', Arial, sans-serif !important;
+  font-size: clamp(58px, 10vw, 148px) !important;
+  font-weight: 400 !important;
+  line-height: .92 !important;
+  letter-spacing: .025em !important;
+  color: var(--text-primary) !important;
+  -webkit-text-stroke: clamp(1px, .12vw, 2px) #60241e !important;
+  paint-order: stroke fill;
+  text-shadow: 0 8px 34px rgba(0,0,0,.26) !important;
+}
+
+body.page-munkaink .hero-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap;
+  gap: 12px 18px !important;
+  margin: 0 !important;
+}
+
+body.page-munkaink .hero-counter,
+body.page-munkaink .hero-scroll {
+  min-height: 38px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px;
+  font-family: 'Inter', Arial, sans-serif !important;
+  font-size: .72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+body.page-munkaink .hero-counter {
+  background: rgba(128,0,32,.055);
+  color: var(--text-muted);
+}
+body.page-munkaink .hero-counter .count-num {
+  color: var(--text-primary);
+  font-family: 'Black Ops One', 'Arial Black', Arial, sans-serif;
+  font-size: 1rem;
+}
+body.page-munkaink .hero-scroll {
+  border-color: var(--btn-border) !important;
+  background: var(--btn-bg) !important;
+  color: var(--btn-text) !important;
+}
+body.page-munkaink .hero-scroll:hover {
+  background: var(--btn-hover-bg) !important;
+  color: var(--btn-hover-text) !important;
+}
+body.page-munkaink .scroll-arrow { font-size: 1rem; line-height: 1; }
+
+/* ---------- lista ---------- */
+body.page-munkaink .projects {
+  position: relative !important;
+  z-index: 2 !important;
+  padding: 0 0 110px !important;
+  border-top: 1px solid var(--line) !important;
+  background: transparent !important;
+}
+
+body.page-munkaink .project-list {
+  width: min(calc(100% - 64px), 1440px) !important;
+  max-width: 1440px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+body.page-munkaink .project {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(240px,.68fr) minmax(0,1.32fr) !important;
+  align-items: center !important;
+  gap: clamp(34px,5vw,78px) !important;
+  margin: 0 !important;
+  padding: clamp(58px,6.5vw,96px) 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  color: inherit !important;
+  text-decoration: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+body.page-munkaink .project:nth-child(even) {
+  grid-template-columns: minmax(0,1.32fr) minmax(240px,.68fr) !important;
+}
+body.page-munkaink .project:nth-child(odd) .project-copy { order: 1; }
+body.page-munkaink .project:nth-child(odd) .project-visual { order: 2; }
+body.page-munkaink .project:nth-child(even) .project-visual { order: 1; }
+body.page-munkaink .project:nth-child(even) .project-copy { order: 2; }
+
+body.page-munkaink .project-copy {
+  min-width: 0;
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+body.page-munkaink .project-index {
+  margin-bottom: 16px;
+  color: var(--text-muted);
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: .69rem;
+  font-weight: 800;
+  letter-spacing: .18em;
+}
+
+body.page-munkaink .project-copy h3 {
+  margin: 0 !important;
+  color: var(--text-primary) !important;
+  font-family: 'Black Ops One', 'Arial Black', Arial, sans-serif !important;
+  font-size: clamp(31px,3.7vw,58px) !important;
+  font-weight: 400 !important;
+  line-height: 1.02 !important;
+  letter-spacing: .02em !important;
+  text-transform: uppercase;
+  -webkit-text-stroke: 0 transparent !important;
+  paint-order: stroke fill;
+  text-shadow: none !important;
+  transition: color .18s ease, text-shadow .18s ease, -webkit-text-stroke-color .18s ease !important;
+}
+
+/* Csak hoverkor világít. */
+body.page-munkaink:not(.light-theme) .project:hover .project-copy h3 {
+  color: #fff !important;
+  -webkit-text-stroke: .7px rgba(213,43,84,.95) !important;
+  text-shadow: 0 0 9px rgba(255,255,255,.28), 0 0 18px rgba(128,0,32,.62) !important;
+}
+body.page-munkaink.light-theme .project:hover .project-copy h3 {
+  color: #090f1c !important;
+  -webkit-text-stroke: .7px rgba(37,99,235,.9) !important;
+  text-shadow: 0 0 8px rgba(147,197,253,.6), 0 0 16px rgba(37,99,235,.25) !important;
+}
+
+body.page-munkaink .project-domain {
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: clamp(11px,.9vw,13px);
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: lowercase;
+}
+
+body.page-munkaink .project-tag {
+  display: block;
+  margin-top: 9px;
+  color: var(--text-muted) !important;
+  font-family: 'Inter', Arial, sans-serif !important;
+  font-size: clamp(11px,.9vw,14px) !important;
+  font-weight: 700 !important;
+  letter-spacing: .08em !important;
+  -webkit-text-stroke: 0 transparent !important;
+  text-shadow: none !important;
+}
+
+/* ---------- egységes preview ---------- */
+body.page-munkaink .project-visual {
+  width: 100% !important;
+  aspect-ratio: 16 / 10 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  position: relative;
+  overflow: hidden !important;
+  border: 1px solid rgba(128,0,32,.34) !important;
+  border-radius: 18px !important;
+  background: #08090c !important;
+  box-shadow: 0 18px 50px rgba(0,0,0,.34) !important;
+  isolation: isolate;
+  transform: none !important;
+  transition: border-color .2s ease, box-shadow .2s ease !important;
+}
+
+body.page-munkaink .project:hover .project-visual {
+  transform: none !important;
+  border-color: rgba(197,42,79,.82) !important;
+  box-shadow: 0 22px 58px rgba(0,0,0,.42), 0 0 0 1px rgba(128,0,32,.12) !important;
+}
+
+body.page-munkaink .browser-frame {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 38px minmax(0,1fr);
+  overflow: hidden;
+  background: #0a0b0f;
+}
+
+body.page-munkaink .browser-bar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  background: #111217;
+}
+
+body.page-munkaink .browser-dots {
+  flex: 0 0 auto;
+  display: inline-flex;
+  gap: 6px;
+}
+body.page-munkaink .browser-dots i {
+  width: 8px;
+  height: 8px;
+  display: block;
+  border-radius: 50%;
+}
+body.page-munkaink .browser-dots i:nth-child(1) { background:#ff5f57; }
+body.page-munkaink .browser-dots i:nth-child(2) { background:#febc2e; }
+body.page-munkaink .browser-dots i:nth-child(3) { background:#28c840; }
+
+body.page-munkaink .browser-url {
+  min-width: 0;
+  max-width: 64%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 4px 12px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  color: #aeb6c4;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+body.page-munkaink .browser-viewport {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden !important;
+  background: #0a0b0f;
+  contain: layout paint;
+}
+
+body.page-munkaink .preview-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 5px;
+  padding: clamp(22px,4vw,44px);
+  background: linear-gradient(135deg,#101116 0%,#160d12 55%,#07080b 100%);
+  color: #fff;
+}
+body.page-munkaink .preview-fallback::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(128,0,32,.13) 1px,transparent 1px), linear-gradient(90deg,rgba(128,0,32,.13) 1px,transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+}
+body.page-munkaink .preview-fallback > * { position:relative; z-index:1; }
+body.page-munkaink .preview-fallback span {
+  color: #d94b68;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .18em;
+}
+body.page-munkaink .preview-fallback strong {
+  max-width: 80%;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: clamp(26px,4vw,54px);
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+body.page-munkaink .preview-shot {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  display: block;
+  object-fit: contain !important;
+  object-position: top center !important;
+  background: #fff;
+  opacity: 0;
+  transform: none !important;
+  filter: none !important;
+  transition: opacity .18s ease !important;
+}
+body.page-munkaink .browser-viewport.preview-ready .preview-shot { opacity: 1; }
+body.page-munkaink .browser-viewport.preview-error .preview-shot { display: none !important; }
+body.page-munkaink .project:hover .preview-shot { transform: none !important; filter: none !important; }
+
+body.page-munkaink .project-open {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  display: grid !important;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.74) !important;
+  border-radius: 50%;
+  background: #0b0c10 !important;
+  color: #fff !important;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.22);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease !important;
+}
+body.page-munkaink .project:hover .project-open {
+  transform: rotate(45deg) !important;
+  background: var(--work-red) !important;
+  border-color: #d94b68 !important;
+}
+
+/* ---------- light ---------- */
+body.page-munkaink.light-theme .inner-title-wrap h1 {
+  color: #0f172a !important;
+  -webkit-text-stroke-color: #94a3b8 !important;
+  text-shadow: none !important;
+}
+body.page-munkaink.light-theme .project-copy h3 { color:#0f172a !important; }
+body.page-munkaink.light-theme .project-visual {
+  border-color: rgba(15,23,42,.15) !important;
+  background:#e2e8f0 !important;
+  box-shadow: 0 16px 42px rgba(15,23,42,.12) !important;
+}
+body.page-munkaink.light-theme .project:hover .project-visual {
+  border-color: rgba(37,99,235,.5) !important;
+  box-shadow: 0 20px 48px rgba(15,23,42,.16) !important;
+}
+body.page-munkaink.light-theme .browser-bar {
+  border-bottom-color: rgba(15,23,42,.1);
+  background:#eef2f7;
+}
+body.page-munkaink.light-theme .browser-url {
+  border-color: rgba(15,23,42,.1);
+  background: rgba(255,255,255,.65);
+  color:#64748b;
+}
+body.page-munkaink.light-theme .browser-viewport { background:#dfe5ec; }
+body.page-munkaink.light-theme .preview-fallback {
+  background: linear-gradient(135deg,#f8fafc,#e2e8f0);
+  color:#0f172a;
+}
+body.page-munkaink.light-theme .preview-fallback::after {
+  background-image: linear-gradient(rgba(37,99,235,.08) 1px,transparent 1px), linear-gradient(90deg,rgba(37,99,235,.08) 1px,transparent 1px);
+}
+body.page-munkaink.light-theme .preview-fallback span { color:#2563eb; }
+body.page-munkaink.light-theme .project-open {
+  border-color: rgba(15,23,42,.18) !important;
+  background: rgba(255,255,255,.96) !important;
+  color:#0f172a !important;
+}
+body.page-munkaink.light-theme .project:hover .project-open {
+  background:#0f172a !important;
+  color:#fff !important;
+  border-color:#0f172a !important;
+}
+
+/* ---------- stabilitás / performance ---------- */
+html, body.page-munkaink { overflow-x:hidden !important; }
+body.page-munkaink.menu-open { overflow-y:hidden !important; }
+body.page-munkaink:not(.menu-open) .menu-overlay {
+  pointer-events:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+}
+
+@supports (content-visibility: auto) {
+  body.page-munkaink .project {
+    content-visibility:auto;
+    contain-intrinsic-size:auto 720px;
+  }
+}
+
+html.software-render body.page-munkaink .project-visual,
+html.software-render body.page-munkaink .project:hover .project-visual {
+  box-shadow:none !important;
+  transform:none !important;
+}
+html.software-render body.page-munkaink .preview-shot { transition:none !important; }
+html.software-render body.page-munkaink .project:hover .project-copy h3 {
+  text-shadow:none !important;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 980px) {
+  body.page-munkaink .project-list { width:min(calc(100% - 44px),1440px) !important; }
+  body.page-munkaink .project,
+  body.page-munkaink .project:nth-child(even) {
+    grid-template-columns:1fr !important;
+    gap:24px !important;
+    padding:50px 0 !important;
+  }
+  body.page-munkaink .project .project-copy { order:1 !important; padding:0 !important; }
+  body.page-munkaink .project .project-visual { order:2 !important; }
+  body.page-munkaink .project-copy h3 { font-size:clamp(30px,7vw,48px) !important; }
+}
+
+@media (max-width: 640px) {
+  body.page-munkaink .inner-title-wrap { padding-top:40px !important; padding-bottom:34px !important; }
+  body.page-munkaink .inner-title-wrap h1 { font-size:clamp(46px,15vw,72px) !important; }
+  body.page-munkaink .hero-meta { gap:9px !important; }
+  body.page-munkaink .hero-counter,
+  body.page-munkaink .hero-scroll { min-height:34px; font-size:.63rem !important; }
+  body.page-munkaink .projects { padding-bottom:78px !important; }
+  body.page-munkaink .project-list { width:calc(100% - 28px) !important; }
+  body.page-munkaink .project,
+  body.page-munkaink .project:nth-child(even) { padding:38px 0 !important; gap:18px !important; }
+  body.page-munkaink .project-index { margin-bottom:10px; }
+  body.page-munkaink .project-domain { margin-top:10px; }
+  body.page-munkaink .project-visual { aspect-ratio:16 / 10 !important; border-radius:12px !important; }
+  body.page-munkaink .browser-frame { grid-template-rows:33px minmax(0,1fr); }
+  body.page-munkaink .browser-bar { padding:0 10px; gap:9px; }
+  body.page-munkaink .browser-dots i { width:7px; height:7px; }
+  body.page-munkaink .browser-url { max-width:72%; padding:3px 9px; font-size:9px; }
+  body.page-munkaink .project-open { width:38px; height:38px; right:10px; bottom:10px; font-size:16px; }
+  body.page-munkaink .preview-fallback { padding:22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-munkaink *,
+  body.page-munkaink *::before,
+  body.page-munkaink *::after { transition-duration:.001ms !important; animation-duration:.001ms !important; }
+}
+
+/* =========================================================
+   PREVIEW SYSTEM V3 — local, fix méretű thumbnailök
+   Nincs külső screenshot API, nincs iframe, nincs letterbox.
+   ========================================================= */
+body.page-munkaink .browser-viewport {
+  background: #07080a !important;
+}
+
+body.page-munkaink .preview-fallback {
+  display: none !important;
+}
+
+body.page-munkaink .preview-shot {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  opacity: 1 !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  background: #07080a !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+  user-select: none;
+  pointer-events: none;
+}
+
+body.page-munkaink .project:hover .preview-shot {
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Kicsit szélesebb és filmesebb desktop preview, de fixen stabil. */
+@media (min-width: 981px) {
+  body.page-munkaink .project {
+    grid-template-columns: minmax(250px,.62fr) minmax(620px,1.38fr) !important;
+  }
+  body.page-munkaink .project:nth-child(even) {
+    grid-template-columns: minmax(620px,1.38fr) minmax(250px,.62fr) !important;
+  }
+  body.page-munkaink .project-visual {
+    aspect-ratio: 16 / 9.6 !important;
+  }
+}
+
+@media (max-width: 980px) {
+  body.page-munkaink .project-visual {
+    aspect-ratio: 16 / 10 !important;
+  }
+}
+
+
+/* =========================================================
+   PREVIEW SYSTEM V4 — VALÓDI ÉLŐ OLDALAK
+   - nincs generált / hamis thumbnail
+   - nincs screenshot API
+   - a valódi publikus oldal töltődik be
+   - a frame 1440px-es desktop viewportként, skálázva jelenik meg
+   - JS tiltva a previewban: kisebb terhelés + nem ugrik fel cookie/modal script
+   ========================================================= */
+body.page-munkaink .browser-viewport {
+  position: relative !important;
+  overflow: hidden !important;
+  background: #07080a !important;
+  contain: layout paint !important;
+}
+
+body.page-munkaink .preview-live-frame {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 2 !important;
+  display: block !important;
+  width: 1440px;
+  height: 900px;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: #fff !important;
+  transform-origin: 0 0 !important;
+  pointer-events: none !important;
+  opacity: 0;
+  transition: opacity .18s ease !important;
+}
+
+body.page-munkaink .browser-viewport.preview-loaded .preview-live-frame {
+  opacity: 1;
+}
+
+body.page-munkaink .preview-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #07080a;
+  color: #87909f;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  transition: opacity .18s ease, visibility .18s ease;
+}
+
+body.page-munkaink .preview-loader-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b51f45;
+  box-shadow: 0 0 12px rgba(181,31,69,.58);
+  animation: previewPulse 1.1s ease-in-out infinite alternate;
+}
+
+body.page-munkaink .browser-viewport.preview-loaded .preview-loader {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes previewPulse {
+  from { opacity: .38; transform: scale(.82); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* A régi V2/V3 kép-preview szabályok már nem használt elemekre mutatnak. */
+body.page-munkaink .preview-shot,
+body.page-munkaink .preview-fallback {
+  display: none !important;
+}
+
+/* A frame maradjon teljesen statikus hover alatt. */
+body.page-munkaink .project:hover .preview-live-frame {
+  filter: none !important;
+}
+
+/* Szoftveres rendernél sem animáljuk a frame-et. */
+html.software-render body.page-munkaink .preview-live-frame,
+html.software-render body.page-munkaink .preview-loader {
+  transition: none !important;
+}
+html.software-render body.page-munkaink .preview-loader-dot {
+  animation: none !important;
+}
+
+body.page-munkaink.light-theme .browser-viewport,
+body.page-munkaink.light-theme .preview-loader {
+  background: #eef2f7 !important;
+}
+body.page-munkaink.light-theme .preview-loader {
+  color: #64748b;
+}
+
+@media (max-width: 640px) {
+  body.page-munkaink .preview-loader {
+    font-size: 9px;
+    letter-spacing: .12em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-munkaink .preview-live-frame,
+  body.page-munkaink .preview-loader {
+    transition: none !important;
+  }
+  body.page-munkaink .preview-loader-dot {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   PREVIEW SYSTEM V5 — HYBRID / STABIL FALLBACK
+   Zöld Tara + INGSIGN: valódi, helyi oldal-screenshot.
+   A többi projekt marad élő preview.
+   ========================================================= */
+body.page-munkaink .preview-static-shot {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  display: block !important;
+  object-fit: cover !important;
+  object-position: top center !important;
+  background: #fff !important;
+  transform: none !important;
+  filter: none !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+body.page-munkaink .project:hover .preview-static-shot {
+  transform: none !important;
+  filter: none !important;
+}
+
+html.software-render body.page-munkaink .preview-static-shot {
+  transition: none !important;
+}
+
+
+/* =========================================================
+   PREVIEW SYSTEM V6 — 4 LIVE + ZÖLD TARA STATIC
+   Balaton Essence / Silent Lake / Lujdort / INGSIGN = live.
+   INGSIGN külön JS engedélyt kap, mert a kezdőoldala scriptből áll fel.
+   Zöld Tara marad helyi valódi screenshot, mert külső iframe-ben nem stabil.
+   ========================================================= */
+body.page-munkaink .preview-live-frame--scripts {
+  /* külön osztály csak dokumentálja a JS-es live frame-et;
+     vizuálisan ugyanazt a skálázást használja, mint a többi live preview. */
+  pointer-events: none !important;
+}
+
+
+/* =========================================================
+   V13 — őszinte live-preview fallback Balaton Essence-hez
+   Nincs generált/kamu kép. Ha az iframe nem tölthető,
+   informatív overlay jelenik meg.
+   ========================================================= */
+body.page-munkaink .preview-honest-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 8px;
+  padding: clamp(18px, 3vw, 30px);
+  background:
+    radial-gradient(circle at 78% 24%, rgba(201,164,91,.24), transparent 0 20%, transparent 21%),
+    linear-gradient(135deg, #081913 0%, #0d2e25 42%, #06110d 100%);
+  color: #f8fafc;
+}
+body.page-munkaink .preview-honest-fallback::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(210,180,107,.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(210,180,107,.10) 1px, transparent 1px);
+  background-size: 38px 38px;
+  opacity: .42;
+  pointer-events: none;
+}
+body.page-munkaink .preview-honest-fallback > * {
+  position: relative;
+  z-index: 1;
+}
+body.page-munkaink .preview-honest-fallback span {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  color: #d4b06b;
+}
+body.page-munkaink .preview-honest-fallback strong {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(26px, 3vw, 48px);
+  line-height: .98;
+  letter-spacing: -.03em;
+}
+body.page-munkaink .preview-honest-fallback p {
+  margin: 0;
+  max-width: min(92%, 440px);
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: clamp(12px, 1.2vw, 14px);
+  line-height: 1.45;
+  color: rgba(241,245,249,.82);
+}
+body.page-munkaink .browser-viewport.preview-failed .preview-honest-fallback {
+  display: flex;
+}
+body.page-munkaink .browser-viewport.preview-failed .preview-loader {
+  opacity: 0;
+}
+body.page-munkaink .browser-viewport.preview-failed .preview-live-frame {
+  opacity: 0;
+}
+body.page-munkaink.light-theme .preview-honest-fallback {
+  background:
+    radial-gradient(circle at 78% 24%, rgba(212,176,107,.20), transparent 0 20%, transparent 21%),
+    linear-gradient(135deg, #eef5ef 0%, #dfeee6 46%, #f8fafc 100%);
+  color: #0f172a;
+}
+body.page-munkaink.light-theme .preview-honest-fallback p {
+  color: rgba(15,23,42,.78);
+}
