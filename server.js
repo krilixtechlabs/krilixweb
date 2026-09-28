@@ -1400,35 +1400,48 @@ async function sendQuoteAcceptedEmails(quote, acceptedBy) {
   if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === "missing-key" || !process.env.CONTACT_TO_EMAIL) return;
   const publicUrl = `${BASE_URL}/ajanlat/${quote.slug}`;
   const amount = new Intl.NumberFormat("hu-HU").format(Number(quote.total_price || 0));
+  const currency = escapeHtml(quote.currency || "Ft");
   const from = getFromEmail();
 
   await resend.emails.send({
     from,
     to: process.env.CONTACT_TO_EMAIL,
     subject: `Ajánlat elfogadva: ${quote.client_name} — ${amount} ${quote.currency || "Ft"}`,
-    html: `
-      <div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;padding:32px;background:#0b0e0f;color:#f4efe6">
-        <div style="color:#d7af55;font-size:12px;letter-spacing:2px">KRILIX TECH & LABS</div>
-        <h1 style="font-size:34px;margin:18px 0">Ajánlat elfogadva.</h1>
-        <p><strong>Ügyfél:</strong> ${escapeHtml(quote.client_name)}</p>
-        <p><strong>Elfogadta:</strong> ${escapeHtml(acceptedBy.name)} (${escapeHtml(acceptedBy.email)})</p>
-        <p><strong>Projekt díja:</strong> ${amount} ${escapeHtml(quote.currency || "Ft")}</p>
-        <p><a href="${publicUrl}" style="color:#d7af55">Ajánlat megnyitása →</a></p>
-      </div>`
+    html: emailShell({
+      label: "Ajánlat · elfogadva",
+      title: "Az ügyfél elfogadta az ajánlatot.",
+      content: `
+        ${emailPanel({
+          label: "Elfogadás adatai",
+          tone: "accent",
+          content: `
+            <p style="margin:0 0 10px;"><strong style="color:#ffffff;">Ügyfél:</strong> ${escapeHtml(quote.client_name)}</p>
+            <p style="margin:0 0 10px;"><strong style="color:#ffffff;">Elfogadta:</strong> ${escapeHtml(acceptedBy.name)} · ${escapeHtml(acceptedBy.email)}</p>
+            <p style="margin:0;"><strong style="color:#ffffff;">Projekt díja:</strong> <span style="color:#ff4d73; font-weight:800;">${amount} ${currency}</span></p>
+          `
+        })}
+        ${buttonHtml({ href: publicUrl, text: "Ajánlat megnyitása" })}
+      `
+    })
   });
 
   await resend.emails.send({
     from,
     to: acceptedBy.email,
     subject: `Ajánlat elfogadása rögzítve — ${quote.client_name}`,
-    html: `
-      <div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;padding:32px;background:#0b0e0f;color:#f4efe6">
-        <div style="color:#d7af55;font-size:12px;letter-spacing:2px">KRILIX TECH & LABS</div>
-        <h1 style="font-size:34px;margin:18px 0">Köszönjük az elfogadást.</h1>
-        <p>Rögzítettük a <strong>${amount} ${escapeHtml(quote.currency || "Ft")}</strong> összegű ajánlat elfogadását.</p>
-        <p>A következő lépésekkel hamarosan jelentkezünk.</p>
-        <p><a href="${publicUrl}" style="color:#d7af55">Ajánlat megnyitása →</a></p>
-      </div>`
+    html: emailShell({
+      label: "Ajánlat elfogadva",
+      title: "Köszönjük az elfogadást.",
+      content: `
+        <p style="margin:0 0 20px;">Rögzítettük a <strong style="color:#ffffff;">${amount} ${currency}</strong> összegű ajánlat elfogadását.</p>
+        ${emailPanel({
+          label: "Következő lépés",
+          tone: "accent",
+          content: "A projekt következő lépéseivel hamarosan jelentkezünk. Az ajánlatot az alábbi gombbal bármikor újra megnyithatod."
+        })}
+        ${buttonHtml({ href: publicUrl, text: "Ajánlat megnyitása" })}
+      `
+    })
   });
 }
 
@@ -1562,35 +1575,35 @@ function formatBriefRow(row) {
 }
 
 function briefList(values) {
-  if (!values || !values.length) return `<span style="color:#8f8678;">Nincs megadva</span>`;
-  return `<ul style="margin:8px 0 0; padding-left:20px;">${values.map(value => `<li>${escapeHtml(value)}</li>`).join("")}</ul>`;
+  if (!values || !values.length) return `<span style="color:#7f8795;">Nincs megadva</span>`;
+  return `<ul style="margin:8px 0 0; padding-left:20px; color:#d8dde7;">${values.map(value => `<li style="margin:0 0 6px;">${escapeHtml(value)}</li>`).join("")}</ul>`;
 }
 
 function briefText(value) {
   const text = cleanOptional(value);
-  return text ? htmlLines(text) : `<span style="color:#8f8678;">Nincs megadva</span>`;
+  return text ? htmlLines(text) : `<span style="color:#7f8795;">Nincs megadva</span>`;
 }
 
 function briefLink(value) {
   const text = cleanOptional(value);
-  if (!text) return `<span style="color:#8f8678;">Nincs megadva</span>`;
+  if (!text) return `<span style="color:#7f8795;">Nincs megadva</span>`;
   const safe = escapeHtml(text);
-  return `<a href="${safe}" style="color:#111;">${safe}</a>`;
+  return `<a href="${safe}" style="color:#ff4d73; text-decoration:none; border-bottom:1px solid rgba(255,77,115,.45);">${safe}</a>`;
 }
 
 function briefRow(label, value) {
   return `
     <tr>
-      <td style="width:210px; padding:10px 14px; border-bottom:1px solid #ded3bd; color:#8a6a2c; font-weight:700; font-size:13px;">${label}</td>
-      <td style="padding:10px 14px; border-bottom:1px solid #ded3bd; color:#111; font-size:14px; line-height:1.6;">${value}</td>
+      <td valign="top" style="width:190px; padding:13px 16px; border-bottom:1px solid #252a33; color:#ff4d73; font-weight:800; font-size:11px; letter-spacing:.7px; text-transform:uppercase;">${label}</td>
+      <td valign="top" style="padding:13px 16px; border-bottom:1px solid #252a33; color:#d8dde7; font-size:14px; line-height:1.65;">${value}</td>
     </tr>
   `;
 }
 
 function briefBlock(title, rows) {
   return `
-    <div style="margin-top:24px; border:1px solid #ded3bd; background:#fffaf0;">
-      <div style="padding:14px 16px; background:#f4efe5; color:#8a6a2c; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">${title}</div>
+    <div style="margin-top:22px; border:1px solid #2a303a; background:#0b0e13; border-radius:14px; overflow:hidden;">
+      <div style="padding:14px 16px; background:#10141b; border-left:3px solid #b0002b; color:#f4f6fa; font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase;">${title}</div>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table>
     </div>
   `;
@@ -1605,7 +1618,7 @@ function adminBriefEmail(brief) {
       <p style="margin:0 0 18px;">Projektazonosító: <strong>${escapeHtml(brief.briefCode || "")}</strong></p>
       ${briefBlock("Alap adatok", [
         briefRow("Név", briefText(brief.name)),
-        briefRow("Email", `<a href="mailto:${escapeHtml(brief.email)}" style="color:#111;">${escapeHtml(brief.email)}</a>`),
+        briefRow("Email", `<a href="mailto:${escapeHtml(brief.email)}" style="color:#ff4d73; text-decoration:none;">${escapeHtml(brief.email)}</a>`),
         briefRow("Telefonszám", briefText(brief.phone)),
         briefRow("Cég / márkanév", briefText(brief.company)),
         briefRow("Jelenlegi weboldal", briefLink(brief.currentWebsite)),
@@ -1651,14 +1664,17 @@ function customerBriefConfirmationEmail(brief) {
     label: "Brief megérkezett",
     title: `Köszönjük, ${escapeHtml(brief.name)}.`,
     content: `
-      <p style="margin:0 0 22px;">Megkaptuk a projekt briefet. Átnézzük az elküldött információkat, és ezek alapján tudunk továbbmenni a következő lépésekkel.</p>
-      <div style="padding:24px; background:#0c0c0c; border:1px solid rgba(231,200,121,.22); color:#f7f1e6;">
-        <div style="margin-bottom:14px; color:#e7c879; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">Rövid összefoglaló</div>
-        <p style="margin:0 0 10px;"><strong>Projekt:</strong> ${brief.projectTypes.length ? escapeHtml(brief.projectTypes.join(", ")) : "Nincs megadva"}</p>
-        <p style="margin:0 0 10px;"><strong>Fő cél:</strong><br>${briefText(brief.mainGoal)}</p>
-        <p style="margin:0;"><strong>Határidő:</strong> ${brief.deadline ? escapeHtml(brief.deadline) : "Nincs megadva"}</p>
-      </div>
-      <p style="margin:24px 0 0;">Ha valami fontos kimaradt, válaszolj erre az emailre, és kiegészítheted.</p>
+      <p style="margin:0 0 20px;">Megkaptuk a projekt briefet. Átnézzük az elküldött információkat, és ezek alapján készítjük elő a következő lépéseket.</p>
+      ${emailPanel({
+        label: "Rövid összefoglaló",
+        tone: "accent",
+        content: `
+          <p style="margin:0 0 10px;"><strong style="color:#ffffff;">Projekt:</strong> ${brief.projectTypes.length ? escapeHtml(brief.projectTypes.join(", ")) : "Nincs megadva"}</p>
+          <p style="margin:0 0 10px;"><strong style="color:#ffffff;">Fő cél:</strong><br>${briefText(brief.mainGoal)}</p>
+          <p style="margin:0;"><strong style="color:#ffffff;">Határidő:</strong> ${brief.deadline ? escapeHtml(brief.deadline) : "Nincs megadva"}</p>
+        `
+      })}
+      <p style="margin:22px 0 0;">Ha valami fontos kimaradt, válaszolj erre az e-mailre, és kiegészítheted.</p>
     `
   });
 }
@@ -1697,32 +1713,100 @@ function htmlLines(value) {
 }
 
 function buttonHtml({ href, text }) {
-  return `<div style="margin-top:26px;"><a href="${href}" style="display:inline-block; padding:15px 22px; background:#e7c879; color:#070707; text-decoration:none; font-size:14px; font-weight:700;">${text}</a></div>`;
+  return `
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:26px;">
+      <tr>
+        <td bgcolor="#b0002b" style="border-radius:10px; border:1px solid #d72a50;">
+          <a href="${href}" style="display:inline-block; padding:14px 22px; color:#ffffff; text-decoration:none; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:1; font-weight:800; letter-spacing:1px; text-transform:uppercase;">${text} &nbsp;→</a>
+        </td>
+      </tr>
+    </table>`;
+}
+
+function emailPanel({ label, content, tone = "default" }) {
+  const border = tone === "accent" ? "#7e0b28" : "#262c36";
+  const bar = tone === "accent" ? "#b0002b" : "#3a414d";
+  return `
+    <div style="margin:22px 0 0; padding:20px 22px; background:#0a0d12; border:1px solid ${border}; border-left:3px solid ${bar}; border-radius:12px; color:#d8dde7;">
+      ${label ? `<div style="margin:0 0 12px; color:#ff4d73; font-size:10px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase;">${label}</div>` : ""}
+      <div style="font-size:14px; line-height:1.7;">${content}</div>
+    </div>`;
 }
 
 function emailShell({ title, label, content, dark = true }) {
-  const bg = dark ? "#070707" : "#f4efe5";
-  const card = dark ? "#151515" : "#ffffff";
-  const text = dark ? "#f7f1e6" : "#111111";
-  const muted = dark ? "#b8ad9b" : "#665f54";
-  const border = dark ? "rgba(231,200,121,.35)" : "#ded3bd";
-
-  return `<!doctype html><html lang="hu"><body style="margin:0; padding:0; background:${bg}; font-family:Arial, Helvetica, sans-serif; color:${text};"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${bg}; padding:36px 16px;"><tr><td align="center"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:680px; background:${card}; border:1px solid ${border};"><tr><td style="padding:38px 36px 28px;"><div style="font-size:11px; letter-spacing:4px; text-transform:uppercase; color:#e7c879; font-weight:700;">${label}</div><h1 style="margin:18px 0 0; font-family:Georgia, 'Times New Roman', serif; font-size:42px; line-height:1; font-weight:400; letter-spacing:-1.8px; color:${text};">${title}</h1></td></tr><tr><td style="padding:0 36px 34px; color:${muted}; font-size:16px; line-height:1.75;">${content}</td></tr><tr><td style="padding:22px 36px; border-top:1px solid rgba(231,200,121,.16); color:#8f8678; font-size:12px; line-height:1.6;">Krilix Tech & Labs — prémium weboldalak és működő webes megoldások.</td></tr></table></td></tr></table></body></html>`;
+  // A dark parametert kompatibilitás miatt megtartjuk, de a v26 minden automata
+  // levélhez egységes Krilix dark/red arculatot használ.
+  return `<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+</head>
+<body bgcolor="#05070a" style="margin:0; padding:0; background:#05070a; font-family:Arial,Helvetica,sans-serif; color:#f4f6fa;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#05070a" style="width:100%; background:#05070a;">
+    <tr>
+      <td align="center" style="padding:30px 12px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%; max-width:680px; border-collapse:separate; background:#080b10; border:1px solid #242a34; border-radius:18px; overflow:hidden;">
+          <tr>
+            <td style="padding:0; height:4px; line-height:4px; font-size:0; background:#b0002b;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td style="padding:28px 30px 22px; border-bottom:1px solid #202630;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="middle">
+                    <div style="font-size:23px; line-height:1; font-weight:900; letter-spacing:3.2px; color:#ffffff;">KRILIX</div>
+                    <div style="margin-top:6px; font-size:10px; line-height:1; font-weight:700; letter-spacing:2.4px; color:#ff4d73; text-transform:uppercase;">Tech &amp; Labs</div>
+                  </td>
+                  <td align="right" valign="middle">
+                    <div style="display:inline-block; padding:7px 10px; border:1px solid #313844; border-radius:999px; color:#8e98a8; font-size:9px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase;">Digital systems</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:34px 30px 12px;">
+              <div style="margin:0 0 14px; color:#ff4d73; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase;">${label}</div>
+              <div style="width:42px; height:2px; margin:0 0 18px; background:#b0002b; line-height:2px; font-size:0;">&nbsp;</div>
+              <h1 style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:34px; line-height:1.06; font-weight:900; letter-spacing:-1.1px; color:#ffffff;">${title}</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 30px 34px; color:#aeb6c4; font-size:15px; line-height:1.72;">${content}</td>
+          </tr>
+          <tr>
+            <td style="padding:20px 30px 24px; border-top:1px solid #202630; background:#07090d;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="color:#778191; font-size:11px; line-height:1.55;">Krilix Tech &amp; Labs<br><span style="color:#596271;">Egyedi weboldalak · webes rendszerek · digitális megoldások</span></td>
+                  <td align="right" style="color:#ff4d73; font-size:10px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase;">krilixtechlabs.com</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 }
 
 function adminNewMessageEmail({ projectCode, name, email, message, attachmentLink, adminUrl, threadUrl }) {
   return emailShell({
     dark: false,
-    label: "Krilix Tech & Labs",
+    label: "Új kapcsolatfelvétel",
     title: "Új megkeresés érkezett.",
     content: `
-      <p style="margin:0 0 18px;">Projektazonosító: <strong>${projectCode}</strong></p>
-      <p style="margin:0 0 8px;"><strong>Név:</strong> ${name}</p>
-      <p style="margin:0 0 22px;"><strong>Email:</strong> <a href="mailto:${email}" style="color:#111;">${email}</a></p>
-      <div style="padding:24px; background:#f4efe5; border:1px solid #ded3bd; color:#111;"><div style="margin-bottom:14px; color:#8a6a2c; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">Üzenet</div>${message}</div>
-      ${attachmentLink ? `<p style="margin:20px 0 0;"><strong>Csatolt link:</strong> <a href="${escapeHtml(attachmentLink)}" style="color:#111;">${escapeHtml(attachmentLink)}</a></p>` : ""}
+      <div style="margin:0 0 18px; color:#d8dde7;"><strong style="color:#ffffff;">Projektazonosító:</strong> ${projectCode}</div>
+      ${emailPanel({ label: "Ügyfél", content: `<strong style="color:#ffffff;">${name}</strong><br><a href="mailto:${email}" style="color:#ff4d73; text-decoration:none;">${email}</a>` })}
+      ${emailPanel({ label: "Üzenet", content: message, tone: "accent" })}
+      ${attachmentLink ? `<div style="margin-top:18px;"><strong style="color:#ffffff;">Csatolt link:</strong> <a href="${escapeHtml(attachmentLink)}" style="color:#ff4d73; text-decoration:none;">${escapeHtml(attachmentLink)}</a></div>` : ""}
       ${buttonHtml({ href: adminUrl, text: "Megnyitás adminban" })}
-      <p style="margin-top:20px; font-size:13px;">Ügyfél privát link: <a href="${threadUrl}" style="color:#111;">${threadUrl}</a></p>
+      <div style="margin-top:22px; padding-top:18px; border-top:1px solid #252b35; color:#7f8998; font-size:11px; line-height:1.6;">Privát ügyféllink:<br><a href="${threadUrl}" style="color:#aeb6c4; text-decoration:none; word-break:break-all;">${threadUrl}</a></div>
     `
   });
 }
@@ -1732,16 +1816,26 @@ function customerConfirmationEmail({ name, message, threadUrl }) {
     dark: true,
     label: "Üzenet megérkezett",
     title: `Köszönjük, ${name}.`,
-    content: `<p style="margin:0 0 22px;">Megkaptuk az üzeneted. Átnézzük, és hamarosan visszajelzünk a következő lépésekkel.</p><div style="padding:24px; background:#0c0c0c; border:1px solid rgba(231,200,121,.22); color:#f7f1e6;"><div style="margin-bottom:14px; color:#e7c879; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">Az elküldött üzeneted</div>${message}</div><p style="margin:24px 0 0;">A beszélgetést később ezen a privát linken tudod folytatni:</p>${buttonHtml({ href: threadUrl, text: "Beszélgetés megnyitása" })}`
+    content: `
+      <p style="margin:0 0 20px;">Megkaptuk az üzeneted. Átnézzük, és hamarosan visszajelzünk a következő lépésekkel.</p>
+      ${emailPanel({ label: "Az elküldött üzeneted", content: message, tone: "accent" })}
+      <p style="margin:22px 0 0;">A beszélgetést később a privát projektlinken tudod folytatni.</p>
+      ${buttonHtml({ href: threadUrl, text: "Beszélgetés megnyitása" })}
+    `
   });
 }
 
 function replyNotificationEmail({ name, reply, threadUrl }) {
   return emailShell({
     dark: true,
-    label: "Krilix Tech & Labs",
+    label: "Projektkommunikáció",
     title: "Válasz érkezett.",
-    content: `<p style="margin:0 0 22px;">Szia ${name}, válasz érkezett a megkeresésedre.</p><div style="padding:24px; background:#0c0c0c; border:1px solid rgba(231,200,121,.22); color:#f7f1e6;">${reply}</div><p style="margin:24px 0 0;">A teljes beszélgetést itt tudod megnyitni és folytatni:</p>${buttonHtml({ href: threadUrl, text: "Beszélgetés megnyitása" })}`
+    content: `
+      <p style="margin:0 0 20px;">Szia ${name}, új válasz érkezett a Krilix Tech &amp; Labs csapatától.</p>
+      ${emailPanel({ label: "Új válasz", content: reply, tone: "accent" })}
+      <p style="margin:22px 0 0;">A teljes beszélgetést és az előzményeket a privát projektoldalon éred el.</p>
+      ${buttonHtml({ href: threadUrl, text: "Beszélgetés megnyitása" })}
+    `
   });
 }
 
@@ -1750,6 +1844,11 @@ function customerThreadReplyEmail({ projectCode, name, email, message, adminUrl 
     dark: false,
     label: "Ügyfél válaszolt",
     title: "Új üzenet érkezett.",
-    content: `<p style="margin:0 0 8px;"><strong>Azonosító:</strong> ${projectCode}</p><p style="margin:0 0 8px;"><strong>Név:</strong> ${name}</p><p style="margin:0 0 22px;"><strong>Email:</strong> <a href="mailto:${email}" style="color:#111;">${email}</a></p><div style="padding:24px; background:#f4efe5; border:1px solid #ded3bd; color:#111;"><div style="margin-bottom:14px; color:#8a6a2c; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase;">Üzenet</div>${message}</div>${buttonHtml({ href: adminUrl, text: "Megnyitás adminban" })}`
+    content: `
+      <div style="margin:0 0 8px;"><strong style="color:#ffffff;">Azonosító:</strong> ${projectCode}</div>
+      <div style="margin:0 0 18px;"><strong style="color:#ffffff;">Ügyfél:</strong> ${name} · <a href="mailto:${email}" style="color:#ff4d73; text-decoration:none;">${email}</a></div>
+      ${emailPanel({ label: "Üzenet", content: message, tone: "accent" })}
+      ${buttonHtml({ href: adminUrl, text: "Megnyitás adminban" })}
+    `
   });
 }
