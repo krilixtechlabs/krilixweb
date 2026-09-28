@@ -1,0 +1,18 @@
+KRILIX v25 — CLEAN URL PATCH
+
+Új publikus URL-ek:
+/
+/munkaink
+/szolgaltatasok
+/rolunk
+/kapcsolat
+/adatvedelem
+
+Meglévő tiszta backend URL-ek változatlanul:
+/admin
+/brief
+/adatkezeles
+/ajanlat/:slug
+/thread/:token
+
+A régi .html / index.html címek 301-es átirányítást kapnak.

@@ -27,6 +27,51 @@ const BUSINESS_STATUSES = new Set([
 ]);
 
 app.use(express.json({ limit: "5mb" }));
+
+// Clean, extension-free public URLs. These routes intentionally live
+// before express.static so Express does not redirect directories to /.../.
+const cleanPublicPages = {
+  "/munkaink": "munkaink/index.html",
+  "/szolgaltatasok": "szolgaltatasok/index.html",
+  "/rolunk": "rolunk/index.html",
+  "/kapcsolat": "kapcsolat/index.html",
+  "/adatvedelem": "adatvedelem/index.html"
+};
+
+const canonicalRedirects = new Map([
+  ["/index.html", "/"],
+  ["/index/", "/"],
+  ["/index/index.html", "/"],
+  ["/munkaink/", "/munkaink"],
+  ["/munkaink/index.html", "/munkaink"],
+  ["/szolgaltatasok/", "/szolgaltatasok"],
+  ["/szolgaltatasok/index.html", "/szolgaltatasok"],
+  ["/rolunk/", "/rolunk"],
+  ["/rolunk/index.html", "/rolunk"],
+  ["/kapcsolat/", "/kapcsolat"],
+  ["/kapcsolat/index.html", "/kapcsolat"],
+  ["/adatvedelem/", "/adatvedelem"],
+  ["/adatvedelem/index.html", "/adatvedelem"],
+  ["/admin.html", "/admin"],
+  ["/brief.html", "/brief"],
+  ["/adatkezeles.html", "/adatkezeles"]
+]);
+
+app.use((req, res, next) => {
+  const target = canonicalRedirects.get(req.path);
+  if (!target) return next();
+
+  const queryIndex = req.originalUrl.indexOf("?");
+  const query = queryIndex >= 0 ? req.originalUrl.slice(queryIndex) : "";
+  return res.redirect(301, `${target}${query}`);
+});
+
+for (const [route, file] of Object.entries(cleanPublicPages)) {
+  app.get(route, (req, res) => {
+    res.sendFile(path.join(publicPath, file));
+  });
+}
+
 app.use(express.static(publicPath));
 
 
