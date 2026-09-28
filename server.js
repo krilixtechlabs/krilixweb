@@ -54,7 +54,8 @@ const canonicalRedirects = new Map([
   ["/adatvedelem/index.html", "/adatvedelem"],
   ["/admin.html", "/admin"],
   ["/brief.html", "/brief"],
-  ["/adatkezeles.html", "/adatkezeles"]
+  ["/adatkezeles.html", "/adatkezeles"],
+  ["/thread.html", "/kapcsolat"]
 ]);
 
 app.use((req, res, next) => {
@@ -85,16 +86,14 @@ app.post("/api/contact", async (req, res) => {
 
     assertMailConfig();
 
-    const threadToken = crypto.randomBytes(32).toString("hex");
-
     const saved = await pool.query(
       `
       INSERT INTO contact_messages
-        (name, email, message, attachment_link, thread_token, business_status, has_unread_customer_message, last_activity_at)
-      VALUES ($1, $2, $3, $4, $5, 'new_lead', TRUE, NOW())
-      RETURNING id, created_at, thread_token
+        (name, email, message, attachment_link, business_status, has_unread_customer_message, last_activity_at)
+      VALUES ($1, $2, $3, $4, 'new_lead', TRUE, NOW())
+      RETURNING id, created_at
       `,
-      [name.trim(), email.trim(), message.trim(), cleanOptional(attachmentLink), threadToken]
+      [name.trim(), email.trim(), message.trim(), cleanOptional(attachmentLink)]
     );
 
     const contactId = saved.rows[0].id;
@@ -105,15 +104,6 @@ app.post("/api/contact", async (req, res) => {
       [projectCode, contactId]
     );
 
-    await pool.query(
-      `
-      INSERT INTO conversation_messages (contact_message_id, sender, message)
-      VALUES ($1, 'customer', $2)
-      `,
-      [contactId, message.trim()]
-    );
-
-    const threadUrl = `${BASE_URL}/thread/${threadToken}`;
     const fromEmail = getFromEmail();
 
     await resend.emails.send({
@@ -127,19 +117,18 @@ app.post("/api/contact", async (req, res) => {
         email: escapeHtml(email),
         message: htmlLines(message),
         attachmentLink: cleanOptional(attachmentLink),
-        adminUrl: `${BASE_URL}/admin`,
-        threadUrl
+        adminUrl: `${BASE_URL}/admin`
       })
     });
 
     await resend.emails.send({
       from: fromEmail,
       to: email.trim(),
+      replyTo: process.env.CONTACT_TO_EMAIL,
       subject: "Megkaptuk az üzeneted - Krilix Tech & Labs",
       html: customerConfirmationEmail({
         name: escapeHtml(name),
-        message: htmlLines(message),
-        threadUrl
+        message: htmlLines(message)
       })
     });
 
@@ -234,7 +223,7 @@ app.get("/admin", (req, res) => {
 });
 
 app.get("/thread/:token", (req, res) => {
-  res.sendFile(path.join(publicPath, "thread.html"));
+  return res.redirect(301, "/kapcsolat");
 });
 
 app.get("/brief", (req, res) => {
@@ -677,6 +666,8 @@ app.get("/api/admin/messages", adminAuth.requirePermission("messages.read"), asy
         cm.name,
         cm.email,
         cm.message,
+        cm.message AS last_message,
+        'customer'::text AS last_sender,
         cm.attachment_link,
         cm.status,
         cm.business_status,
@@ -684,35 +675,13 @@ app.get("/api/admin/messages", adminAuth.requirePermission("messages.read"), asy
         cm.has_unread_customer_message,
         cm.last_activity_at,
         cm.last_seen_by_admin_at,
-        cm.reply_message,
-        cm.replied_at,
-        cm.created_at,
-        cm.thread_token,
-        (
-          SELECT c.message
-          FROM conversation_messages c
-          WHERE c.contact_message_id = cm.id
-          ORDER BY c.created_at DESC
-          LIMIT 1
-        ) AS last_message,
-        (
-          SELECT c.sender
-          FROM conversation_messages c
-          WHERE c.contact_message_id = cm.id
-          ORDER BY c.created_at DESC
-          LIMIT 1
-        ) AS last_sender
+        cm.created_at
       FROM contact_messages cm
       ORDER BY cm.last_activity_at DESC NULLS LAST, cm.created_at DESC
       `
     );
 
-    const messages = result.rows.map((row) => ({
-      ...row,
-      thread_url: `${BASE_URL}/thread/${row.thread_token}`
-    }));
-
-    return res.status(200).json({ ok: true, messages });
+    return res.status(200).json({ ok: true, messages: result.rows });
   } catch (error) {
     console.error("Admin messages error:", error);
     return res.status(500).json({ ok: false, error: "Nem sikerült lekérni a megkereséseket." });
@@ -798,7 +767,6 @@ app.delete("/api/admin/messages/:id", adminAuth.requirePermission("messages.dele
       return res.status(404).json({ ok: false, error: "A megkeresés nem található." });
     }
 
-    await client.query(`DELETE FROM conversation_messages WHERE contact_message_id = $1`, [id]);
     await client.query(`DELETE FROM contact_messages WHERE id = $1`, [id]);
     await client.query("COMMIT");
 
@@ -813,160 +781,12 @@ app.delete("/api/admin/messages/:id", adminAuth.requirePermission("messages.dele
   }
 });
 
-app.get("/api/thread/:token", async (req, res) => {
-  try {
-    const contactResult = await pool.query(
-      `
-      SELECT id, project_code, name, email, message, attachment_link, created_at, business_status
-      FROM contact_messages
-      WHERE thread_token = $1
-      `,
-      [req.params.token]
-    );
-
-    if (!contactResult.rows.length) {
-      return res.status(404).json({ ok: false, error: "A beszélgetés nem található." });
-    }
-
-    const contact = contactResult.rows[0];
-
-    const messagesResult = await pool.query(
-      `
-      SELECT id, sender, message, sender_name, created_at
-      FROM conversation_messages
-      WHERE contact_message_id = $1
-      ORDER BY created_at ASC
-      `,
-      [contact.id]
-    );
-
-    return res.status(200).json({ ok: true, contact, messages: messagesResult.rows });
-  } catch (error) {
-    console.error("Thread fetch error:", error);
-    return res.status(500).json({ ok: false, error: "Nem sikerült betölteni a beszélgetést." });
-  }
-});
-
-app.post("/api/thread/:token/reply", async (req, res) => {
-  try {
-    const { message } = req.body;
-
-    if (!message || !message.trim()) {
-      return res.status(400).json({ ok: false, error: "Az üzenet nem lehet üres." });
-    }
-
-    const contactResult = await pool.query(
-      `SELECT id, project_code, name, email FROM contact_messages WHERE thread_token = $1`,
-      [req.params.token]
-    );
-
-    if (!contactResult.rows.length) {
-      return res.status(404).json({ ok: false, error: "A beszélgetés nem található." });
-    }
-
-    const contact = contactResult.rows[0];
-
-    await pool.query(
-      `INSERT INTO conversation_messages (contact_message_id, sender, message) VALUES ($1, 'customer', $2)`,
-      [contact.id, message.trim()]
-    );
-
-    await pool.query(
-      `
-      UPDATE contact_messages
-      SET has_unread_customer_message = TRUE,
-          status = 'new',
-          last_activity_at = NOW()
-      WHERE id = $1
-      `,
-      [contact.id]
-    );
-
-    await resend.emails.send({
-      from: getFromEmail(),
-      to: process.env.CONTACT_TO_EMAIL,
-      replyTo: contact.email,
-      subject: `Új ügyfél válasz ${contact.project_code || `#${contact.id}`} - ${contact.name}`,
-      html: customerThreadReplyEmail({
-        projectCode: escapeHtml(contact.project_code || `#${contact.id}`),
-        name: escapeHtml(contact.name),
-        email: escapeHtml(contact.email),
-        message: htmlLines(message),
-        adminUrl: `${BASE_URL}/admin`
-      })
-    });
-
-    return res.status(200).json({ ok: true, message: "Üzenet elküldve." });
-  } catch (error) {
-    console.error("Thread reply error:", error);
-    return res.status(500).json({ ok: false, error: "Nem sikerült elküldeni az üzenetet." });
-  }
-});
-
-app.post("/api/admin/thread/:token/reply", adminAuth.requirePermission("messages.reply"), async (req, res) => {
-  try {
-    const { message } = req.body;
-
-    if (!message || !message.trim()) {
-      return res.status(400).json({ ok: false, error: "Az üzenet nem lehet üres." });
-    }
-
-    const contactResult = await pool.query(
-      `SELECT id, project_code, name, email, thread_token FROM contact_messages WHERE thread_token = $1`,
-      [req.params.token]
-    );
-
-    if (!contactResult.rows.length) {
-      return res.status(404).json({ ok: false, error: "A beszélgetés nem található." });
-    }
-
-    const contact = contactResult.rows[0];
-    const threadUrl = `${BASE_URL}/thread/${contact.thread_token}`;
-
-    await pool.query(
-      `
-      INSERT INTO conversation_messages
-        (contact_message_id, sender, message, admin_user_id, sender_name)
-      VALUES ($1, 'admin', $2, $3, $4)
-      `,
-      [contact.id, message.trim(), req.adminUser.id, req.adminUser.name]
-    );
-
-    await pool.query(
-      `
-      UPDATE contact_messages
-      SET status = 'replied',
-          reply_message = $1,
-          replied_at = NOW(),
-          has_unread_customer_message = FALSE,
-          last_seen_by_admin_at = NOW(),
-          last_activity_at = NOW()
-      WHERE id = $2
-      `,
-      [message.trim(), contact.id]
-    );
-
-    await resend.emails.send({
-      from: getFromEmail(),
-      to: contact.email,
-      bcc: process.env.CONTACT_TO_EMAIL,
-      subject: "Válasz érkezett - Krilix Tech & Labs",
-      html: replyNotificationEmail({
-        name: escapeHtml(contact.name),
-        reply: htmlLines(message),
-        threadUrl
-      })
-    });
-
-    await adminAuth.logAudit(req, "message.replied", "contact_message", contact.id, {
-      projectCode: contact.project_code
-    });
-    return res.status(200).json({ ok: true, message: "Krilix válasz elküldve." });
-  } catch (error) {
-    console.error("Admin thread reply error:", error);
-    return res.status(500).json({ ok: false, error: "Nem sikerült elküldeni az admin választ." });
-  }
-});
+const retiredThreadApi = (req, res) => {
+  return res.status(410).json({ ok: false, error: "A beszélgetés funkció megszűnt." });
+};
+app.all("/api/thread/:token", retiredThreadApi);
+app.all("/api/thread/:token/reply", retiredThreadApi);
+app.all("/api/admin/thread/:token/reply", retiredThreadApi);
 
 app.use((error, req, res, next) => {
   console.error("Unhandled server error:", error);
@@ -1010,7 +830,6 @@ async function initDatabase() {
       );
     `);
 
-    await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS thread_token TEXT UNIQUE;`);
     await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS project_code TEXT;`);
     await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS business_status TEXT DEFAULT 'new_lead';`);
     await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS admin_note TEXT;`);
@@ -1019,46 +838,19 @@ async function initDatabase() {
     await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS last_seen_by_admin_at TIMESTAMP;`);
     await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS has_unread_customer_message BOOLEAN DEFAULT TRUE;`);
 
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS conversation_messages (
-        id SERIAL PRIMARY KEY,
-        contact_message_id INTEGER NOT NULL REFERENCES contact_messages(id) ON DELETE CASCADE,
-        sender TEXT NOT NULL,
-        message TEXT NOT NULL,
-        created_at TIMESTAMP NOT NULL DEFAULT NOW()
-      );
-    `);
-
-    await pool.query(`ALTER TABLE conversation_messages ADD COLUMN IF NOT EXISTS seen_by_admin BOOLEAN DEFAULT FALSE;`);
-
-    const missing = await pool.query(`SELECT id, created_at FROM contact_messages WHERE thread_token IS NULL OR project_code IS NULL OR last_activity_at IS NULL`);
-    for (const row of missing.rows) {
-      const token = crypto.randomBytes(32).toString("hex");
+    const contactsMissingMeta = await pool.query(`SELECT id, created_at FROM contact_messages WHERE project_code IS NULL OR last_activity_at IS NULL`);
+    for (const row of contactsMissingMeta.rows) {
       await pool.query(
-        `
-        UPDATE contact_messages
-        SET thread_token = COALESCE(thread_token, $1),
-            project_code = COALESCE(project_code, $2),
-            last_activity_at = COALESCE(last_activity_at, created_at)
-        WHERE id = $3
-        `,
-        [token, buildProjectCode(row.id, row.created_at), row.id]
+        `UPDATE contact_messages
+         SET project_code = COALESCE(project_code, $1),
+             last_activity_at = COALESCE(last_activity_at, created_at)
+         WHERE id = $2`,
+        [buildProjectCode(row.id, row.created_at), row.id]
       );
     }
 
-    const withoutConversation = await pool.query(`
-      SELECT cm.id, cm.message
-      FROM contact_messages cm
-      WHERE NOT EXISTS (SELECT 1 FROM conversation_messages c WHERE c.contact_message_id = cm.id)
-    `);
-
-    for (const row of withoutConversation.rows) {
-      await pool.query(
-        `INSERT INTO conversation_messages (contact_message_id, sender, message) VALUES ($1, 'customer', $2)`,
-        [row.id, row.message]
-      );
-    }
-
+    // A korábbi thread/beszélgetés adatait nem töröljük az adatbázisból,
+    // de az alkalmazás többé nem hoz létre és nem használ beszélgetéseket.
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS project_briefs (
@@ -1795,7 +1587,7 @@ function emailShell({ title, label, content, dark = true }) {
 </html>`;
 }
 
-function adminNewMessageEmail({ projectCode, name, email, message, attachmentLink, adminUrl, threadUrl }) {
+function adminNewMessageEmail({ projectCode, name, email, message, attachmentLink, adminUrl }) {
   return emailShell({
     dark: false,
     label: "Új kapcsolatfelvétel",
@@ -1806,49 +1598,19 @@ function adminNewMessageEmail({ projectCode, name, email, message, attachmentLin
       ${emailPanel({ label: "Üzenet", content: message, tone: "accent" })}
       ${attachmentLink ? `<div style="margin-top:18px;"><strong style="color:#ffffff;">Csatolt link:</strong> <a href="${escapeHtml(attachmentLink)}" style="color:#ff4d73; text-decoration:none;">${escapeHtml(attachmentLink)}</a></div>` : ""}
       ${buttonHtml({ href: adminUrl, text: "Megnyitás adminban" })}
-      <div style="margin-top:22px; padding-top:18px; border-top:1px solid #252b35; color:#7f8998; font-size:11px; line-height:1.6;">Privát ügyféllink:<br><a href="${threadUrl}" style="color:#aeb6c4; text-decoration:none; word-break:break-all;">${threadUrl}</a></div>
     `
   });
 }
 
-function customerConfirmationEmail({ name, message, threadUrl }) {
+function customerConfirmationEmail({ name, message }) {
   return emailShell({
     dark: true,
     label: "Üzenet megérkezett",
     title: `Köszönjük, ${name}.`,
     content: `
-      <p style="margin:0 0 20px;">Megkaptuk az üzeneted. Átnézzük, és hamarosan visszajelzünk a következő lépésekkel.</p>
+      <p style="margin:0 0 20px;">Megkaptuk az üzeneted. Átnézzük, és hamarosan e-mailben visszajelzünk a következő lépésekkel.</p>
       ${emailPanel({ label: "Az elküldött üzeneted", content: message, tone: "accent" })}
-      <p style="margin:22px 0 0;">A beszélgetést később a privát projektlinken tudod folytatni.</p>
-      ${buttonHtml({ href: threadUrl, text: "Beszélgetés megnyitása" })}
-    `
-  });
-}
-
-function replyNotificationEmail({ name, reply, threadUrl }) {
-  return emailShell({
-    dark: true,
-    label: "Projektkommunikáció",
-    title: "Válasz érkezett.",
-    content: `
-      <p style="margin:0 0 20px;">Szia ${name}, új válasz érkezett a Krilix Tech &amp; Labs csapatától.</p>
-      ${emailPanel({ label: "Új válasz", content: reply, tone: "accent" })}
-      <p style="margin:22px 0 0;">A teljes beszélgetést és az előzményeket a privát projektoldalon éred el.</p>
-      ${buttonHtml({ href: threadUrl, text: "Beszélgetés megnyitása" })}
-    `
-  });
-}
-
-function customerThreadReplyEmail({ projectCode, name, email, message, adminUrl }) {
-  return emailShell({
-    dark: false,
-    label: "Ügyfél válaszolt",
-    title: "Új üzenet érkezett.",
-    content: `
-      <div style="margin:0 0 8px;"><strong style="color:#ffffff;">Azonosító:</strong> ${projectCode}</div>
-      <div style="margin:0 0 18px;"><strong style="color:#ffffff;">Ügyfél:</strong> ${name} · <a href="mailto:${email}" style="color:#ff4d73; text-decoration:none;">${email}</a></div>
-      ${emailPanel({ label: "Üzenet", content: message, tone: "accent" })}
-      ${buttonHtml({ href: adminUrl, text: "Megnyitás adminban" })}
+      <p style="margin:22px 0 0;">Ha szeretnéd kiegészíteni a megkeresést, egyszerűen válaszolj erre az e-mailre.</p>
     `
   });
 }

@@ -601,7 +601,7 @@ body.admin-light *::-webkit-scrollbar-thumb{border-color:#eef0f4}
 
       <section class="screen" id="messagesScreen">
         <div class="screen-heading"><div><h2>Ajánlatkérések</h2><p>A főoldali kapcsolat űrlapról érkezett megkeresések.</p></div></div>
-        <section class="panel"><div class="panel-body"><div class="toolbar"><input id="messageSearch" type="search" placeholder="Keresés név, email vagy üzenet alapján..."><select id="messageBusinessFilter"><option value="all">Összes üzleti státusz</option></select><select id="messageFilter"><option value="all">Összes üzenet</option><option value="unread">Új ügyfélüzenet</option><option value="replied">Megválaszolva</option></select><span></span></div><div class="table-wrap"><table><thead><tr><th>Név</th><th>Email</th><th>Utolsó aktivitás</th><th>Státusz</th><th>Művelet</th></tr></thead><tbody id="messageRows"></tbody></table></div></div></section>
+        <section class="panel"><div class="panel-body"><div class="toolbar"><input id="messageSearch" type="search" placeholder="Keresés név, email vagy üzenet alapján..."><select id="messageBusinessFilter"><option value="all">Összes üzleti státusz</option></select><select id="messageFilter"><option value="all">Összes megkeresés</option><option value="unread">Új megkeresések</option></select><span></span></div><div class="table-wrap"><table><thead><tr><th>Név</th><th>Email</th><th>Üzenet</th><th>Beérkezés</th><th>Státusz</th><th>Művelet</th></tr></thead><tbody id="messageRows"></tbody></table></div></div></section>
       </section>
 
 
@@ -669,7 +669,7 @@ body.admin-light *::-webkit-scrollbar-thumb{border-color:#eef0f4}
   <div class="admin-toast" id="adminToast" role="status" aria-live="polite"></div>
 
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
-  <aside class="detail-drawer" id="detailDrawer"><div class="drawer-head"><div><h2>Brief részletek</h2><p id="detailHint">Válassz ki egy briefet.</p></div><button class="drawer-close" id="closeDrawer">×</button></div><div class="drawer-body"><div id="briefDetail" class="empty">Nincs kiválasztott brief.</div></div></aside>
+  <aside class="detail-drawer" id="detailDrawer"><div class="drawer-head"><div><h2 id="detailDrawerTitle">Részletek</h2><p id="detailHint">Válassz ki egy elemet.</p></div><button class="drawer-close" id="closeDrawer">×</button></div><div class="drawer-body"><div id="briefDetail" class="empty">Nincs kiválasztott elem.</div></div></aside>
 
   <div class="modal" id="confirmModal"><div class="modal-box"><h2>Törlés?</h2><p class="note" id="confirmText">Ez a művelet nem vonható vissza.</p><div class="modal-actions"><button class="btn" id="cancelDelete">Mégse</button><button class="btn danger" id="approveDelete">Törlés</button></div></div></div>
 
@@ -1251,7 +1251,7 @@ body.admin-light *::-webkit-scrollbar-thumb{border-color:#eef0f4}
       const titles={
         dashboard:[`Üdvözlünk vissza, ${firstName}!`,"Itt van, mi történik ma a KRILIX-nél."],
         briefs:["Brief-ek","Összes beérkezett projekt brief áttekintése és kezelése."],
-        messages:["Ajánlatkérések","A főoldalról érkezett érdeklődők és beszélgetések."],
+        messages:["Ajánlatkérések","A kapcsolati űrlapról érkezett érdeklődők."],
         quotes:["Ajánlatok","Interaktív ajánlatok létrehozása, publikálása és követése."],
         projects:["Projektek","Aktív és lezárt munkák kezelése."],
         customers:["Ügyfelek","Kapcsolatok és ügyfélelőzmények."],
@@ -1359,7 +1359,7 @@ body.admin-light *::-webkit-scrollbar-thumb{border-color:#eef0f4}
       if(state.selectedBriefId){const b=state.briefs.find(x=>x.id===state.selectedBriefId); if(b) renderBriefDetail(b);}
     }
 
-    function selectBrief(id){state.selectedBriefId=id;const b=state.briefs.find(x=>x.id===id);renderBriefs();renderBriefDetail(b);openDetailDrawer()}
+    function selectBrief(id){state.selectedBriefId=id;const b=state.briefs.find(x=>x.id===id);$("detailDrawerTitle").textContent="Brief részletek";renderBriefs();renderBriefDetail(b);openDetailDrawer()}
 
     function renderBriefDetail(b){
       if(!b){$("briefDetail").innerHTML=`<div class="empty">Nincs kiválasztott brief.</div>`;return}
@@ -1406,21 +1406,68 @@ body.admin-light *::-webkit-scrollbar-thumb{border-color:#eef0f4}
       const q=($("messageSearch").value||globalSearch.value||"").trim().toLowerCase();
       const bs=$("messageBusinessFilter").value, mf=$("messageFilter").value;
       const rows=state.messages.filter(m=>{
-        const hay=[m.project_code,m.name,m.email,m.message,m.last_message,m.admin_note].join(" ").toLowerCase();
+        const hay=[m.project_code,m.name,m.email,m.message,m.admin_note].join(" ").toLowerCase();
         if(q&&!hay.includes(q))return false;
         if(bs!=="all"&&m.business_status!==bs)return false;
         if(mf==="unread"&&!m.has_unread_customer_message)return false;
-        if(mf==="replied"&&m.status!=="replied")return false;
         return true;
       });
       $("messageRows").innerHTML=rows.length?rows.map(m=>`
         <tr>
           <td><div class="person"><div class="avatar">${initials(m.name)}</div><div><strong>${esc(m.name||"Névtelen")}</strong><small>${esc(m.project_code||("#"+m.id))}</small></div></div></td>
           <td>${esc(m.email||"—")}</td>
-          <td>${date(m.last_activity_at||m.created_at)}</td>
-          <td>${messageStatusTag(m.business_status)} ${m.has_unread_customer_message?'<span class="tag">Új üzenet</span>':""}</td>
-          <td><div class="quote-row-actions"><a class="btn small gold" href="/thread/${esc(m.thread_token)}?admin=1" target="_blank" onclick="markRead(${m.id})">${can("messages.reply")?"Válasz":"Megtekintés"}</a>${can("quotes.write")?`<button class="btn small" onclick="openQuoteFromMessage(${m.id})">Ajánlat</button>`:""}</div></td>
-        </tr>`).join(""):`<tr><td colspan="5">Nincs ilyen megkeresés.</td></tr>`;
+          <td style="max-width:320px"><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(m.message||"—")}</div></td>
+          <td>${date(m.created_at||m.last_activity_at)}</td>
+          <td>${messageStatusTag(m.business_status)} ${m.has_unread_customer_message?'<span class="tag">Új</span>':""}</td>
+          <td><div class="quote-row-actions"><button class="btn small gold" onclick="showMessageDetails(${m.id})">Részletek</button>${can("quotes.write")?`<button class="btn small" onclick="openQuoteFromMessage(${m.id})">Ajánlat</button>`:""}${can("messages.delete")?`<button class="btn small danger" onclick="confirmDelete('message',${m.id},'${jsq(m.name||"Megkeresés")}')">Törlés</button>`:""}</div></td>
+        </tr>`).join(""):`<tr><td colspan="6">Nincs ilyen megkeresés.</td></tr>`;
+    }
+
+    async function showMessageDetails(id){
+      const m=state.messages.find(item=>item.id===Number(id));
+      if(!m)return;
+      $("detailDrawerTitle").textContent="Ajánlatkérés részletei";
+      $("detailHint").textContent=`${m.project_code||("#"+m.id)} · ${date(m.created_at||m.last_activity_at)}`;
+      const canWrite=can("messages.write");
+      const mailSubject=encodeURIComponent(`Krilix / ${m.project_code||"megkeresés"}`);
+      $("briefDetail").innerHTML=`
+        <div class="detail">
+          <div class="detail-title">
+            <div><h2>${esc(m.name||"Névtelen")}</h2><p>${esc(m.email||"")}</p></div>
+            <div class="detail-actions">
+              <a class="btn small" href="mailto:${esc(m.email||"")}?subject=${mailSubject}">Email</a>
+              ${can("quotes.write")?`<button class="btn small gold" onclick="closeDetailDrawer();openQuoteFromMessage(${m.id})">Ajánlat készítése</button>`:""}
+              ${can("messages.delete")?`<button class="btn small danger" onclick="closeDetailDrawer();confirmDelete('message',${m.id},'${jsq(m.name||"Megkeresés")}')">Törlés</button>`:""}
+            </div>
+          </div>
+          <div class="detail-grid">
+            <div class="field"><label>Üzleti státusz</label><select ${canWrite?"":"disabled"} onchange="updateMessageLead(${m.id},{businessStatus:this.value})">${Object.entries(messageStatusLabels).map(([v,l])=>`<option value="${v}" ${m.business_status===v?"selected":""}>${l}</option>`).join("")}</select></div>
+            <div class="field"><label>Belső jegyzet</label><textarea ${canWrite?"":"readonly"} onblur="updateMessageLead(${m.id},{adminNote:this.value})">${esc(m.admin_note||"")}</textarea></div>
+            ${info("Kapcsolat",`Email: ${m.email||"—"}
+Beérkezés: ${date(m.created_at||m.last_activity_at)}`,true)}
+            ${info("Üzenet",m.message||"—",true)}
+            ${m.attachment_link?info("Csatolt link",m.attachment_link,true):""}
+          </div>
+        </div>`;
+      openDetailDrawer();
+      if(m.has_unread_customer_message){
+        await markRead(m.id);
+        m.has_unread_customer_message=false;
+        renderMessages();renderDashboard();renderStats();
+      }
+    }
+
+    async function updateMessageLead(id,payload){
+      if(!can("messages.write")){showAdminToast("Ehhez nincs módosítási jogosultságod.","error");return}
+      try{
+        const res=await fetch(`/api/admin/messages/${id}`,{method:"PATCH",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+        const data=await res.json();
+        if(!res.ok||!data.ok)throw new Error(data.error||"Nem sikerült menteni.");
+        const m=state.messages.find(item=>item.id===Number(id));
+        if(m){if(payload.businessStatus!==undefined)m.business_status=payload.businessStatus;if(payload.adminNote!==undefined)m.admin_note=payload.adminNote}
+        renderMessages();renderDashboard();renderStats();
+        showAdminToast("Megkeresés mentve.","success");
+      }catch(error){showAdminToast(error.message||"Nem sikerült menteni.","error")}
     }
 
     async function updateBrief(id,payload){
@@ -1434,7 +1481,7 @@ body.admin-light *::-webkit-scrollbar-thumb{border-color:#eef0f4}
       }catch(e){alert("Nem sikerült menteni.")}
     }
 
-    async function markRead(id){try{await fetch(`/api/admin/messages/${id}/read`,{method:"POST",credentials:"include"})}catch{}}
+    async function markRead(id){try{const res=await fetch(`/api/admin/messages/${id}/read`,{method:"POST",credentials:"include"});return res.ok}catch{return false}}
 
     function confirmDelete(type,id,name){
       const permission=type==="brief"?"briefs.delete":"messages.delete";
@@ -1702,7 +1749,7 @@ body.admin-light *::-webkit-scrollbar-thumb{border-color:#eef0f4}
       const labels={
         "auth.login":"Sikeres belépés","auth.login_failed":"Sikertelen belépés","auth.logout":"Kijelentkezés","auth.password_changed":"Jelszó módosítva",
         "user.created":"Fiók létrehozva","user.updated":"Fiók módosítva","user.password_reset":"Jelszó alaphelyzetbe állítva",
-        "brief.updated":"Brief módosítva","brief.deleted":"Brief törölve","message.read":"Üzenet megnyitva","message.updated":"Ajánlatkérés módosítva","message.deleted":"Ajánlatkérés törölve","message.replied":"Ügyfélválasz elküldve","quote.created":"Ajánlat létrehozva","quote.updated":"Ajánlat módosítva","quote.published":"Ajánlat publikálva","quote.unpublished":"Ajánlat visszavonva","quote.duplicated":"Ajánlat másolva","quote.deleted":"Ajánlat törölve"
+        "brief.updated":"Brief módosítva","brief.deleted":"Brief törölve","message.read":"Üzenet megnyitva","message.updated":"Ajánlatkérés módosítva","message.deleted":"Ajánlatkérés törölve","message.replied":"Korábbi ügyfélválasz","quote.created":"Ajánlat létrehozva","quote.updated":"Ajánlat módosítva","quote.published":"Ajánlat publikálva","quote.unpublished":"Ajánlat visszavonva","quote.duplicated":"Ajánlat másolva","quote.deleted":"Ajánlat törölve"
       };
       $("auditList").innerHTML=state.audit.length?state.audit.map(item=>`
         <div class="audit-item"><strong>${esc(labels[item.action]||item.action)}</strong><span>${esc(item.user_name||item.user_email||"Rendszer")}${item.target_id?` · ${esc(item.target_type||"elem")} #${esc(item.target_id)}`:""}</span><time>${date(item.created_at)}</time></div>`).join(""):'<div class="empty">Még nincs naplózott művelet.</div>';
